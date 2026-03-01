@@ -101,6 +101,8 @@ src/main/java/es/NTTEnterprise/RIntellix/ms_core_data/
     │   └── RequestMapper.java           # Entity ↔ Domain conversion
     └── repository/
         └── RequestRepository.java       # Spring Data MongoDB interface
+├── utils/                               # UTILITIES
+│   └── LogMessage.java                  # Centralized log message constants
 ```
 
 ---
@@ -314,6 +316,94 @@ The application will start on `http://localhost:8080`.
 
 ---
 
+## Logging System
+
+### Overview
+
+The microservice implements a comprehensive logging system using **SLF4J** with **Logback** as the underlying logging framework. All log messages are centralized in a utility class to ensure consistency and maintainability.
+
+### Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                          LOGGING ARCHITECTURE                           │
+│  ┌─────────────────────────────────────────────────────────────────────┐│
+│  │                        utils/LogMessage.java                        ││
+│  │           Centralized log message constants for all layers          ││
+│  └─────────────────────────────────────────────────────────────────────┘│
+│                                    │                                    │
+│     ┌──────────────────────────────┼──────────────────────────────┐    │
+│     ▼                              ▼                              ▼    │
+│  ┌──────────────┐         ┌────────────────┐         ┌──────────────┐  │
+│  │  Controller  │         │ Application    │         │  Repository  │  │
+│  │   Adapter    │────────▶│   Service      │────────▶│   Adapter    │  │
+│  │   (INFO)     │         │   (DEBUG)      │         │   (DEBUG)    │  │
+│  └──────────────┘         └────────────────┘         └──────────────┘  │
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────────┐│
+│  │                   logback-spring.xml Configuration                  ││
+│  │  - Console Appender (colored output)                                ││
+│  │  - File Appender (rolling, 10MB max, 30 days retention)             ││
+│  │  - Error File Appender (errors only)                                ││
+│  └─────────────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Log Message Categories
+
+| Category | Layer | Level | Example Messages |
+|----------|-------|-------|------------------|
+| `CONTROLLER_*` | Infrastructure (Input) | INFO/WARN | Request received, Response sent, Validation errors |
+| `SERVICE_*` | Application | DEBUG | Operation start/end, Validation, Mapping |
+| `REPOSITORY_*` | Infrastructure (Output) | DEBUG | Database operations, Entity mapping |
+| `MAPPER_*` | Infrastructure | DEBUG | Object conversions |
+| `EXCEPTION_*` | All | WARN/ERROR | Entity not found, Illegal arguments |
+
+### Configuration
+
+The logging configuration is defined in `src/main/resources/logback-spring.xml`:
+
+- **Console Output**: Colored, human-readable format
+- **File Output**: `logs/ms-core-data.log` (rolling, 10MB max file size)
+- **Error File**: `logs/ms-core-data-error.log` (errors only)
+- **Retention**: 30 days, 1GB total size cap
+
+### Log Levels by Layer
+
+| Layer | Default Level | Description |
+|-------|---------------|-------------|
+| Controllers | INFO | Request/Response tracking |
+| Services | DEBUG | Business logic flow |
+| Repository Adapters | DEBUG | Database operations |
+| Spring Framework | INFO | Framework internals |
+| MongoDB Driver | WARN | Database driver messages |
+
+### Example Log Flow
+
+```
+2026-03-01 10:15:23.456 INFO  [http-nio-8080-1] RequestControllerAdapter : Request received: GET /api/requests
+2026-03-01 10:15:23.457 DEBUG [http-nio-8080-1] RequestControllerAdapter : Request parameters - partyName: [John], requestStatus: [null]
+2026-03-01 10:15:23.458 DEBUG [http-nio-8080-1] RequestApplicationService : Starting listRequests operation with filters - partyName: [John], requestStatus: [null]
+2026-03-01 10:15:23.459 DEBUG [http-nio-8080-1] RequestRepositoryAdapter : Executing findWithFilters operation - partyName: [John], requestStatus: [null]
+2026-03-01 10:15:23.485 DEBUG [http-nio-8080-1] RequestRepositoryAdapter : findWithFilters operation completed - Retrieved 3 entity(ies)
+2026-03-01 10:15:23.486 DEBUG [http-nio-8080-1] RequestApplicationService : listRequests operation completed - Found 3 request(s)
+2026-03-01 10:15:23.487 INFO  [http-nio-8080-1] RequestControllerAdapter : Response sent successfully - Status: 200 - Items count: 3
+```
+
+### Adding New Log Messages
+
+To maintain consistency, all new log messages should be added to `LogMessage.java`:
+
+```java
+// In utils/LogMessage.java
+public static final String MY_NEW_LOG = "Description with placeholders: {} and {}";
+
+// Usage in code
+log.info(LogMessage.MY_NEW_LOG, value1, value2);
+```
+
+---
+
 ## TODO List
 
 ### High Priority
@@ -334,13 +424,13 @@ The application will start on `http://localhost:8080`.
   - Validate request status transitions
   - Add DTO validation at controller level
 
-- [ ] **Implement Comprehensive Logging System**
-  - Configure structured logging with a clear, visual format
-  - Implement log file generation for error traceability
-  - Add correlation IDs for request tracking
-  - Log request/response payloads (sanitized)
-  - Create different log levels for each layer (DEBUG, INFO, WARN, ERROR)
-  - Consider using ELK stack (Elasticsearch, Logstash, Kibana) for log aggregation
+- [x] **Implement Comprehensive Logging System** ✅
+  - ~~Configure structured logging with a clear, visual format~~
+  - ~~Implement log file generation for error traceability~~
+  - Add correlation IDs for request tracking (future enhancement)
+  - Log request/response payloads (sanitized) (future enhancement)
+  - ~~Create different log levels for each layer (DEBUG, INFO, WARN, ERROR)~~
+  - Consider using ELK stack (Elasticsearch, Logstash, Kibana) for log aggregation (future enhancement)
 
 ### Low Priority
 
