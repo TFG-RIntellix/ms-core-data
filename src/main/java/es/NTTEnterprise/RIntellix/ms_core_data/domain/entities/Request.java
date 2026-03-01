@@ -12,6 +12,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestStatus;
 public class Request {
 
 private Date creationDate;
+private Date lastReviewDate;
 private PropertyCollateral collateral;
 private RequestDetails requestDetails;
 private RequestStatus requestStatus; 
@@ -62,6 +63,14 @@ private RequestStatus requestStatus;
 
     public void setRequestStatus(RequestStatus requestStatus) {
         this.requestStatus = requestStatus;
+    }
+
+    public Date getLastReviewDate() {
+        return lastReviewDate;
+    }
+
+    public void setLastReviewDate(Date lastReviewDate) {
+        this.lastReviewDate = lastReviewDate;
     }
 
     // toString, hashCode and equals methods

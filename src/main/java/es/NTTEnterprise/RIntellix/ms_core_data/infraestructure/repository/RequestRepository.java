@@ -3,6 +3,7 @@ import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.RequestEntity;
 
@@ -14,19 +15,20 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.RequestE
  */
 public interface RequestRepository extends MongoRepository<RequestEntity, String> {
     
-    /**
-     * Finds a request by the name of the party associated with it.
-     * @param partyName the name of the party associated with the request
-     * @return the request entity that matches the given party name
-     */
-    @Query("{ 'party.name': ?0 }")
-    List<RequestEntity> findByPartyName(String partyName);
 
     /**
-     * Finds a request by its status.
-     * @param status the status of the request (e.g., "Pendiente de Revision", "Revisado", "Aprobado", "Rechazado")
-     * @return the request entity that matches the given status.
+     * Finds requests with dynamic filtering based on party name and request status.
+     * Only non-null parameters are applied as filters. If a parameter is null, it will not be used as a filter.
+     * @param partyName the name of the party associated with the request (optional filter)
+     * @param status the status of the request (optional filter)
+     * @return list of request entities matching the provided filters
      */
-    @Query("{ 'status': ?0 }")   
-    List<RequestEntity> findByStatus(String status);
+    @Query("{ $and: [ " +
+           "{ $or: [ { $expr: { $eq: [:#{#partyName}, null] } }, { 'party.name': :#{#partyName} } ] }, " +
+           "{ $or: [ { $expr: { $eq: [:#{#status}, null] } }, { 'status': :#{#status} } ] } " +
+           "] }")
+    List<RequestEntity> findWithFilters(@Param("partyName") String partyName, @Param("status") String status);
+
 }
+
+

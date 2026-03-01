@@ -41,16 +41,11 @@ public class RequestRepositoryAdapter implements RequestPortRepository {
     }
 
     @Override
-    public List<Request> findByPartyName(String partyName) {
-        return requestRepository.findByPartyName(partyName).stream()
+    public List<Request> findWithFilters(String partyName, String requestStatus) {
+        return requestRepository.findWithFilters(partyName, requestStatus).stream()
                 .map(requestMapper::toDomain)
                 .toList();
     }
-    
-    @Override
-    public List<Request> findByStatus(String status) {
-        return requestRepository.findByStatus(status).stream()
-                .map(requestMapper::toDomain)
-                .toList();
-    }
+
+
 }

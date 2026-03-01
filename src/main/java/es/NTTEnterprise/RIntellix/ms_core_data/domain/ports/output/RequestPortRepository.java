@@ -41,19 +41,13 @@ public interface RequestPortRepository {
     public Request findById(String requestId) throws EntityNotFoundException, IllegalArgumentException;
 
     /**
-     * Retrieves all requests made by a specific party.
+     * Retrieves requests with dynamic filtering.
+     * Only non-null parameters are applied as filters.
      *
-     * @param partyName the name of the party
-     * @return List of requests made by the specified party
+     * @param partyName the name of the party (optional filter)
+     * @param requestStatus the status of the request (optional filter)
+     * @return List of requests matching the specified filters
      */
-    public List<Request> findByPartyName(String partyName);
-
-    /**
-     * Retrieves all requests of a specific status.
-     *
-     * @param requestStatus the status of the request.
-     * @return List of requests with the specified status
-     */
-    public List<Request> findByStatus(String status);
+    public List<Request> findWithFilters(String partyName, String requestStatus);
 
 }

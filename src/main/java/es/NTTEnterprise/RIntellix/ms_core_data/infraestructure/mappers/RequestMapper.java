@@ -65,8 +65,11 @@ public class RequestMapper {
 
         // Convert LocalDate to Date
         Date creationDate = localDateToDate(entity.getRequestDate());
+        Date lastReviewDate = localDateToDate(entity.getLastReviewDate());
 
-        return new Request(collateral, creationDate, requestDetails, entity.getStatus());
+        Request request = new Request(collateral, creationDate, requestDetails, entity.getStatus());
+        request.setLastReviewDate(lastReviewDate);
+        return request;
     }
 
     /**
