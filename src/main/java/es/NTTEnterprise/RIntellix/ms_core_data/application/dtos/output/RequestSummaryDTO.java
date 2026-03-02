@@ -10,7 +10,7 @@ public class RequestSummaryDTO {
 
     private String requestId;
     // TODO: Include the partyName and the relationship between Request & Party
-    //private String partyName;
+     String partyName;
     private String status;
     private String requestType;
     private Double amount;
@@ -29,9 +29,10 @@ public class RequestSummaryDTO {
      * @param creationDate the date when the request was created
      * @param lastReviewDate the date when the request was last reviewed
      */
-    public RequestSummaryDTO(String requestId, String status, String requestType, Double amount,
+    public RequestSummaryDTO(String requestId, String partyName, String status, String requestType, Double amount,
             String currency, String creationDate, String lastReviewDate) {
         this.requestId = requestId;
+        this.partyName = partyName;
         this.status = status;
         this.requestType = requestType;
         this.amount = amount;
@@ -101,5 +102,13 @@ public class RequestSummaryDTO {
 
     public void setLastReviewDate(String lastReviewDate) {
         this.lastReviewDate = lastReviewDate;
+    }
+
+    public String getPartyName() {
+        return partyName;
+    }
+
+    public void setPartyName(String partyName) {
+        this.partyName = partyName;
     }
 }

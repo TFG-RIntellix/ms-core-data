@@ -14,6 +14,14 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.repository.Reques
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Adapter class that implements the RequestPortRepository interface.
+ * Responsible ONLY for Request aggregate persistence operations.
+ * Party resolution is handled at the application layer to respect SRP.
+ * 
+ * @author Lucía Fernández Mancebo
+ * @Date 02-28-2026
+ */
 @Slf4j
 @Repository
 public class RequestRepositoryAdapter implements RequestPortRepository {
@@ -68,6 +76,5 @@ public class RequestRepositoryAdapter implements RequestPortRepository {
                 .map(requestMapper::toDomain)
                 .toList();
     }
-
 
 }

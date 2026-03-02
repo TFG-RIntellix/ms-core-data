@@ -62,4 +62,9 @@ public class Money {
     public int hashCode() {
         return amount.hashCode() + currency.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return amount + " " + currency;
+    }
 }

@@ -21,7 +21,7 @@ This project follows the **Hexagonal Architecture** pattern (also known as Ports
 │                              INFRASTRUCTURE                              │
 │  ┌─────────────────────┐                    ┌─────────────────────────┐ │
 │  │   Input Adapters    │                    │    Output Adapters      │ │
-│  │  (REST Controller)  │                    │  (Repository Adapter)   │ │
+│  │  (REST Controller)  │                    │  (Repository Adapters)  │ │
 │  └──────────┬──────────┘                    └────────────┬────────────┘ │
 │             │                                            │              │
 │             ▼                                            ▼              │
@@ -38,8 +38,8 @@ This project follows the **Hexagonal Architecture** pattern (also known as Ports
 │  │                          DOMAIN LAYER                               ││
 │  │  ┌──────────────────┐  ┌─────────────────┐  ┌────────────────────┐ ││
 │  │  │    Entities      │  │     Enums       │  │      Ports         │ ││
-│  │  │  (Request, Money │  │ (RequestStatus, │  │ (Input & Output    │ ││
-│  │  │   RequestDetails)│  │  RequestType)   │  │   Interfaces)      │ ││
+│  │  │  (Request, Party │  │ (RequestStatus, │  │ (Input & Output    │ ││
+│  │  │   Person, Money) │  │  PartyType...)  │  │   Interfaces)      │ ││
 │  │  └──────────────────┘  └─────────────────┘  └────────────────────┘ ││
 │  └─────────────────────────────────────────────────────────────────────┘│
 └─────────────────────────────────────────────────────────────────────────┘
@@ -77,30 +77,55 @@ src/main/java/es/NTTEnterprise/RIntellix/ms_core_data/
 │   │   ├── Request.java                 # Aggregate root
 │   │   ├── RequestDetails.java          # Value object with request specifics
 │   │   ├── PropertyCollateral.java      # Mortgage collateral information
-│   │   └── Money.java                   # Value object for monetary amounts
+│   │   ├── Money.java                   # Value object for monetary amounts
+│   │   ├── Party.java                   # Party aggregate (customer)
+│   │   ├── Person.java                  # Person entity with identity and profiles
+│   │   ├── ContactInfo.java             # Value object for contact data
+│   │   ├── FinancialProfile.java        # Value object for financial data
+│   │   ├── SocioDemographicProfile.java # Value object for demographic data
+│   │   └── Contract.java                # Entity for active contracts
 │   ├── enums/
 │   │   ├── RequestStatus.java           # PENDIENTE_DE_REVISION, APROBADO, etc.
 │   │   ├── RequestType.java             # PRESTAMO, HIPOTECA, TARJETA_CREDITO
-│   │   └── Purpose.java                 # COMPRA_VIVIENDA, EDUCACION, etc.
+│   │   ├── Purpose.java                 # COMPRA_VIVIENDA, EDUCACION, etc.
+│   │   ├── PartyType.java               # INDIVIDUAL, COMPANY
+│   │   ├── Gender.java                  # MALE, FEMALE, OTHER
+│   │   ├── MaritalStatus.java           # SINGLE, MARRIED, DIVORCED, WIDOWED
+│   │   ├── Education.java               # PRIMARY, SECONDARY, BACHELOR, etc.
+│   │   ├── EmploymentStatus.java        # EMPLOYED, SELF_EMPLOYED, etc.
+│   │   └── HomeOwnership.java           # OWNER, RENTER, FAMILY, OTHER
 │   ├── exceptions/
 │   │   └── EntityNotFoundException.java # Domain-specific exception
 │   └── ports/
 │       ├── input/
 │       │   └── RequestPortService.java  # Input port (use case interface)
 │       └── output/
-│           └── RequestPortRepository.java # Output port (repository interface)
+│           ├── RequestPortRepository.java # Output port (repository interface)
+│           └── PartyPortRepository.java   # Output port for Party operations
 └── infraestructure/                     # INFRASTRUCTURE LAYER
     ├── adapters/
     │   ├── input/
     │   │   └── RequestControllerAdapter.java # REST API controller
     │   └── output/
-    │       └── RequestRepositoryAdapter.java # MongoDB repository adapter
+    │       ├── RequestRepositoryAdapter.java # Request MongoDB adapter (SRP: only Request)
+    │       └── PartyRepositoryAdapter.java   # Party MongoDB adapter (SRP: only Party)
     ├── entities/
-    │   └── RequestEntity.java           # MongoDB document mapping
+    │   ├── RequestEntity.java           # MongoDB document mapping
+    │   ├── PartyEntity.java             # Party MongoDB document
+    │   └── embedded/
+    │       ├── ContactInfoEntity.java   # Embedded contact data
+    │       ├── DemographicsEntity.java  # Embedded demographics
+    │       ├── EconomicDataEntity.java  # Embedded economic data
+    │       ├── EmploymentEntity.java    # Embedded employment data
+    │       └── CreditHistoryEntity.java # Embedded credit history
     ├── mappers/
-    │   └── RequestMapper.java           # Entity ↔ Domain conversion
+    │   ├── RequestMapper.java           # Entity ↔ Domain (includes partyId mapping)
+    │   └── PartyMapper.java             # Party Entity ↔ Domain (includes toPartialDomain)
+    ├── projections/
+    │   └── PartyNameProjection.java     # Spring Data projection for efficient name queries
     └── repository/
-        └── RequestRepository.java       # Spring Data MongoDB interface
+        ├── RequestRepository.java       # Spring Data MongoDB interface
+        └── PartyRepository.java         # Party Spring Data interface (with projection query)
 ├── utils/                               # UTILITIES
 │   └── LogMessage.java                  # Centralized log message constants
 ```
@@ -115,12 +140,19 @@ The **heart of the application** containing pure business logic with no external
 
 | Component | Description |
 |-----------|-------------|
-| `Request` | The aggregate root representing a financial product request. Contains creation date, status, details, and optional collateral. |
+| `Request` | The aggregate root representing a financial product request. Contains creation date, status, details, `partyId` reference (for lazy loading), `party` association (populated when needed), and optional collateral. |
 | `RequestDetails` | Value object encapsulating request-specific information: type, purpose, amount, term, interest rate, credit limit, and repayment system. |
 | `Money` | Value object representing monetary amounts with currency. Ensures type safety and provides arithmetic operations with currency validation. |
 | `PropertyCollateral` | Value object for mortgage-specific collateral data (property value, first home indicator). |
+| `Party` | Aggregate representing a customer (individual or company). Contains party type and person details with business methods like `getTotalDebt()` and `getGlobalDTI()`. |
+| `Person` | Entity containing identity data (firstName, lastName, NIF), demographic profile, financial profile, contact info, and active contracts. |
+| `ContactInfo` | Value object for contact information: phone number, email, and physical address. |
+| `FinancialProfile` | Value object containing income data, employment status, occupation, seniority, and credit history information. |
+| `SocioDemographicProfile` | Value object with birth date, gender, marital status, education level, home ownership, country of residence, and number of dependants. |
+| `Contract` | Entity representing an active contract with outstanding balance and monthly payment information. |
 | `RequestPortService` | Input port defining the contract for use cases: `listRequests()` and `getRequestDetails()`. |
-| `RequestPortRepository` | Output port defining the contract for data persistence operations. |
+| `RequestPortRepository` | Output port defining the contract for Request data persistence operations. |
+| `PartyPortRepository` | Output port defining the contract for Party retrieval operations. |
 
 ### Application Layer
 
@@ -128,11 +160,11 @@ Orchestrates the flow of data between the domain and the outside world.
 
 | Component | Description |
 |-----------|-------------|
-| `RequestApplicationService` | Implements `RequestPortService`. Coordinates fetching data from the repository, applying business rules, and mapping to DTOs. |
+| `RequestApplicationService` | Implements `RequestPortService`. **Orchestrates Request and Party aggregates** at the application layer. For listings, resolves party names via `PartyPortRepository.findPartyName()`. For details, resolves full party data via `PartyPortRepository.findById()`. This ensures proper separation of concerns following hexagonal architecture. |
 | `RequestSummaryDTO` | Lightweight DTO for list views containing: status, type, amount, currency, and dates. |
-| `RequestDetailsDTO` | Comprehensive DTO for detailed views including all request information and party data (pending implementation). |
+| `RequestDetailsDTO` | Comprehensive DTO including: request info, party name, NIF, phone, email, address, employment status, and income. |
 | `RequestSummaryDTOMapper` | Transforms `Request` domain entities to `RequestSummaryDTO`. |
-| `RequestDetailsDTOMapper` | Transforms `Request` domain entities to `RequestDetailsDTO`. |
+| `RequestDetailsDTOMapper` | Transforms `Request` domain entities to `RequestDetailsDTO`, including all party information. |
 
 ### Infrastructure Layer
 
@@ -141,10 +173,19 @@ Handles all external concerns: HTTP, database, serialization, etc.
 | Component | Description |
 |-----------|-------------|
 | `RequestControllerAdapter` | REST controller exposing endpoints. Implements the input adapter pattern by delegating to `RequestPortService`. |
-| `RequestRepositoryAdapter` | Implements `RequestPortRepository`. Bridges the domain with Spring Data MongoDB by converting between `RequestEntity` and `Request`. |
-| `RequestEntity` | MongoDB document mapping with `@Document` and `@Field` annotations. Represents the persistence model. |
+| `RequestRepositoryAdapter` | Implements `RequestPortRepository`. **Single Responsibility**: Only handles Request aggregate persistence operations. Does NOT resolve Party data — that responsibility belongs to the application layer. Bridges the domain with Spring Data MongoDB by converting between `RequestEntity` and `Request`. |
+| `PartyRepositoryAdapter` | Implements `PartyPortRepository`. **Single Responsibility**: Only handles Party aggregate operations. Provides two retrieval modes: `findById()` for full party data, and `findPartyName()` for optimized name-only queries using MongoDB projections. |
+| `RequestEntity` | MongoDB document mapping with `@Document` and `@Field` annotations. Represents the Request persistence model. |
+| `PartyEntity` | MongoDB document mapping for parties with embedded documents for demographics, contact info, employment, economic data, and credit history. |
+| `ContactInfoEntity` | Embedded document for storing contact information within PartyEntity. |
+| `DemographicsEntity` | Embedded document for demographic data (name, NIF, birth date, gender, etc.). |
+| `EconomicDataEntity` | Embedded document for economic/financial information. |
+| `EmploymentEntity` | Embedded document for employment details. |
+| `CreditHistoryEntity` | Embedded document for credit history tracking. |
 | `RequestMapper` | Bidirectional mapper between `RequestEntity` (infrastructure) and `Request` (domain). |
+| `PartyMapper` | Bidirectional mapper between `PartyEntity` (infrastructure) and `Party`/`Person` (domain). Includes `toPartialDomain()` method for creating lightweight Party objects with only name data. |
 | `RequestRepository` | Spring Data MongoDB repository with custom `@Query` methods for filtering. |
+| `PartyRepository` | Spring Data MongoDB repository for Party retrieval operations. Includes optimized projection query `findPartyNameProjectionById()` using MongoDB's `fields` projection to retrieve only `demographics.first_name` and `demographics.last_name`. |
 
 ---
 
@@ -193,7 +234,14 @@ GET /api/requests/{requestId}
   "currency": "EUR",
   "requestTermMonths": 360,
   "interestRate": 2.5,
-  "purpose": "COMPRA_VIVIENDA"
+  "purpose": "COMPRA_VIVIENDA",
+  "partyName": "Juan García López",
+  "partyNIF": "12345678A",
+  "partyPhoneNumber": "+34 612 345 678",
+  "partyEmail": "juan.garcia@email.com",
+  "partyAddress": "Calle Mayor, 15, Madrid",
+  "partyLaboralSituation": "EMPLOYED",
+  "partyIncome": "45000.00 EUR"
 }
 ```
 
@@ -353,7 +401,7 @@ The microservice implements a comprehensive logging system using **SLF4J** with 
 
 | Category | Layer | Level | Example Messages |
 |----------|-------|-------|------------------|
-| `CONTROLLER_*` | Infrastructure (Input) | INFO/WARN | Request received, Response sent, Validation errors |
+| `CONTROLLER_*` | Infrastructure (Input) | INFO/WARN & ERROR| Request received, Response sent, Validation errors |
 | `SERVICE_*` | Application | DEBUG | Operation start/end, Validation, Mapping |
 | `REPOSITORY_*` | Infrastructure (Output) | DEBUG | Database operations, Entity mapping |
 | `MAPPER_*` | Infrastructure | DEBUG | Object conversions |
@@ -372,7 +420,7 @@ The logging configuration is defined in `src/main/resources/logback-spring.xml`:
 
 | Layer | Default Level | Description |
 |-------|---------------|-------------|
-| Controllers | INFO | Request/Response tracking |
+| Controllers | INFO & ERROR| Request/Response tracking |
 | Services | DEBUG | Business logic flow |
 | Repository Adapters | DEBUG | Database operations |
 | Spring Framework | INFO | Framework internals |
@@ -408,12 +456,24 @@ log.info(LogMessage.MY_NEW_LOG, value1, value2);
 
 ### High Priority
 
-- [ ] **Add Party Information to Requests**
-  - Implement `Party` and `Person` domain entities
-  - Create relationship between `Request` and `Party`
-  - Add party data to `RequestSummaryDTO` (partyName)
-  - Complete `RequestDetailsDTO` party fields (NIF, phone, email, address, laboral situation, income)
-  - Update mappers to include party information
+- [x] **Add Party Information to Requests** ✅
+  - ~~Implement `Party` and `Person` domain entities~~
+  - ~~Create relationship between `Request` and `Party`~~
+  - ~~Add party data to `RequestSummaryDTO` (partyName)~~ ✅
+  - ~~Complete `RequestDetailsDTO` party fields (NIF, phone, email, address, laboral situation, income)~~
+  - ~~Update mappers to include party information~~
+  - ~~Implement `PartyPortRepository` and `PartyRepositoryAdapter`~~
+  - ~~Create `PartyEntity` with embedded documents for MongoDB~~
+  - ~~Add new domain value objects: `ContactInfo`, `FinancialProfile`, `SocioDemographicProfile`, `Contract`~~
+  - ~~Implement `PartyMapper` for entity-domain conversion~~
+
+- [x] **Architectural Refactoring: Aggregate Orchestration** ✅
+  - ~~Move aggregate orchestration from Infrastructure to Application layer~~
+  - ~~Add `partyId` field to `Request` domain entity for lazy loading~~
+  - ~~Remove `PartyRepositoryAdapter` dependency from `RequestRepositoryAdapter`~~
+  - ~~Implement efficient projection queries for `findPartyName()`~~
+  - ~~Apply SRP: Each adapter handles only its own aggregate~~
+  - ~~Apply DIP: Application layer depends on interfaces, not concrete classes~~
 
 ### Medium Priority
 
@@ -455,8 +515,214 @@ log.info(LogMessage.MY_NEW_LOG, value1, value2);
 
 ---
 
+## Recent Updates (March 2026)
+
+### Architectural Refactoring: Aggregate Orchestration ✅ (March 2, 2026)
+
+**Problem Identified:**
+The initial implementation had `RequestRepositoryAdapter` directly depending on `PartyRepositoryAdapter` to resolve Party data. This violated:
+- **Single Responsibility Principle (SRP)**: The adapter was handling two aggregates
+- **Dependency Inversion Principle (DIP)**: Depending on a concrete class instead of an interface
+- **Hexagonal Architecture**: Infrastructure-to-infrastructure coupling bypassed the domain
+
+**Solution Applied:**
+
+#### 1. Domain Layer Changes
+
+| Change | Description |
+|--------|-------------|
+| `Request.partyId` | Added `partyId` field as a simple reference (String). Enables lazy loading pattern where Party is resolved only when needed. |
+
+```java
+// Request.java - New field
+private String partyId;      // Reference to Party by ID (lazy loading)
+private Party party;         // Populated when needed by application layer
+```
+
+#### 2. Infrastructure Layer Changes
+
+| Change | Description |
+|--------|-------------|
+| `RequestRepositoryAdapter` | **Removed** dependency on `PartyRepositoryAdapter`. Now follows SRP by handling only Request persistence. |
+| `RequestMapper` | Maps `partyId` from entity to domain for later resolution. |
+| `PartyRepository` | Added projection query using MongoDB's `fields` for efficient name-only retrieval. |
+| `PartyMapper.toPartialDomain()` | Creates lightweight Party with only Person name data. |
+
+```java
+// RequestRepositoryAdapter - Before (WRONG)
+public class RequestRepositoryAdapter {
+    private final PartyRepositoryAdapter partyRepositoryAdapter; // ❌ Concrete dependency
+    // ... fetched and set party inside adapter
+}
+
+// RequestRepositoryAdapter - After (CORRECT)
+public class RequestRepositoryAdapter {
+    private final RequestRepository requestRepository;           // ✅ Only its own dependencies
+    private final RequestMapper requestMapper;
+    // ... only maps Request, returns partyId for later resolution
+}
+```
+
+#### 3. Application Layer Changes
+
+| Change | Description |
+|--------|-------------|
+| `RequestApplicationService.listRequests()` | After retrieving Requests, iterates and resolves Party names via `PartyPortRepository.findPartyName()` (interface dependency). |
+| `RequestApplicationService.getRequestDetails()` | Resolves full Party via `PartyPortRepository.findById()` (interface dependency). |
+
+```java
+// RequestApplicationService - Orchestration at correct layer
+public List<RequestSummaryDTO> listRequests(String partyName, String requestStatus) {
+    List<Request> requests = requestPortRepository.findWithFilters(partyName, requestStatus);
+    
+    // Orchestration: Resolve Party at application layer
+    requests.forEach(request -> {
+        if (request.getPartyId() != null) {
+            request.setParty(partyPortRepository.findPartyName(request.getPartyId())); // ✅ Interface
+        }
+    });
+    
+    return requests.stream().map(requestSummaryDTOMapper::toDTO).toList();
+}
+```
+
+### Why This Architecture Is Optimal
+
+#### 1. Single Responsibility Principle (SRP) ✅
+
+Each adapter handles **only its own aggregate**:
+
+| Adapter | Responsibility |
+|---------|---------------|
+| `RequestRepositoryAdapter` | Request persistence operations only |
+| `PartyRepositoryAdapter` | Party persistence operations only |
+| `RequestApplicationService` | **Orchestration** between aggregates |
+
+#### 2. Dependency Inversion Principle (DIP) ✅
+
+Application layer depends on **abstractions (interfaces)**, not concrete implementations:
+
+```
+RequestApplicationService
+         │
+         ├─── PartyPortRepository (interface) ◄─── PartyRepositoryAdapter (concrete)
+         │
+         └─── RequestPortRepository (interface) ◄─── RequestRepositoryAdapter (concrete)
+```
+
+#### 3. Hexagonal Architecture Compliance ✅
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         APPLICATION LAYER                                │
+│   ┌─────────────────────────────────────────────────────────────────┐   │
+│   │              RequestApplicationService                          │   │
+│   │                                                                 │   │
+│   │  1. Get Requests (via RequestPortRepository interface)          │   │
+│   │  2. For each request, resolve Party (via PartyPortRepository)   │   │
+│   │  3. Map to DTOs and return                                      │   │
+│   └─────────────────────────────────────────────────────────────────┘   │
+│                    │                              │                      │
+│                    ▼                              ▼                      │
+│           ┌─────────────────┐            ┌─────────────────┐            │
+│           │ RequestPort     │            │ PartyPort       │            │
+│           │ Repository      │            │ Repository      │            │
+│           │ (OUTPUT PORT)   │            │ (OUTPUT PORT)   │            │
+│           └────────┬────────┘            └────────┬────────┘            │
+└────────────────────┼──────────────────────────────┼─────────────────────┘
+                     │                              │
+┌────────────────────┼──────────────────────────────┼─────────────────────┐
+│                    ▼                              ▼                      │
+│           ┌─────────────────┐            ┌─────────────────┐            │
+│           │ Request         │            │ Party           │            │
+│           │ Repository      │            │ Repository      │            │
+│           │ Adapter         │            │ Adapter         │            │
+│           └─────────────────┘            └─────────────────┘            │
+│                                                                         │
+│                        INFRASTRUCTURE LAYER                             │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+#### 4. Query Efficiency ✅
+
+| Use Case | Query Strategy | Data Retrieved |
+|----------|----------------|----------------|
+| List Requests | `findPartyName()` with MongoDB projection | Only `firstName` + `lastName` |
+| Request Details | `findById()` | Complete Party data |
+
+This avoids over-fetching: listings don't load full Party documents, saving bandwidth and memory.
+
+### Party Management Implementation ✅
+
+Complete implementation of the Party aggregate with all associated components:
+
+#### Domain Layer
+
+| Component | Description |
+|-----------|-------------|
+| `Party` | Aggregate representing a customer (individual or company). Contains party type and person details. |
+| `Person` | Entity with identity data (name, NIF), and grouped profiles for demographics, financials, and contact info. |
+| `ContactInfo` | Value object containing phone number, email, and physical address. |
+| `FinancialProfile` | Value object with income, employment status, occupation, seniority, and credit history data. |
+| `SocioDemographicProfile` | Value object with birth date, gender, marital status, education, home ownership, and dependants. |
+| `Contract` | Entity representing active contracts with outstanding balance and monthly payment. |
+
+#### New Enums
+
+| Enum | Values |
+|------|--------|
+| `PartyType` | INDIVIDUAL, COMPANY |
+| `Gender` | MALE, FEMALE, OTHER |
+| `MaritalStatus` | SINGLE, MARRIED, DIVORCED, WIDOWED |
+| `Education` | PRIMARY, SECONDARY, BACHELOR, MASTER, DOCTORATE |
+| `EmploymentStatus` | EMPLOYED, SELF_EMPLOYED, UNEMPLOYED, RETIRED, STUDENT |
+| `HomeOwnership` | OWNER, RENTER, FAMILY, OTHER |
+
+#### Infrastructure Layer
+
+| Component | Description |
+|-----------|-------------|
+| `PartyEntity` | MongoDB document mapping for parties collection with embedded documents. |
+| `ContactInfoEntity` | Embedded document for contact information. |
+| `DemographicsEntity` | Embedded document for demographic data. |
+| `EconomicDataEntity` | Embedded document for economic/financial data. |
+| `EmploymentEntity` | Embedded document for employment information. |
+| `CreditHistoryEntity` | Embedded document for credit history tracking. |
+| `PartyMapper` | Bidirectional mapper between PartyEntity and Party domain objects. |
+| `PartyRepository` | Spring Data MongoDB repository for parties. |
+| `PartyRepositoryAdapter` | Implements `PartyPortRepository`, bridging domain with persistence. |
+| `PartyPortRepository` | Output port defining the contract for Party retrieval operations. |
+
+#### Application Layer Updates
+
+- `RequestApplicationService` now **orchestrates** Request and Party aggregates:
+  - `listRequests()`: Resolves party names using `PartyPortRepository.findPartyName()` (projection-based, efficient)
+  - `getRequestDetails()`: Resolves full party using `PartyPortRepository.findById()`
+- `RequestDetailsDTO` includes complete party information: name, NIF, phone, email, address, employment status, and income.
+- `RequestDetailsDTOMapper` maps party data from the domain to the DTO.
+
+#### Projection Infrastructure
+
+| Component | Description |
+|-----------|-------------|
+| `PartyNameProjection` | Spring Data interface projection for efficient name-only queries. Nested interface structure mirrors MongoDB document. |
+| `PartyRepository.findPartyNameProjectionById()` | MongoDB query with `fields` projection retrieving only `demographics.first_name` and `demographics.last_name`. |
+| `PartyMapper.toPartialDomain()` | Creates lightweight `Party` domain object with only `Person` containing name data.
+
+#### Logging Updates
+
+- Added Party-specific log messages in `LogMessage.java`:
+  - `REPOSITORY_PARTY_FIND_BY_ID_START`
+  - `REPOSITORY_PARTY_FIND_BY_ID_FOUND`
+  - `REPOSITORY_PARTY_FIND_BY_ID_NOT_FOUND`
+  - `REPOSITORY_PARTY_FIND_BY_ID_MAPPING`
+
+---
+
 ## Author
 
 **Lucía Fernández Mancebo**
 
-*Date: February 28, 2026* 
+*Date: February 28, 2026*
+
+*Last Updated: March 2, 2026*

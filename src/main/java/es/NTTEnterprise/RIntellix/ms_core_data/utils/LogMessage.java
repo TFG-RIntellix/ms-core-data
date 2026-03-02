@@ -41,7 +41,7 @@ public final class LogMessage {
     public static final String SERVICE_GET_DETAILS_FOUND = "Request found - requestId: [{}]";
     public static final String SERVICE_GET_DETAILS_MAPPING = "Mapping Request to RequestDetailsDTO - requestId: [{}]";
     public static final String SERVICE_GET_DETAILS_COMPLETE = "getRequestDetails operation completed successfully - requestId: [{}]";
-
+    public static final String SERVICE_GET_DETAILS_RETRIEVE_PARTY = "Retrieving associated Party for request - partyId: [{}]";
     // ============================================================
     // INFRASTRUCTURE LAYER - Repository Adapter
     // ============================================================
@@ -57,6 +57,16 @@ public final class LogMessage {
     public static final String REPOSITORY_FIND_WITH_FILTERS_START = "Executing findWithFilters operation - partyName: [{}], requestStatus: [{}]";
     public static final String REPOSITORY_FIND_WITH_FILTERS_RESULT = "findWithFilters operation completed - Retrieved {} entity(ies)";
     public static final String REPOSITORY_FIND_WITH_FILTERS_MAPPING = "Mapping {} RequestEntity(ies) to Request domain objects";
+
+    // Party Repository
+    public static final String REPOSITORY_PARTY_FIND_BY_ID_START = "Executing findById operation - partyId: [{}]";
+    public static final String REPOSITORY_PARTY_FIND_BY_ID_FOUND = "Party found in database - partyId: [{}]";
+    public static final String REPOSITORY_PARTY_FIND_BY_ID_NOT_FOUND = "Party not found in database - partyId: [{}]";
+    public static final String REPOSITORY_PARTY_FIND_BY_ID_MAPPING = "Mapping PartyEntity to Party domain - partyId: [{}]";
+    
+    public static final String REPOSITORY_PARTY_FIND_NAME_ONLY_START = "Executing findPartyWithNameOnly operation - partyId: [{}]";
+    public static final String REPOSITORY_PARTY_FIND_NAME_ONLY_NOT_FOUND = "Party not found for name query - partyId: [{}]";
+    public static final String REPOSITORY_PARTY_FIND_NAME_ONLY_RESULT = "Partial Party retrieved - partyId: [{}], fullName: [{}]";
 
     // ============================================================
     // INFRASTRUCTURE LAYER - Mappers

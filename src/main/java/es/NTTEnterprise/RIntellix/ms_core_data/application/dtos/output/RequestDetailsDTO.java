@@ -9,7 +9,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output;
  */
 public class RequestDetailsDTO {
 
-    // TODO: Put the parties information in order to get it from the request entity when the mapper is implemented
+    // TODO: Change the requested amount into a String and convert it when it is necessary, in order to avoid problems with the currency and the amount when it is sent to the presentation layer. The same for the income of the party.
     public String requestId;
     public String requestDate;
     public String partyName;

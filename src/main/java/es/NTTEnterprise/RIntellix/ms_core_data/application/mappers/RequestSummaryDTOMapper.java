@@ -8,23 +8,39 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestSu
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 
 /**
- * Mapper class to convert between Request (domain) and RequestSummaryDTO (application).
+ * Mapper class to convert between Request (domain) and RequestSummaryDTO
+ * (application).
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 02-28-2026
  */
 @Component
 public class RequestSummaryDTOMapper {
 
-    // I want to map all the Request entities in domain into the RequestSummaryDTO, so I need to create a method that takes a Request entity as input and returns a RequestSummaryDTO as output.
-    
+    /**
+     * Maps a Request domain object to a RequestSummaryDTO.
+     * 
+     * @param request the Request domain object to map
+     * @return the mapped RequestSummaryDTO
+     */
     public RequestSummaryDTO toDTO(Request request) {
         RequestSummaryDTO requestSummaryDTO = new RequestSummaryDTO();
+        requestSummaryDTO.setRequestId(request.getId());
         requestSummaryDTO.setStatus(request.getRequestStatus().toString());
         requestSummaryDTO.setRequestType(request.getRequestDetails().getRequestType().toString());
-        requestSummaryDTO.setAmount(request.getRequestDetails().getRequestedAmount() != null ? request.getRequestDetails().getRequestedAmount().getAmount() : null);
-        requestSummaryDTO.setCurrency(request.getRequestDetails().getRequestedAmount() != null ? request.getRequestDetails().getRequestedAmount().getCurrency() : null);
+        requestSummaryDTO.setAmount(request.getRequestDetails().getRequestedAmount() != null
+                ? request.getRequestDetails().getRequestedAmount().getAmount()
+                : null);
+        requestSummaryDTO.setCurrency(request.getRequestDetails().getRequestedAmount() != null
+                ? request.getRequestDetails().getRequestedAmount().getCurrency()
+                : null);
         requestSummaryDTO.setCreationDate(request.getCreationDate().toString());
-        requestSummaryDTO.setLastReviewDate(request.getLastReviewDate() != null ? request.getLastReviewDate().toString() : null);
+        requestSummaryDTO
+                .setLastReviewDate(request.getLastReviewDate() != null ? request.getLastReviewDate().toString() : null);
+        requestSummaryDTO.setPartyName(request.getParty() != null && request.getParty().getPersonDetails() != null
+                ? request.getParty().getPersonDetails().getFullName()
+                : null);
+
         return requestSummaryDTO;
     }
 

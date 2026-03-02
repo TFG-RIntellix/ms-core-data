@@ -11,6 +11,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestSummar
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input.RequestPortService;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.PartyPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -26,15 +27,18 @@ import lombok.extern.slf4j.Slf4j;
 public class RequestApplicationService implements RequestPortService {
     
     private final RequestPortRepository requestPortRepository;
+    private final PartyPortRepository partyPortRepository;
     private final RequestSummaryDTOMapper requestSummaryDTOMapper;
     private final RequestDetailsDTOMapper requestDetailsDTOMapper;
 
     public RequestApplicationService(RequestPortRepository requestPortRepository, 
+                                     PartyPortRepository partyPortRepository,
                                      RequestSummaryDTOMapper requestSummaryDTOMapper,
                                      RequestDetailsDTOMapper requestDetailsDTOMapper) {
         this.requestPortRepository = requestPortRepository;
         this.requestSummaryDTOMapper = requestSummaryDTOMapper;
         this.requestDetailsDTOMapper = requestDetailsDTOMapper;
+        this.partyPortRepository = partyPortRepository;
     }
 
     @Override
@@ -43,6 +47,13 @@ public class RequestApplicationService implements RequestPortService {
         
         List<Request> requests = requestPortRepository.findWithFilters(partyName, requestStatus);
         log.debug(LogMessage.SERVICE_LIST_REQUESTS_RESULT, requests.size());
+        
+        // Obtain partyName for each request arrending to SPA principles.
+        requests.forEach(request -> {
+            if (request.getPartyId() != null) {
+                request.setParty(partyPortRepository.findPartyName(request.getPartyId()));
+            }
+        });
         
         log.debug(LogMessage.SERVICE_LIST_REQUESTS_MAPPING, requests.size());
         return requests.stream()
@@ -65,7 +76,11 @@ public class RequestApplicationService implements RequestPortService {
         Request request = requestPortRepository.findById(requestId);
         log.debug(LogMessage.SERVICE_GET_DETAILS_FOUND, requestId);
         
-        log.debug(LogMessage.SERVICE_GET_DETAILS_MAPPING, requestId);
+        // Resolve full Party for detailed view (orchestration at application layer)
+        if (request.getPartyId() != null) {
+            request.setParty(partyPortRepository.findById(request.getPartyId()));
+        }
+
         RequestDetailsDTO result = requestDetailsDTOMapper.toDTO(request);
         
         log.debug(LogMessage.SERVICE_GET_DETAILS_COMPLETE, requestId);

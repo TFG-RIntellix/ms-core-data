@@ -11,11 +11,14 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestStatus;
  */
 public class Request {
 
+private String id;
+private String partyId; // Reference to Party by ID (for lazy loading)
 private Date creationDate;
 private Date lastReviewDate;
 private PropertyCollateral collateral;
 private RequestDetails requestDetails;
 private RequestStatus requestStatus; 
+private Party party; // Association to Party (populated when needed)
 
     /**
      * Constructor of the Request class.
@@ -32,6 +35,22 @@ private RequestStatus requestStatus;
     }
     
     // Getters and setters
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getPartyId() {
+        return partyId;
+    }
+
+    public void setPartyId(String partyId) {
+        this.partyId = partyId;
+    }
 
     public Date getCreationDate() {
         return creationDate;
@@ -71,6 +90,14 @@ private RequestStatus requestStatus;
 
     public void setLastReviewDate(Date lastReviewDate) {
         this.lastReviewDate = lastReviewDate;
+    }
+
+    public Party getParty() {
+        return party;
+    }
+
+    public void setParty(Party party) {
+        this.party = party;
     }
 
     // toString, hashCode and equals methods
