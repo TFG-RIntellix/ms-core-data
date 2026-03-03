@@ -23,24 +23,6 @@ public class Party {
         this.personDetails = personDetails;
     }
 
-    /**
-     * Calculates the total debt of the party.
-     * Must be implemented by subclasses.
-     * @return the total debt as Money
-     */
-    public Money getTotalDebt() {
-        return new Money(0.0, "EUR");
-    }
-
-    /**
-     * Calculates the global Debt-To-Income ratio.
-     * Must be implemented by subclasses.
-     * @return the DTI ratio as a Double
-     */
-    public Double getGlobalDTI() {
-        return 0.0;
-    }
-
     // Getters and Setters
 
     public String getId() {

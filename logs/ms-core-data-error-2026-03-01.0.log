@@ -1,7 +1,20 @@
-2026-03-03 01:44:50.184 ERROR [http-nio-8080-exec-8] e.N.R.m.i.a.i.RequestControllerAdapter : Unexpected error processing request: Cannot invoke "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Money.toString()" because the return value of "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RequestDetails.getRequestedAmount()" is null
-java.lang.NullPointerException: Cannot invoke "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Money.toString()" because the return value of "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RequestDetails.getRequestedAmount()" is null
-	at es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestDetailsDTOMapper.toDTO(RequestDetailsDTOMapper.java:28)
-	at es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.RequestApplicationService.getRequestDetails(RequestApplicationService.java:103)
+2026-03-01 13:08:40.540 ERROR [main] o.s.b.d.LoggingFailureAnalysisReporter : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2026-03-01 15:34:47.103 ERROR [http-nio-8080-exec-9] e.N.R.m.i.a.i.RequestControllerAdapter : Unexpected error processing request: Cannot invoke "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party.getId()" because the return value of "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request.getParty()" is null
+java.lang.NullPointerException: Cannot invoke "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party.getId()" because the return value of "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request.getParty()" is null
+	at es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.RequestApplicationService.getRequestDetails(RequestApplicationService.java:73)
 	at es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.input.RequestControllerAdapter.getRequestDetails(RequestControllerAdapter.java:71)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
@@ -48,4 +61,4 @@ java.lang.NullPointerException: Cannot invoke "es.NTTEnterprise.RIntellix.ms_cor
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
 	at java.base/java.lang.Thread.run(Thread.java:842)
-2026-03-03 01:44:50.193 ERROR [http-nio-8080-exec-8] e.N.R.m.i.a.i.RequestControllerAdapter : Error response sent - Status: 500 - Reason: Internal server error
+2026-03-01 15:34:47.109 ERROR [http-nio-8080-exec-9] e.N.R.m.i.a.i.RequestControllerAdapter : Error response sent - Status: 500 - Reason: Internal server error

@@ -46,7 +46,9 @@ public class PartyRepositoryAdapter implements PartyPortRepository {
 
         log.debug(LogMessage.REPOSITORY_PARTY_FIND_BY_ID_FOUND, partyId);
         log.debug(LogMessage.REPOSITORY_PARTY_FIND_BY_ID_MAPPING, partyId);
-        return partyMapper.toDomain(partyEntityOpt.get());
+        Party party = partyMapper.toDomain(partyEntityOpt.get());
+
+        return party;
 
     }
 

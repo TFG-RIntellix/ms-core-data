@@ -83,11 +83,16 @@ src/main/java/es/NTTEnterprise/RIntellix/ms_core_data/
 │   │   ├── ContactInfo.java             # Value object for contact data
 │   │   ├── FinancialProfile.java        # Value object for financial data
 │   │   ├── SocioDemographicProfile.java # Value object for demographic data
-│   │   └── Contract.java                # Entity for active contracts
+│   │   ├── Contract.java                # Abstract base for all contract types
+│   │   ├── LoanContract.java            # PRESTAMO (extends Contract)
+│   │   ├── MortgageContract.java        # HIPOTECA (extends LoanContract)
+│   │   └── CreditCardContract.java      # TARJETA_CREDITO (extends Contract)
 │   ├── enums/
 │   │   ├── RequestStatus.java           # PENDIENTE_DE_REVISION, APROBADO, etc.
 │   │   ├── RequestType.java             # PRESTAMO, HIPOTECA, TARJETA_CREDITO
 │   │   ├── Purpose.java                 # COMPRA_VIVIENDA, EDUCACION, etc.
+│   │   ├── ContractType.java            # PRESTAMO, HIPOTECA, TARJETA_CREDITO
+│   │   ├── ContractStatus.java          # ACTIVO, PAGADO, EN_MORA
 │   │   ├── PartyType.java               # INDIVIDUAL, COMPANY
 │   │   ├── Gender.java                  # MALE, FEMALE, OTHER
 │   │   ├── MaritalStatus.java           # SINGLE, MARRIED, DIVORCED, WIDOWED
@@ -101,17 +106,20 @@ src/main/java/es/NTTEnterprise/RIntellix/ms_core_data/
 │       │   └── RequestPortService.java  # Input port (use case interface)
 │       └── output/
 │           ├── RequestPortRepository.java # Output port (repository interface)
-│           └── PartyPortRepository.java   # Output port for Party operations
+│           ├── PartyPortRepository.java   # Output port for Party operations
+│           └── ContractPortRepository.java # Output port for Contract operations
 └── infraestructure/                     # INFRASTRUCTURE LAYER
     ├── adapters/
     │   ├── input/
     │   │   └── RequestControllerAdapter.java # REST API controller
     │   └── output/
     │       ├── RequestRepositoryAdapter.java # Request MongoDB adapter (SRP: only Request)
-    │       └── PartyRepositoryAdapter.java   # Party MongoDB adapter (SRP: only Party)
+│           ├── PartyRepositoryAdapter.java   # Party MongoDB adapter (loads contracts into aggregate)
+│           └── ContractRepositoryAdapter.java # Contract MongoDB adapter (SRP: only Contract)
     ├── entities/
     │   ├── RequestEntity.java           # MongoDB document mapping
     │   ├── PartyEntity.java             # Party MongoDB document
+    │   ├── ContractEntity.java          # Contract MongoDB document (union of all types)
     │   └── embedded/
     │       ├── ContactInfoEntity.java   # Embedded contact data
     │       ├── DemographicsEntity.java  # Embedded demographics
@@ -120,12 +128,14 @@ src/main/java/es/NTTEnterprise/RIntellix/ms_core_data/
     │       └── CreditHistoryEntity.java # Embedded credit history
     ├── mappers/
     │   ├── RequestMapper.java           # Entity ↔ Domain (includes partyId mapping)
-    │   └── PartyMapper.java             # Party Entity ↔ Domain (includes toPartialDomain)
+    │   ├── PartyMapper.java             # Party Entity ↔ Domain (includes toPartialDomain)
+    │   └── ContractMapper.java          # Contract Entity → Domain (Map-based strategy, no switches)
     ├── projections/
     │   └── PartyNameProjection.java     # Spring Data projection for efficient name queries
     └── repository/
         ├── RequestRepository.java       # Spring Data MongoDB interface
-        └── PartyRepository.java         # Party Spring Data interface (with projection query)
+        ├── PartyRepository.java         # Party Spring Data interface (with projection query)
+        └── ContractRepository.java      # Contract Spring Data interface (by partyId queries)
 ├── utils/                               # UTILITIES
 │   └── LogMessage.java                  # Centralized log message constants
 ```
@@ -149,7 +159,10 @@ The **heart of the application** containing pure business logic with no external
 | `ContactInfo` | Value object for contact information: phone number, email, and physical address. |
 | `FinancialProfile` | Value object containing income data, employment status, occupation, seniority, and credit history information. |
 | `SocioDemographicProfile` | Value object with birth date, gender, marital status, education level, home ownership, country of residence, and number of dependants. |
-| `Contract` | Entity representing an active contract with outstanding balance and monthly payment information. |
+| `Contract` | **Abstract base class** for all financial contracts. Defines `calculateMonthlyPayment()` and `getOutstandingDebt()` as abstract methods, enabling polymorphic DTI calculation without switch statements. |
+| `LoanContract` | Concrete entity for PRESTAMO contracts. Extends `Contract`. Monthly payment comes directly from the database (pre-calculated French amortization). Also serves as base class for `MortgageContract`. |
+| `MortgageContract` | Concrete entity for HIPOTECA contracts. **Extends `LoanContract`** (a mortgage IS-A loan with additional property fields). Adds `propertyValue`, `isFirstHome`, and LTV calculation. |
+| `CreditCardContract` | Concrete entity for TARJETA_CREDITO contracts. Extends `Contract`. Calculates monthly payment based on revolving mode: non-revolving = `currentBalance / 12`; revolving = French system over 12 months with interest. |
 | `RequestPortService` | Input port defining the contract for use cases: `listRequests()` and `getRequestDetails()`. |
 | `RequestPortRepository` | Output port defining the contract for Request data persistence operations. |
 | `PartyPortRepository` | Output port defining the contract for Party retrieval operations. |
@@ -186,6 +199,11 @@ Handles all external concerns: HTTP, database, serialization, etc.
 | `PartyMapper` | Bidirectional mapper between `PartyEntity` (infrastructure) and `Party`/`Person` (domain). Includes `toPartialDomain()` method for creating lightweight Party objects with only name data. |
 | `RequestRepository` | Spring Data MongoDB repository with custom `@Query` methods for filtering. |
 | `PartyRepository` | Spring Data MongoDB repository for Party retrieval operations. Includes optimized projection query `findPartyNameProjectionById()` using MongoDB's `fields` projection to retrieve only `demographics.first_name` and `demographics.last_name`. |
+| `ContractEntity` | MongoDB document mapping for the "contracts" collection. Uses a single-document structure (union of all contract-type fields) since MongoDB stores all types in the same collection with discriminated fields by `contract_type`. |
+| `ContractMapper` | Maps `ContractEntity` → domain `Contract` hierarchy using a **Map-based strategy pattern**: a `Map<String, Function<ContractEntity, Contract>>` dispatches by `contract_type` without switches. To add a new type: create a subclass, add a mapping method, register in the map. |
+| `ContractRepository` | Spring Data MongoDB repository for contracts. Provides `findByPartyId()` and `findByPartyIdAndStatus()` queries. |
+| `ContractRepositoryAdapter` | Implements `ContractPortRepository`. Bridges domain with Contract persistence, delegating to `ContractRepository` and `ContractMapper`. |
+| `PartyRepositoryAdapter` | Now also loads active contracts as part of the Party aggregate via `ContractPortRepository.findActiveByPartyId()`, attaching them to `Person.activeContracts`. |
 
 ---
 
@@ -404,6 +422,8 @@ The microservice implements a comprehensive logging system using **SLF4J** with 
 | `CONTROLLER_*` | Infrastructure (Input) | INFO/WARN & ERROR| Request received, Response sent, Validation errors |
 | `SERVICE_*` | Application | DEBUG | Operation start/end, Validation, Mapping |
 | `REPOSITORY_*` | Infrastructure (Output) | DEBUG | Database operations, Entity mapping |
+| `REPOSITORY_CONTRACT_*` | Infrastructure (Output) | DEBUG | Contract loading by partyId |
+| `DOMAIN_*` | Domain | DEBUG | DTI, LTV, total debt, monthly payment calculations |
 | `MAPPER_*` | Infrastructure | DEBUG | Object conversions |
 | `EXCEPTION_*` | All | WARN/ERROR | Entity not found, Illegal arguments |
 
@@ -494,6 +514,17 @@ log.info(LogMessage.MY_NEW_LOG, value1, value2);
 
 ### Low Priority
 
+- [x] **Implement Contract Hierarchy & DTI/LTV Calculations** ✅
+  - ~~Model Contract as abstract base with polymorphic subtypes (LoanContract, MortgageContract, CreditCardContract)~~
+  - ~~MortgageContract extends LoanContract (shared monthly payment logic from DB)~~
+  - ~~CreditCardContract with revolving/non-revolving monthly payment formulas~~
+  - ~~DTI = Σ(monthly payments) / Gross Monthly Income~~
+  - ~~LTV = Outstanding Balance / Property Value (mortgages only)~~
+  - ~~Map-based strategy pattern in ContractMapper (no switches)~~
+  - ~~ContractEntity, ContractRepository, ContractRepositoryAdapter~~
+  - ~~Load contracts into Party aggregate via ContractPortRepository~~
+  - ~~DEBUG-level logging for DTI, LTV, total debt, monthly payment calculations~~
+
 - [ ] **Enhance Mappers Based on Request Type**
   - Differentiate DTO fields based on `RequestType`:
     - `PRESTAMO`: Show term, interest rate, repayment system
@@ -501,6 +532,58 @@ log.info(LogMessage.MY_NEW_LOG, value1, value2);
     - `TARJETA_CREDITO`: Show credit limit, revolving flag
   - Consider polymorphic DTOs or conditional field inclusion
   - Implement a mapper strategy pattern for type-specific mapping
+
+### High Priority
+
+- [ ] **Implement Scoring, Simulation & Report Endpoints**
+  - **Scoring**
+    - [ ] Define `Scoring` domain entity (fields: id, requestId, result, parameters, createdAt, etc.)
+    - [ ] Create `ScoringEntity` (infrastructure) and `ScoringMapper`
+    - [ ] Create `ScoringRepository` (Spring Data MongoDB) and `ScoringPortRepository` (output port)
+    - [ ] Implement `ScoringRepositoryAdapter`
+    - [ ] Create `ScoringDTO` (output) and `ScoringDTOMapper` (application)
+    - [ ] Implement `GET api/requests/{id}/scoring` — recovers the active scoring linked to a request
+    - [ ] Define error handling: 404 (not found), 401/403 (auth)
+  - **Simulations**
+    - [ ] Define `Simulation` domain entity (fields: id, requestId, scoringId, parameters, status, createdAt, etc.)
+    - [ ] Create `SimulationEntity`, `SimulationMapper`
+    - [ ] Create `SimulationRepository` and `SimulationPortRepository`
+    - [ ] Implement `SimulationRepositoryAdapter`
+    - [ ] Create `SimulationDTO`, `SimulationCreateDTO` (input), `SimulationDTOMapper`
+    - [ ] Implement `GET api/simulations/{id}` — retrieves a simulation by id
+    - [ ] Implement `POST api/simulations` — persists a new simulation generated by ms-risk-engine
+    - [ ] Implement `PATCH api/simulations/{id}` — partial update (e.g. status transitions)
+    - [ ] Implement `DELETE api/simulations/{id}` — deletes a simulation (guard: must not be archived → 409)
+    - [ ] Define error handling: 400, 404, 409, 401/403, 500
+  - **Reports** *(deferred — final phase of implementation)*
+    - [ ] Define `Report` domain entity
+    - [ ] Create `ReportEntity`, `ReportMapper`, `ReportRepository`, `ReportPortRepository`, `ReportRepositoryAdapter`
+    - [ ] Create `ReportDTO`, `ReportCreateDTO`, `ReportDTOMapper`
+    - [ ] Implement `POST /reports` — persists a new report generated by ms-reporting
+    - [ ] Implement `GET /reports?requestId={id}&scoringId={id}` — retrieves the report linked to a scoring
+    - [ ] Define error handling: 400, 404, 409, 401/403, 500
+
+- [ ] **Implement Kafka Producer & Consumer (Async Scoring Flow)**
+  - **Infrastructure setup**
+    - [ ] Add Spring for Apache Kafka dependency to `pom.xml`
+    - [ ] Configure Kafka broker connection, topics, serializer/deserializer in `application.properties`
+    - [ ] Define topic names as constants (e.g. `scoring.request`, `scoring.result`)
+  - **Producer (outbound event → AI model input)**
+    - [ ] Define `ScoringRequestEvent` DTO with the fields required as input for the AI model
+    - [ ] Create output port `ScoringEventPublisher` (domain/ports/output)
+    - [ ] Implement `KafkaScoringEventPublisher` adapter (infrastructure/adapters/output)
+    - [ ] Wire the producer into the application service: when a scoring is triggered, publish the event to Kafka
+    - [ ] Add structured logging for event publication (success / failure)
+  - **Consumer (inbound event → scoring persistence)**
+    - [ ] Create `KafkaScoringResultConsumer` (infrastructure/adapters/input) with `@KafkaListener`
+    - [ ] Define `ScoringResultEvent` DTO with the scoring result payload
+    - [ ] On message received: map event → domain entity → persist via `ScoringPortRepository` (same flow as a POST)
+    - [ ] Add idempotency guard (e.g. check if scoring already exists for the given requestId)
+    - [ ] Add structured logging for event consumption and persistence
+  - **Testing & resilience**
+    - [ ] Verify end-to-end async flow: produce event → consume result → verify persistence
+    - [ ] Define error/retry strategy (DLQ — Dead Letter Queue) for failed consumptions
+    - [ ] Document Kafka topics, event schemas, and async flow in README
 
 ### Future Enhancements
 
@@ -652,6 +735,111 @@ RequestApplicationService
 
 This avoids over-fetching: listings don't load full Party documents, saving bandwidth and memory.
 
+### Contract Hierarchy & DTI/LTV Calculations ✅ (March 2–3, 2026)
+
+**Objective:** Model the different financial contract types (PRESTAMO, HIPOTECA, TARJETA_CREDITO) as domain entities within the Party aggregate, and implement DTI (Debt-To-Income) and LTV (Loan-To-Value) calculations using polymorphism instead of switch statements.
+
+#### Domain Model: Contract Hierarchy
+
+```
+Contract (abstract)
+├── calculateMonthlyPayment(): Money   [abstract]
+├── getOutstandingDebt(): Money         [abstract]
+│
+├── LoanContract (PRESTAMO)
+│   ├── monthlyPayment from DB (French amortization, pre-calculated)
+│   └── getOutstandingDebt() → outstandingBalance
+│
+├── MortgageContract extends LoanContract (HIPOTECA)
+│   ├── Inherits calculateMonthlyPayment() and getOutstandingDebt()
+│   ├── propertyValue, isFirstHome
+│   └── getLTV() = outstandingBalance / propertyValue
+│
+└── CreditCardContract (TARJETA_CREDITO)
+    ├── Non-revolving: M = currentBalance / 12
+    └── Revolving: M = currentBalance × [i(1+i)^12 / ((1+i)^12 − 1)]
+```
+
+**Key design decision:** `MortgageContract extends LoanContract` because a mortgage IS-A loan with additional property-related fields. Both share the same monthly payment logic (stored directly from the database), avoiding code duplication.
+
+#### DTI Calculation Formula
+
+```
+DTI = Σ(monthly payments from all active contracts) / Gross Monthly Income
+
+Where:
+  Gross Monthly Income = Annual Income / 12
+
+Monthly payment per contract type:
+  - PRESTAMO / HIPOTECA → monthly_payment (from DB, pre-calculated with French system)
+  - TARJETA_CREDITO (non-revolving) → current_balance / 12
+  - TARJETA_CREDITO (revolving) → French system over 12 months with interest rate
+```
+
+#### LTV Calculation Formula (Mortgages only)
+
+```
+LTV = Outstanding Balance / Property Value
+```
+
+#### Infrastructure: Map-Based Strategy Pattern (No Switches)
+
+The `ContractMapper` uses a `Map<String, Function<ContractEntity, Contract>>` to dispatch entity-to-domain conversion by contract type, avoiding switch/if-else chains:
+
+```java
+private static final Map<String, Function<ContractEntity, Contract>> MAPPERS = Map.of(
+    "PRESTAMO",        ContractMapper::mapToLoanContract,
+    "HIPOTECA",        ContractMapper::mapToMortgageContract,
+    "TARJETA_CREDITO", ContractMapper::mapToCreditCardContract
+);
+```
+
+To add a new contract type: (1) create domain subclass, (2) add mapping method, (3) register in the map.
+
+#### New Domain Enums
+
+| Enum | Values |
+|------|--------|
+| `ContractType` | PRESTAMO, HIPOTECA, TARJETA_CREDITO |
+| `ContractStatus` | ACTIVO, PAGADO, EN_MORA |
+
+#### New Infrastructure Components
+
+| Component | Description |
+|-----------|-------------|
+| `ContractEntity` | MongoDB document mapping for the `contracts` collection (single-document union of all contract-type fields) |
+| `ContractMapper` | Entity → Domain using Map-based strategy pattern (no switches) |
+| `ContractRepository` | Spring Data MongoDB repository with `findByPartyId()` and `findByPartyIdAndStatus()` |
+| `ContractRepositoryAdapter` | Implements `ContractPortRepository`, bridges domain with persistence |
+| `ContractPortRepository` | Output port with `findByPartyId()` and `findActiveByPartyId()` |
+
+#### Party Aggregate Integration (DDD)
+
+Contracts are loaded as part of the Party aggregate in `PartyRepositoryAdapter.findById()`:
+
+```java
+// Load active contracts as part of the Party aggregate
+List<Contract> activeContracts = contractPortRepository.findActiveByPartyId(partyId);
+party.getPersonDetails().setActiveContracts(activeContracts);
+```
+
+This follows DDD principles: contracts hang off the Party aggregate root and are accessed through `Person.getActiveContracts()`.
+
+#### Domain Calculation Logging
+
+Added `@Slf4j` logging at DEBUG level and centralized log constants in `LogMessage.java` for traceability of financial calculations:
+
+| Constant | Description |
+|----------|-------------|
+| `DOMAIN_TOTAL_DEBT_RESULT` | Total outstanding debt result |
+| `DOMAIN_TOTAL_MONTHLY_PAYMENT_RESULT` | Total monthly debt payment result |
+| `DOMAIN_DTI_RESULT` | DTI calculation (monthly payment, gross monthly income, DTI ratio) |
+| `DOMAIN_DTI_NO_INCOME` | DTI skipped due to missing/zero income |
+| `DOMAIN_LTV_RESULT` | LTV calculation (outstanding balance, property value, LTV ratio) |
+| `DOMAIN_LTV_NO_DATA` | LTV skipped due to missing data |
+
+---
+
 ### Party Management Implementation ✅
 
 Complete implementation of the Party aggregate with all associated components:
@@ -725,4 +913,4 @@ Complete implementation of the Party aggregate with all associated components:
 
 *Date: February 28, 2026*
 
-*Last Updated: March 2, 2026*
+*Last Updated: March 3, 2026*

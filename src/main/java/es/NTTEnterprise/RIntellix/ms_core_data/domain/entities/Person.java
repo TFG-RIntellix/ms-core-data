@@ -3,6 +3,8 @@ package es.NTTEnterprise.RIntellix.ms_core_data.domain.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Entity representing a Person (individual party).
@@ -10,6 +12,7 @@ import java.util.List;
  * @author Lucía Fernández Mancebo
  * @Date 03-01-2026
  */
+@Slf4j
 public class Person {
 
     // Identity
@@ -66,8 +69,9 @@ public class Person {
 
     /**
      * Calculates the total outstanding debt from all active contracts.
+     * Each contract subtype provides its outstanding debt via getOutstandingDebt().
      * If there are no active contracts, returns a Money object with zero amount.
-     * 
+     *
      * @return the total debt as a Money object
      */
     public Money getTotalDebt() {
@@ -77,31 +81,65 @@ public class Person {
 
         Money totalDebt = new Money(0.0, "EUR");
         for (Contract contract : activeContracts) {
-            if (contract.getOutstandingBalance() != null) {
-                totalDebt = totalDebt.add(contract.getOutstandingBalance());
+            Money debt = contract.getOutstandingDebt();
+            if (debt != null) {
+                totalDebt = totalDebt.add(debt);
             }
         }
+        log.debug(LogMessage.DOMAIN_TOTAL_DEBT_RESULT, totalDebt);
         return totalDebt;
     }
+
     /**
-     * Method to calculate the global Debt-To-Income ratio for the person.
-     * The form is the following: DTI = Total Debt / Annual Income.
-     * If the annual income is zero or not available, returns null to indicate that DTI cannot be calculated.
+     * Calculates the sum of all monthly payment contributions from active contracts.
+     * Each contract subtype calculates its own monthly payment using the appropriate formula.
+     *
+     * @return the total monthly debt payment as a Money object
+     */
+    public Money getTotalMonthlyDebtPayment() {
+        if (activeContracts == null || activeContracts.isEmpty()) {
+            return new Money(0.0, "EUR");
+        }
+
+        Money totalMonthly = new Money(0.0, "EUR");
+        for (Contract contract : activeContracts) {
+            Money monthly = contract.calculateMonthlyPayment();
+            if (monthly != null) {
+                totalMonthly = totalMonthly.add(monthly);
+            }
+        }
+        log.debug(LogMessage.DOMAIN_TOTAL_MONTHLY_PAYMENT_RESULT, totalMonthly);
+        return totalMonthly;
+    }
+    /**
+     * Calculates the global Debt-To-Income (DTI) ratio for the person.
+     * Formula: DTI = Σ(monthly payments) / Gross Monthly Income
+     * Where: Gross Monthly Income = Annual Income / 12
+     *
+     * Each contract type contributes its monthly payment via calculateMonthlyPayment():
+     * - Loan/Mortgage: French amortization system (cuota constante)
+     * - CreditCard Non-Revolving: currentBalance / 12
+     * - CreditCard Revolving: French system over 12 months with interest
+     *
      * @return the DTI ratio as a Double, or null if it cannot be calculated
      */
     public Double getGlobalDTI() {
-        if (financials == null || financials.getAnnualIncome() == null 
-            || financials.getAnnualIncome().getAmount() == null 
-            || financials.getAnnualIncome().getAmount() == 0) {
+        if (financials == null || financials.getAnnualIncome() == null
+                || financials.getAnnualIncome().getAmount() == null
+                || financials.getAnnualIncome().getAmount() == 0) {
+            log.debug(LogMessage.DOMAIN_DTI_NO_INCOME);
             return null;
         }
 
-        Money totalDebt = getTotalDebt();
-        if (totalDebt == null || totalDebt.getAmount() == null) {
+        Money totalMonthlyPayment = getTotalMonthlyDebtPayment();
+        if (totalMonthlyPayment == null || totalMonthlyPayment.getAmount() == null) {
             return 0.0;
         }
 
-        return totalDebt.getAmount() / financials.getAnnualIncome().getAmount();
+        Double grossMonthlyIncome = financials.getAnnualIncome().getAmount() / 12.0;
+        Double dti = totalMonthlyPayment.getAmount() / grossMonthlyIncome;
+        log.debug(LogMessage.DOMAIN_DTI_RESULT, totalMonthlyPayment, grossMonthlyIncome, dti);
+        return dti;
     }
 
     // Getters and Setters

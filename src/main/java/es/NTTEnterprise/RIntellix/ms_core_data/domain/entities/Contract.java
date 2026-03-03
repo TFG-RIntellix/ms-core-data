@@ -1,25 +1,57 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.domain.entities;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.ContractStatus;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.ContractType;
+
+import java.time.LocalDate;
+
 /**
- * Entity representing a Contract.
- * Placeholder for active contracts associated with a Person.
+ * Abstract base class representing a financial contract.
+ * Each subtype (Loan, Mortgage, CreditCard) implements its own monthly payment
+ * calculation logic for DTI purposes, leveraging polymorphism instead of switches.
+ * Contracts are entities within the Party aggregate, accessed through Person.
+ *
  * @author Lucía Fernández Mancebo
- * @Date 03-01-2026
+ * @Date 03-02-2026
  */
-public class Contract {
+public abstract class Contract {
 
     private String id;
-    private Money outstandingBalance;
-    private Money monthlyPayment;
+    private ContractType contractType;
+    private ContractStatus status;
+    private LocalDate openDate;
+    private Double interestRate;
 
-    public Contract() {
+    protected Contract() {
     }
 
-    public Contract(String id, Money outstandingBalance, Money monthlyPayment) {
+    protected Contract(String id, ContractType contractType, ContractStatus status,
+         LocalDate openDate, Double interestRate) {
         this.id = id;
-        this.outstandingBalance = outstandingBalance;
-        this.monthlyPayment = monthlyPayment;
+        this.contractType = contractType;
+        this.status = status;
+        this.openDate = openDate;
+        this.interestRate = interestRate;
     }
+
+    /**
+     * Calculates the estimated monthly payment contribution for DTI calculation.
+     * Each contract subtype implements its own formula:
+     * - Loan/Mortgage: French amortization system (cuota constante)
+     * - CreditCard Non-Revolving: currentBalance / 12
+     * - CreditCard Revolving: French system over 12 months with interest
+     *
+     * @return the monthly payment as a Money object
+     */
+    public abstract Money calculateMonthlyPayment();
+
+    /**
+     * Returns the outstanding debt balance for this contract.
+     * Used by Person.getTotalDebt() to sum all active debts.
+     *
+     * @return the outstanding debt as a Money object
+     */
+    public abstract Money getOutstandingDebt();
 
     // Getters and Setters
 
@@ -31,19 +63,35 @@ public class Contract {
         this.id = id;
     }
 
-    public Money getOutstandingBalance() {
-        return outstandingBalance;
+    public ContractType getContractType() {
+        return contractType;
     }
 
-    public void setOutstandingBalance(Money outstandingBalance) {
-        this.outstandingBalance = outstandingBalance;
+    public void setContractType(ContractType contractType) {
+        this.contractType = contractType;
     }
 
-    public Money getMonthlyPayment() {
-        return monthlyPayment;
+    public ContractStatus getStatus() {
+        return status;
     }
 
-    public void setMonthlyPayment(Money monthlyPayment) {
-        this.monthlyPayment = monthlyPayment;
+    public void setStatus(ContractStatus status) {
+        this.status = status;
+    }
+
+    public LocalDate getOpenDate() {
+        return openDate;
+    }
+
+    public void setOpenDate(LocalDate openDate) {
+        this.openDate = openDate;
+    }
+
+    public Double getInterestRate() {
+        return interestRate;
+    }
+
+    public void setInterestRate(Double interestRate) {
+        this.interestRate = interestRate;
     }
 }

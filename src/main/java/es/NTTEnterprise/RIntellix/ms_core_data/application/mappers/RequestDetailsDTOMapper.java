@@ -25,12 +25,7 @@ public class RequestDetailsDTOMapper {
               requestDetailsDTO.setRequestDate(request.getCreationDate().toString());
               requestDetailsDTO.setRequestType(request.getRequestDetails().getRequestType().toString());
               requestDetailsDTO.setStatus(request.getRequestStatus().toString());
-              requestDetailsDTO.setRequestedAmount(request.getRequestDetails().getRequestedAmount() != null
-                            ? request.getRequestDetails().getRequestedAmount().getAmount()
-                            : null);
-              requestDetailsDTO.setCurrency(request.getRequestDetails().getRequestedAmount() != null
-                            ? request.getRequestDetails().getRequestedAmount().getCurrency()
-                            : null);
+              requestDetailsDTO.setRequestedAmount(request.getRequestDetails().getRequestedAmount() != null ? request.getRequestDetails().getRequestedAmount().toString() : null);
               requestDetailsDTO.setRequestTermMonths(request.getRequestDetails().getTermMonths());
               requestDetailsDTO.setInterestRate(request.getRequestDetails().getInterestRate());
               requestDetailsDTO.setPurpose(request.getRequestDetails().getPurpose().toString());

@@ -22,8 +22,7 @@ public class RequestDetailsDTO {
     public String partyIncome;
     public String requestType;
     public String status;
-    public Double requestedAmount;
-    public String currency;
+    public String requestedAmount;
     public Integer requestTermMonths;
     public Double interestRate;
     public String purpose;
@@ -129,20 +128,12 @@ public class RequestDetailsDTO {
         this.status = status;
     }
 
-    public Double getRequestedAmount() {
+    public String getRequestedAmount() {
         return requestedAmount;
     }
 
-    public void setRequestedAmount(Double requestedAmount) {
+    public void setRequestedAmount(String requestedAmount) {
         this.requestedAmount = requestedAmount;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
     }
 
     public Integer getRequestTermMonths() {

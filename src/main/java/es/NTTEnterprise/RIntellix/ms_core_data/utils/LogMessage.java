@@ -68,6 +68,14 @@ public final class LogMessage {
     public static final String REPOSITORY_PARTY_FIND_NAME_ONLY_NOT_FOUND = "Party not found for name query - partyId: [{}]";
     public static final String REPOSITORY_PARTY_FIND_NAME_ONLY_RESULT = "Partial Party retrieved - partyId: [{}], fullName: [{}]";
 
+    // Contract Repository
+    public static final String REPOSITORY_CONTRACT_FIND_BY_PARTY_START = "Executing findByPartyId operation on contracts - partyId: [{}]";
+    public static final String REPOSITORY_CONTRACT_FIND_BY_PARTY_RESULT = "findByPartyId operation completed - partyId: [{}], contracts found: {}";
+    public static final String REPOSITORY_CONTRACT_FIND_ACTIVE_START = "Executing findActiveByPartyId operation on contracts - partyId: [{}]";
+    public static final String REPOSITORY_CONTRACT_FIND_ACTIVE_RESULT = "findActiveByPartyId operation completed - partyId: [{}], active contracts found: {}";
+    public static final String REPOSITORY_PARTY_LOADING_CONTRACTS = "Loading active contracts for Party aggregate - partyId: [{}]";
+    public static final String REPOSITORY_PARTY_CONTRACTS_LOADED = "Active contracts loaded for Party aggregate - partyId: [{}], count: {}";
+
     // ============================================================
     // INFRASTRUCTURE LAYER - Mappers
     // ============================================================
@@ -80,6 +88,17 @@ public final class LogMessage {
     public static final String MAPPER_TO_DTO_START = "Starting conversion from Request to DTO";
     public static final String MAPPER_TO_DTO_NULL = "Received null Request - returning null";
     public static final String MAPPER_TO_DTO_COMPLETE = "Conversion to DTO completed successfully";
+
+    // ============================================================
+    // DOMAIN LAYER - Calculations
+    // ============================================================
+
+    public static final String DOMAIN_TOTAL_DEBT_RESULT = "Total outstanding debt calculated - result: {}";
+    public static final String DOMAIN_TOTAL_MONTHLY_PAYMENT_RESULT = "Total monthly debt payment calculated - result: {}";
+    public static final String DOMAIN_DTI_RESULT = "Global DTI calculated - totalMonthlyPayment: {}, grossMonthlyIncome: {}, DTI: {}";
+    public static final String DOMAIN_DTI_NO_INCOME = "DTI calculation skipped - annual income not available or zero";
+    public static final String DOMAIN_LTV_RESULT = "LTV calculated - outstandingBalance: {}, propertyValue: {}, LTV: {}";
+    public static final String DOMAIN_LTV_NO_DATA = "LTV calculation skipped - property value or outstanding balance not available";
 
     // ============================================================
     // EXCEPTION MESSAGES
