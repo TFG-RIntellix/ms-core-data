@@ -20,6 +20,7 @@ public final class LogMessage {
     
     public static final String CONTROLLER_REQUEST_RECEIVED = "Request received: {} {}";
     public static final String CONTROLLER_REQUEST_PARAMS = "Request parameters - partyName: [{}], requestStatus: [{}]";
+    public static final String CONTROLLER_SIMULATION_REQUEST_PARAMS = "Request parameters - requestId: [{}], partyName: [{}], partyId: [{}]";
     public static final String CONTROLLER_REQUEST_PATH_VAR = "Path variable - requestId: [{}]";
     public static final String CONTROLLER_RESPONSE_SUCCESS = "Response sent successfully - Status: {} - Items count: {}";
     public static final String CONTROLLER_RESPONSE_SUCCESS_SINGLE = "Response sent successfully - Status: {} - RequestId: [{}]";
@@ -42,6 +43,28 @@ public final class LogMessage {
     public static final String SERVICE_GET_DETAILS_MAPPING = "Mapping Request to RequestDetailsDTO - requestId: [{}]";
     public static final String SERVICE_GET_DETAILS_COMPLETE = "getRequestDetails operation completed successfully - requestId: [{}]";
     public static final String SERVICE_GET_DETAILS_RETRIEVE_PARTY = "Retrieving associated Party for request - partyId: [{}]";
+
+    public static final String SERVICE_GET_SCORING_START = "Starting getScoringByRequestId operation - requestId: [{}]";
+    public static final String SERVICE_GET_SCORING_VALIDATION = "Validating requestId for scoring: [{}]";
+    public static final String SERVICE_GET_SCORING_VALIDATION_ERROR = "Validation failed for scoring requestId - Value is null or blank";
+    public static final String SERVICE_GET_SCORING_FOUND = "Scoring found for request - requestId: [{}]";
+    public static final String SERVICE_GET_SCORING_COMPLETE = "getScoringByRequestId operation completed successfully - requestId: [{}]";
+
+    // Simulation Service
+    public static final String SERVICE_LIST_SIMULATIONS_START = "Starting listSimulations operation with filters - requestId: [{}], partyName: [{}], partyId: [{}]";
+    public static final String SERVICE_LIST_SIMULATIONS_RESULT = "listSimulations operation completed - Found {} simulation(s)";
+    public static final String SERVICE_LIST_SIMULATIONS_MAPPING = "Mapping {} simulation(s) to SimulationSummaryDTO";
+    public static final String SERVICE_LIST_SIMULATIONS_FILTERING_BY_NAME = "Applying post-fetch partyName filter: [{}]";
+    public static final String SERVICE_LIST_SIMULATIONS_AFTER_FILTER = "After partyName filter - {} simulation(s) remaining";
+
+    public static final String SERVICE_GET_SIMULATION_DETAILS_START = "Starting getSimulationDetails operation - simulationId: [{}]";
+    public static final String SERVICE_GET_SIMULATION_DETAILS_VALIDATION = "Validating simulationId: [{}]";
+    public static final String SERVICE_GET_SIMULATION_DETAILS_VALIDATION_ERROR = "Validation failed for simulationId - Value is null or blank";
+    public static final String SERVICE_GET_SIMULATION_DETAILS_FOUND = "Simulation found - simulationId: [{}]";
+    public static final String SERVICE_GET_SIMULATION_DETAILS_SCORING_FOUND = "Base scoring resolved for simulation comparison - scoringId: [{}]";
+    public static final String SERVICE_GET_SIMULATION_DETAILS_SCORING_NOT_FOUND = "Base scoring not found for simulation comparison - scoringId: [{}]";
+    public static final String SERVICE_GET_SIMULATION_DETAILS_COMPLETE = "getSimulationDetails operation completed successfully - simulationId: [{}]";
+
     // ============================================================
     // INFRASTRUCTURE LAYER - Repository Adapter
     // ============================================================
@@ -75,6 +98,23 @@ public final class LogMessage {
     public static final String REPOSITORY_CONTRACT_FIND_ACTIVE_RESULT = "findActiveByPartyId operation completed - partyId: [{}], active contracts found: {}";
     public static final String REPOSITORY_PARTY_LOADING_CONTRACTS = "Loading active contracts for Party aggregate - partyId: [{}]";
     public static final String REPOSITORY_PARTY_CONTRACTS_LOADED = "Active contracts loaded for Party aggregate - partyId: [{}], count: {}";
+
+    // Scoring Repository
+    public static final String REPOSITORY_SCORING_FIND_BY_REQUEST_START = "Executing findLatestByRequestId operation on scorings - requestId: [{}]";
+    public static final String REPOSITORY_SCORING_FIND_BY_REQUEST_FOUND = "Scoring found for request - requestId: [{}]";
+    public static final String REPOSITORY_SCORING_FIND_BY_REQUEST_NOT_FOUND = "Scoring not found for request - requestId: [{}]";
+    public static final String REPOSITORY_SCORING_FIND_BY_ID_START = "Executing findById operation on scorings - scoringId: [{}]";
+    public static final String REPOSITORY_SCORING_FIND_BY_ID_FOUND = "Scoring found in database - scoringId: [{}]";
+    public static final String REPOSITORY_SCORING_FIND_BY_ID_NOT_FOUND = "Scoring not found in database - scoringId: [{}]";
+
+    // Simulation Repository
+    public static final String REPOSITORY_SIMULATION_FIND_ALL_START = "Executing findAll operation on simulations";
+    public static final String REPOSITORY_SIMULATION_FIND_ALL_RESULT = "findAll operation on simulations completed - Retrieved {} entity(ies)";
+    public static final String REPOSITORY_SIMULATION_FIND_BY_ID_START = "Executing findById operation on simulations - simulationId: [{}]";
+    public static final String REPOSITORY_SIMULATION_FIND_BY_ID_FOUND = "Simulation found in database - simulationId: [{}]";
+    public static final String REPOSITORY_SIMULATION_FIND_BY_ID_NOT_FOUND = "Simulation not found in database - simulationId: [{}]";
+    public static final String REPOSITORY_SIMULATION_FIND_WITH_FILTERS_START = "Executing findWithFilters operation on simulations - requestId: [{}], partyId: [{}]";
+    public static final String REPOSITORY_SIMULATION_FIND_WITH_FILTERS_RESULT = "findWithFilters operation on simulations completed - Retrieved {} entity(ies)";
 
     // ============================================================
     // INFRASTRUCTURE LAYER - Mappers

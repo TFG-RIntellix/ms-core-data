@@ -3,37 +3,49 @@ package es.NTTEnterprise.RIntellix.ms_core_data.domain.entities;
 import java.util.Date;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestStatus;
+
 /**
- * This class represents a request, which can be a loan, mortgage or a credit card. 
- * It contains the creation date, the collateral (if applicable), the details of the request and the status of the request.
+ * This class represents a request, which can be a loan, mortgage or a credit
+ * card.
+ * It contains the creation date, the collateral (if applicable), the details of
+ * the request and the status of the request.
+ *
  * @author Lucía Fernández Mancebo
  * @Date 02-28-2026
  */
 public class Request {
 
-private String id;
-private String partyId; // Reference to Party by ID (for lazy loading)
-private Date creationDate;
-private Date lastReviewDate;
-private PropertyCollateral collateral;
-private RequestDetails requestDetails;
-private RequestStatus requestStatus; 
-private Party party; // Association to Party (populated when needed)
+    private String id;
+    private String partyId; // Reference to Party by ID (for lazy loading)
+    private Date creationDate;
+    private Date lastReviewDate;
+    private PropertyCollateral collateral;
+    private RequestDetails requestDetails;
+    private RequestStatus requestStatus;
+    private Party party; // Association to Party (populated when needed)
 
     /**
      * Constructor of the Request class.
-     * @param collateral the collateral of the request, which can be null if the request is not a mortgage.
-     * @param creationDate the date of creation of the request.
-     * @param requestDetails the details of the request, which contains the type of request, the purpose, the requested amount, the term in months, the interest rate, the credit limit (if applicable), whether it is revolving or not and the repayment system.
-     * @param requestStatus the status of the request, which can be a loan, mortgage or a credit card.
+     * 
+     * @param collateral     the collateral of the request, which can be null if the
+     *                       request is not a mortgage.
+     * @param creationDate   the date of creation of the request.
+     * @param requestDetails the details of the request, which contains the type of
+     *                       request, the purpose, the requested amount, the term in
+     *                       months, the interest rate, the credit limit (if
+     *                       applicable), whether it is revolving or not and the
+     *                       repayment system.
+     * @param requestStatus  the status of the request, which can be a loan,
+     *                       mortgage or a credit card.
      */
-    public Request(PropertyCollateral collateral, Date creationDate, RequestDetails requestDetails, RequestStatus requestStatus) {
+    public Request(PropertyCollateral collateral, Date creationDate, RequestDetails requestDetails,
+            RequestStatus requestStatus) {
         this.collateral = collateral;
         this.creationDate = creationDate;
         this.requestDetails = requestDetails;
         this.requestStatus = requestStatus;
     }
-    
+
     // Getters and setters
 
     public String getId() {
@@ -101,7 +113,7 @@ private Party party; // Association to Party (populated when needed)
     }
 
     // toString, hashCode and equals methods
-    
+
     @Override
     public String toString() {
         return "Request [creationDate=" + creationDate + ", collateral=" + collateral + ", requestDetails="

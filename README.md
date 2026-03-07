@@ -21,7 +21,7 @@ This project follows the **Hexagonal Architecture** pattern (also known as Ports
 │                              INFRASTRUCTURE                              │
 │  ┌─────────────────────┐                    ┌─────────────────────────┐ │
 │  │   Input Adapters    │                    │    Output Adapters      │ │
-│  │  (REST Controller)  │                    │  (Repository Adapters)  │ │
+│  │ (REST Controllers)  │                    │  (Repository Adapters)  │ │
 │  └──────────┬──────────┘                    └────────────┬────────────┘ │
 │             │                                            │              │
 │             ▼                                            ▼              │
@@ -65,13 +65,20 @@ src/main/java/es/NTTEnterprise/RIntellix/ms_core_data/
 ├── application/                         # APPLICATION LAYER
 │   ├── dtos/
 │   │   └── output/
-│   │       ├── RequestSummaryDTO.java   # Lightweight view for list operations
-│   │       └── RequestDetailsDTO.java   # Detailed view for single request
+│   │       ├── RequestSummaryDTO.java       # Lightweight view for list operations
+│   │       ├── RequestDetailsDTO.java       # Detailed view for single request
+│   │       ├── ScoringDTO.java              # Complete scoring data for a request
+│   │       ├── SimulationSummaryDTO.java    # Summary view for simulation listings
+│   │       └── SimulationDetailsDTO.java    # Detailed view with base/simulated comparison
 │   ├── mappers/
-│   │   ├── RequestSummaryDTOMapper.java # Domain → Summary DTO
-│   │   └── RequestDetailsDTOMapper.java # Domain → Details DTO
+│   │   ├── RequestSummaryDTOMapper.java     # Domain → Summary DTO
+│   │   ├── RequestDetailsDTOMapper.java     # Domain → Details DTO
+│   │   ├── ScoringDTOMapper.java            # Domain → Scoring DTO
+│   │   └── SimulationDTOMapper.java         # Domain → Simulation Summary/Details DTO
 │   └── usecases/
-│       └── RequestApplicationService.java # Business logic orchestration
+│       ├── RequestApplicationService.java   # Request business logic orchestration
+│       ├── ScoringApplicationService.java   # Scoring business logic orchestration
+│       └── SimulationApplicationService.java # Simulation business logic orchestration
 ├── domain/                              # DOMAIN LAYER (Core Business Logic)
 │   ├── entities/
 │   │   ├── Request.java                 # Aggregate root
@@ -86,7 +93,12 @@ src/main/java/es/NTTEnterprise/RIntellix/ms_core_data/
 │   │   ├── Contract.java                # Abstract base for all contract types
 │   │   ├── LoanContract.java            # PRESTAMO (extends Contract)
 │   │   ├── MortgageContract.java        # HIPOTECA (extends LoanContract)
-│   │   └── CreditCardContract.java      # TARJETA_CREDITO (extends Contract)
+│   │   ├── CreditCardContract.java      # TARJETA_CREDITO (extends Contract)
+│   │   ├── Scoring.java                 # Scoring aggregate (risk assessment results)
+│   │   ├── RiskMetrics.java             # Value object for PD, LGD, EAD, ECL, risk grade
+│   │   ├── RiskFeature.java             # Value object for XAI feature contributions
+│   │   ├── ModelInputs.java             # Value object for model input features
+│   │   └── Simulation.java              # Simulation aggregate (what-if scenarios)
 │   ├── enums/
 │   │   ├── RequestStatus.java           # PENDIENTE_DE_REVISION, APROBADO, etc.
 │   │   ├── RequestType.java             # PRESTAMO, HIPOTECA, TARJETA_CREDITO
@@ -103,39 +115,60 @@ src/main/java/es/NTTEnterprise/RIntellix/ms_core_data/
 │   │   └── EntityNotFoundException.java # Domain-specific exception
 │   └── ports/
 │       ├── input/
-│       │   └── RequestPortService.java  # Input port (use case interface)
+│       │   ├── RequestPortService.java    # Input port (Request use cases)
+│       │   ├── ScoringPortService.java    # Input port (Scoring use cases)
+│       │   └── SimulationPortService.java # Input port (Simulation use cases)
 │       └── output/
-│           ├── RequestPortRepository.java # Output port (repository interface)
-│           ├── PartyPortRepository.java   # Output port for Party operations
-│           └── ContractPortRepository.java # Output port for Contract operations
+│           ├── RequestPortRepository.java   # Output port for Request operations
+│           ├── PartyPortRepository.java     # Output port for Party operations
+│           ├── ContractPortRepository.java  # Output port for Contract operations
+│           ├── ScoringPortRepository.java   # Output port for Scoring operations
+│           └── SimulationPortRepository.java # Output port for Simulation operations
 └── infraestructure/                     # INFRASTRUCTURE LAYER
     ├── adapters/
     │   ├── input/
-    │   │   └── RequestControllerAdapter.java # REST API controller
+    │   │   ├── RequestControllerAdapter.java    # REST controller for Request endpoints
+    │   │   ├── ScoringControllerAdapter.java    # REST controller for Scoring endpoints
+    │   │   └── SimulationControllerAdapter.java # REST controller for Simulation endpoints
     │   └── output/
-    │       ├── RequestRepositoryAdapter.java # Request MongoDB adapter (SRP: only Request)
-│           ├── PartyRepositoryAdapter.java   # Party MongoDB adapter (loads contracts into aggregate)
-│           └── ContractRepositoryAdapter.java # Contract MongoDB adapter (SRP: only Contract)
+    │       ├── RequestRepositoryAdapter.java     # Request MongoDB adapter (SRP: only Request)
+    │       ├── PartyRepositoryAdapter.java       # Party MongoDB adapter (loads contracts into aggregate)
+    │       ├── ContractRepositoryAdapter.java    # Contract MongoDB adapter (SRP: only Contract)
+    │       ├── ScoringRepositoryAdapter.java     # Scoring MongoDB adapter
+    │       └── SimulationRepositoryAdapter.java  # Simulation MongoDB adapter
     ├── entities/
-    │   ├── RequestEntity.java           # MongoDB document mapping
-    │   ├── PartyEntity.java             # Party MongoDB document
-    │   ├── ContractEntity.java          # Contract MongoDB document (union of all types)
+    │   ├── RequestEntity.java               # MongoDB document mapping for requests
+    │   ├── PartyEntity.java                 # Party MongoDB document
+    │   ├── ContractEntity.java              # Contract MongoDB document (union of all types)
+    │   ├── ScoringEntity.java               # Scoring MongoDB document
+    │   ├── SimulationEntity.java            # Simulation MongoDB document
     │   └── embedded/
-    │       ├── ContactInfoEntity.java   # Embedded contact data
-    │       ├── DemographicsEntity.java  # Embedded demographics
-    │       ├── EconomicDataEntity.java  # Embedded economic data
-    │       ├── EmploymentEntity.java    # Embedded employment data
-    │       └── CreditHistoryEntity.java # Embedded credit history
+    │       ├── ContactInfoEntity.java       # Embedded contact data
+    │       ├── DemographicsEntity.java      # Embedded demographics
+    │       ├── EconomicDataEntity.java      # Embedded economic data
+    │       ├── EmploymentEntity.java        # Embedded employment data
+    │       ├── CreditHistoryEntity.java     # Embedded credit history
+    │       ├── ResultsEntity.java           # Embedded scoring results (PD, LGD, EAD, ECL)
+    │       ├── InputFeaturesEntity.java     # Embedded model input features
+    │       ├── XaiEntity.java               # Embedded XAI top features
+    │       ├── TopFeatureEntity.java        # Embedded single XAI feature contribution
+    │       ├── FormChangesEntity.java       # Embedded simulation form changes
+    │       ├── SimulatedResultsEntity.java  # Embedded simulated risk metrics
+    │       └── DeltaEntity.java             # Embedded simulation delta comparison
     ├── mappers/
     │   ├── RequestMapper.java           # Entity ↔ Domain (includes partyId mapping)
     │   ├── PartyMapper.java             # Party Entity ↔ Domain (includes toPartialDomain)
-    │   └── ContractMapper.java          # Contract Entity → Domain (Map-based strategy, no switches)
+    │   ├── ContractMapper.java          # Contract Entity → Domain (Map-based strategy, no switches)
+    │   ├── ScoringMapper.java           # Scoring Entity → Domain
+    │   └── SimulationMapper.java        # Simulation Entity → Domain (FormChanges→HashMap, etc.)
     ├── projections/
     │   └── PartyNameProjection.java     # Spring Data projection for efficient name queries
     └── repository/
-        ├── RequestRepository.java       # Spring Data MongoDB interface
-        ├── PartyRepository.java         # Party Spring Data interface (with projection query)
-        └── ContractRepository.java      # Contract Spring Data interface (by partyId queries)
+        ├── RequestRepository.java       # Spring Data MongoDB (dynamic SpEL filtering)
+        ├── PartyRepository.java         # Party Spring Data (with projection query)
+        ├── ContractRepository.java      # Contract Spring Data (by partyId queries)
+        ├── ScoringRepository.java       # Scoring Spring Data (by requestId query)
+        └── SimulationRepository.java    # Simulation Spring Data (dynamic SpEL filtering)
 ├── utils/                               # UTILITIES
 │   └── LogMessage.java                  # Centralized log message constants
 ```
@@ -166,6 +199,15 @@ The **heart of the application** containing pure business logic with no external
 | `RequestPortService` | Input port defining the contract for use cases: `listRequests()` and `getRequestDetails()`. |
 | `RequestPortRepository` | Output port defining the contract for Request data persistence operations. |
 | `PartyPortRepository` | Output port defining the contract for Party retrieval operations. |
+| `Scoring` | Aggregate representing the risk assessment result of a request. Contains model results (`RiskMetrics`), input features (`ModelInputs`), XAI explanations (`RiskFeature` list), decision, and metadata. |
+| `RiskMetrics` | Value object encapsulating the core risk indicators: PD (Probability of Default), LGD (Loss Given Default), EAD (Exposure At Default), ECL (Expected Calculated Loss), and risk grade. |
+| `ModelInputs` | Value object containing the input features fed to the AI model for scoring calculation. |
+| `RiskFeature` | Value object representing a single XAI feature contribution (feature name, value, contribution weight). |
+| `ScoringPortService` | Input port defining the contract for scoring use cases: `getScoring()`. |
+| `ScoringPortRepository` | Output port defining the contract for Scoring persistence operations. Provides `findByRequestId()` and `findById()`. |
+| `Simulation` | Aggregate representing a what-if simulation scenario derived from a base scoring. Contains modified inputs (`formChanges`), recalculated results (`simulatedResults`), simulated decision, and computed deltas (`pdChange`, `elChange`, `riskGradeChange`). Party is transient, resolved at the application layer. |
+| `SimulationPortService` | Input port defining the contract for simulation use cases: `listSimulations()` and `getSimulationDetails()`. |
+| `SimulationPortRepository` | Output port defining the contract for Simulation persistence operations. Provides `findById()` and `findWithFilters()` (dynamic filtering by requestId and partyId). |
 
 ### Application Layer
 
@@ -178,6 +220,13 @@ Orchestrates the flow of data between the domain and the outside world.
 | `RequestDetailsDTO` | Comprehensive DTO including: request info, party name, NIF, phone, email, address, employment status, and income. |
 | `RequestSummaryDTOMapper` | Transforms `Request` domain entities to `RequestSummaryDTO`. |
 | `RequestDetailsDTOMapper` | Transforms `Request` domain entities to `RequestDetailsDTO`, including all party information. |
+| `ScoringApplicationService` | Implements `ScoringPortService`. Orchestrates scoring retrieval for a request. Delegates to `ScoringPortRepository.findByRequestId()`. |
+| `ScoringDTO` | DTO containing the complete scoring data: model results, input features, XAI top features, decision, and metadata. |
+| `ScoringDTOMapper` | Transforms `Scoring` domain entities to `ScoringDTO`. |
+| `SimulationApplicationService` | Implements `SimulationPortService`. **Orchestrates Simulation, Party, and Scoring aggregates**. For listings, resolves party names post-fetch via `PartyPortRepository.findPartyName()` and applies case-insensitive party name filtering in-memory. For details, resolves base scoring via `ScoringPortRepository.findById()` for comparison. |
+| `SimulationSummaryDTO` | Lightweight DTO for simulation list views: simulation ID, scenario name, party name, request ID, simulation date. |
+| `SimulationDetailsDTO` | Comprehensive DTO including: modified values (formChanges), base scoring results, simulated results, simulated decision, and computed deltas (pdChange, elChange, riskGradeChange). |
+| `SimulationDTOMapper` | Transforms `Simulation` domain entities to `SimulationSummaryDTO` and `SimulationDetailsDTO`. For detail DTO, also receives the base `Scoring` for comparison fields. |
 
 ### Infrastructure Layer
 
@@ -204,6 +253,19 @@ Handles all external concerns: HTTP, database, serialization, etc.
 | `ContractRepository` | Spring Data MongoDB repository for contracts. Provides `findByPartyId()` and `findByPartyIdAndStatus()` queries. |
 | `ContractRepositoryAdapter` | Implements `ContractPortRepository`. Bridges domain with Contract persistence, delegating to `ContractRepository` and `ContractMapper`. |
 | `PartyRepositoryAdapter` | Now also loads active contracts as part of the Party aggregate via `ContractPortRepository.findActiveByPartyId()`, attaching them to `Person.activeContracts`. |
+| `ScoringControllerAdapter` | REST controller exposing Scoring endpoints at `/api/requests/{id}/scoring`. Input adapter for the Scoring aggregate. |
+| `ScoringRepositoryAdapter` | Implements `ScoringPortRepository`. Handles Scoring persistence with `findByRequestId()` (ObjectId conversion) and `findById()`. |
+| `ScoringEntity` | MongoDB document mapping for the `scorings` collection. Contains embedded documents: `ResultsEntity`, `InputFeaturesEntity`, `XaiEntity`, `TopFeatureEntity`. |
+| `ScoringMapper` | Maps `ScoringEntity` → `Scoring` domain, including nested embedded entities to domain value objects. |
+| `ScoringRepository` | Spring Data MongoDB repository for scorings. Provides `findByRequestId(ObjectId)` query. |
+| `SimulationControllerAdapter` | REST controller exposing Simulation endpoints at `/api/simulations`. Input adapter for the Simulation aggregate. |
+| `SimulationRepositoryAdapter` | Implements `SimulationPortRepository`. Handles String→ObjectId conversion for dynamic query parameters. Follows SRP: party resolution is at application layer. |
+| `SimulationEntity` | MongoDB document mapping for the `simulations` collection. Contains embedded documents: `FormChangesEntity`, `SimulatedResultsEntity`, `DeltaEntity`. |
+| `FormChangesEntity` | Embedded entity mapping the `form_changes` sub-document (modified inputs: annual_income, term_months, amount, interest_rate, nr_dependants, repayment_system, employment_status). |
+| `SimulatedResultsEntity` | Embedded entity mapping the `simulated_results` sub-document (PD, LGD, EAD, ECL, risk_grade, decision). |
+| `DeltaEntity` | Embedded entity mapping the `delta` sub-document (pd_change, el_change, risk_grade_change). |
+| `SimulationMapper` | Maps `SimulationEntity` → `Simulation` domain: `FormChanges`→`HashMap<String,Object>`, `SimulatedResults`→`RiskMetrics`+decision, `Delta`→individual fields. Uses `putIfNotNull` for sparse form changes. |
+| `SimulationRepository` | Spring Data MongoDB repository for simulations. Uses dynamic SpEL filtering with `$and`/`$or` null-skipping pattern (same as `RequestRepository`). |
 
 ---
 
@@ -260,6 +322,93 @@ GET /api/requests/{requestId}
   "partyAddress": "Calle Mayor, 15, Madrid",
   "partyLaboralSituation": "EMPLOYED",
   "partyIncome": "45000.00 EUR"
+}
+```
+
+### Get Scoring for a Request
+
+```http
+GET /api/requests/{requestId}/scoring
+```
+
+**Response:** `200 OK` with `ScoringDTO`
+
+```json
+{
+  "scoringId": "665f1a2b3c4d5e6f7a8b9c0d",
+  "requestId": "507f1f77bcf86cd799439011",
+  "decision": "APPROVED",
+  "scoringDate": "2026-03-01T14:30:00",
+  "pd": 0.032,
+  "lgd": 0.45,
+  "ead": 250000.00,
+  "ecl": 3600.00,
+  "riskGrade": "B+",
+  "inputFeatures": { ... },
+  "topFeatures": [
+    { "featureName": "annual_income", "featureValue": 45000, "contribution": 0.28 },
+    { "featureName": "dti_ratio", "featureValue": 0.32, "contribution": -0.15 }
+  ]
+}
+```
+
+### List Simulations
+
+```http
+GET /api/simulations
+GET /api/simulations?requestId={id}
+GET /api/simulations?partyName={name}
+GET /api/simulations?partyId={id}
+GET /api/simulations?requestId={id}&partyName={name}&partyId={id}
+```
+
+**Response:** `200 OK` with `List<SimulationSummaryDTO>`
+
+```json
+[
+  {
+    "simulationId": "665f1a2b3c4d5e6f7a8b9c0d",
+    "scenarioName": "Higher income scenario",
+    "partyName": "Juan García López",
+    "requestId": "507f1f77bcf86cd799439011",
+    "simulationDate": "2026-03-02T10:15:00"
+  }
+]
+```
+
+### Get Simulation Details
+
+```http
+GET /api/simulations/{simulationId}
+```
+
+**Response:** `200 OK` with `SimulationDetailsDTO`
+
+```json
+{
+  "simulationId": "665f1a2b3c4d5e6f7a8b9c0d",
+  "scenarioName": "Higher income scenario",
+  "simulationDate": "2026-03-02T10:15:00",
+  "requestId": "507f1f77bcf86cd799439011",
+  "baseScoringId": "665f1a2b3c4d5e6f7a8b9c0e",
+  "formChanges": {
+    "annual_income": 60000.00,
+    "term_months": 240
+  },
+  "basePd": 0.045,
+  "baseLgd": 0.45,
+  "baseEad": 250000.00,
+  "baseEcl": 5062.50,
+  "baseRiskGrade": "B",
+  "simulatedPd": 0.032,
+  "simulatedLgd": 0.45,
+  "simulatedEad": 250000.00,
+  "simulatedEcl": 3600.00,
+  "simulatedRiskGrade": "B+",
+  "simulatedDecision": "APPROVED",
+  "pdChange": -0.013,
+  "elChange": -1462.50,
+  "riskGradeChange": "B → B+"
 }
 ```
 
@@ -535,26 +684,27 @@ log.info(LogMessage.MY_NEW_LOG, value1, value2);
 
 ### High Priority
 
-- [ ] **Implement Scoring, Simulation & Report Endpoints**
-  - **Scoring**
-    - [ ] Define `Scoring` domain entity (fields: id, requestId, result, parameters, createdAt, etc.)
-    - [ ] Create `ScoringEntity` (infrastructure) and `ScoringMapper`
-    - [ ] Create `ScoringRepository` (Spring Data MongoDB) and `ScoringPortRepository` (output port)
-    - [ ] Implement `ScoringRepositoryAdapter`
-    - [ ] Create `ScoringDTO` (output) and `ScoringDTOMapper` (application)
-    - [ ] Implement `GET api/requests/{id}/scoring` — recovers the active scoring linked to a request
-    - [ ] Define error handling: 404 (not found), 401/403 (auth)
-  - **Simulations**
-    - [ ] Define `Simulation` domain entity (fields: id, requestId, scoringId, parameters, status, createdAt, etc.)
-    - [ ] Create `SimulationEntity`, `SimulationMapper`
-    - [ ] Create `SimulationRepository` and `SimulationPortRepository`
-    - [ ] Implement `SimulationRepositoryAdapter`
-    - [ ] Create `SimulationDTO`, `SimulationCreateDTO` (input), `SimulationDTOMapper`
-    - [ ] Implement `GET api/simulations/{id}` — retrieves a simulation by id
-    - [ ] Implement `POST api/simulations` — persists a new simulation generated by ms-risk-engine
-    - [ ] Implement `PATCH api/simulations/{id}` — partial update (e.g. status transitions)
-    - [ ] Implement `DELETE api/simulations/{id}` — deletes a simulation (guard: must not be archived → 409)
-    - [ ] Define error handling: 400, 404, 409, 401/403, 500
+- [x] **Implement Scoring, Simulation & Report Endpoints** (partial ✅)
+  - **Scoring** ✅
+    - [x] ~~Define `Scoring` domain entity (with `RiskMetrics`, `ModelInputs`, `RiskFeature`)~~
+    - [x] ~~Create `ScoringEntity` (infrastructure) with embedded entities (`ResultsEntity`, `InputFeaturesEntity`, `XaiEntity`, `TopFeatureEntity`) and `ScoringMapper`~~
+    - [x] ~~Create `ScoringRepository` (Spring Data MongoDB) and `ScoringPortRepository` (output port)~~
+    - [x] ~~Implement `ScoringRepositoryAdapter` (with `findByRequestId` and `findById`)~~
+    - [x] ~~Create `ScoringDTO` (output) and `ScoringDTOMapper` (application)~~
+    - [x] ~~Implement `GET api/requests/{id}/scoring` — recovers the active scoring linked to a request~~
+    - [ ] Define error handling: 401/403 (auth) — pending security layer implementation
+  - **Simulations** ✅ (read-only endpoints)
+    - [x] ~~Define `Simulation` domain entity (fields: id, requestId, partyId, baseScoringId, scenarioName, simulationDate, formChanges, simulatedResults, delta)~~
+    - [x] ~~Create `SimulationEntity` with embedded entities (`FormChangesEntity`, `SimulatedResultsEntity`, `DeltaEntity`) and `SimulationMapper`~~
+    - [x] ~~Create `SimulationRepository` (dynamic SpEL filtering) and `SimulationPortRepository`~~
+    - [x] ~~Implement `SimulationRepositoryAdapter` (String→ObjectId conversion, SRP-compliant)~~
+    - [x] ~~Create `SimulationSummaryDTO`, `SimulationDetailsDTO` and `SimulationDTOMapper`~~
+    - [x] ~~Implement `GET api/simulations` — lists simulations with filtering by requestId, partyName, partyId~~
+    - [x] ~~Implement `GET api/simulations/{id}` — retrieves simulation detail with base scoring comparison~~
+    - [ ] `POST api/simulations` — persists a new simulation generated by ms-risk-engine *(deferred: write operations belong to a future phase)*
+    - [ ] `PATCH api/simulations/{id}` — partial update (e.g. status transitions) *(deferred)*
+    - [ ] `DELETE api/simulations/{id}` — deletes a simulation *(deferred)*
+    - [ ] Define error handling: 401/403 (auth) — pending security layer implementation
   - **Reports** *(deferred — final phase of implementation)*
     - [ ] Define `Report` domain entity
     - [ ] Create `ReportEntity`, `ReportMapper`, `ReportRepository`, `ReportPortRepository`, `ReportRepositoryAdapter`
@@ -904,6 +1054,119 @@ Complete implementation of the Party aggregate with all associated components:
   - `REPOSITORY_PARTY_FIND_BY_ID_FOUND`
   - `REPOSITORY_PARTY_FIND_BY_ID_NOT_FOUND`
   - `REPOSITORY_PARTY_FIND_BY_ID_MAPPING`
+
+---
+
+### Scoring Endpoints Implementation ✅ (March 3, 2026)
+
+**Objective:** Implement the scoring retrieval endpoint (`GET /api/requests/{id}/scoring`) to expose the AI model's risk assessment results for a given request.
+
+#### New Components
+
+| Layer | Component | Description |
+|-------|-----------|-------------|
+| Domain | `Scoring`, `RiskMetrics`, `ModelInputs`, `RiskFeature` | Domain entities/value objects for risk scoring data |
+| Domain | `ScoringPortService`, `ScoringPortRepository` | Input and output ports |
+| Application | `ScoringApplicationService`, `ScoringDTO`, `ScoringDTOMapper` | Use case, DTO, and mapper |
+| Infrastructure | `ScoringEntity`, `ResultsEntity`, `InputFeaturesEntity`, `XaiEntity`, `TopFeatureEntity` | MongoDB document and embedded entities |
+| Infrastructure | `ScoringMapper`, `ScoringRepository`, `ScoringRepositoryAdapter` | Mapper, repository, and adapter |
+| Infrastructure | `ScoringControllerAdapter` | REST controller at `/api/requests/{id}/scoring` |
+
+---
+
+### Simulation Endpoints Implementation ✅ (March 3, 2026)
+
+**Objective:** Implement read-only simulation endpoints (`GET /api/simulations` and `GET /api/simulations/{id}`) to expose what-if scenario analysis data, following the same hexagonal architecture patterns established in the project.
+
+#### Architecture Overview
+
+The simulation feature follows the same aggregate orchestration pattern as Request/Party:
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         APPLICATION LAYER                                │
+│   ┌─────────────────────────────────────────────────────────────────┐   │
+│   │            SimulationApplicationService                         │   │
+│   │                                                                 │   │
+│   │  listSimulations():                                             │   │
+│   │    1. Get Simulations (via SimulationPortRepository)            │   │
+│   │    2. Resolve party names (via PartyPortRepository)             │   │
+│   │    3. Apply partyName filter in-memory (post-fetch)             │   │
+│   │    4. Map to SimulationSummaryDTO                               │   │
+│   │                                                                 │   │
+│   │  getSimulationDetails():                                        │   │
+│   │    1. Get Simulation by ID (via SimulationPortRepository)       │   │
+│   │    2. Resolve base Scoring (via ScoringPortRepository)          │   │
+│   │    3. Map to SimulationDetailsDTO with comparison data          │   │
+│   └─────────────────────────────────────────────────────────────────┘   │
+│           │                    │                    │                    │
+│           ▼                    ▼                    ▼                    │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐        │
+│  │ SimulationPort  │  │ PartyPort       │  │ ScoringPort     │        │
+│  │ Repository      │  │ Repository      │  │ Repository      │        │
+│  └────────┬────────┘  └────────┬────────┘  └────────┬────────┘        │
+└───────────┼─────────────────────┼───────────────────┼──────────────────┘
+            │                     │                    │
+┌───────────┼─────────────────────┼───────────────────┼──────────────────┐
+│           ▼                     ▼                    ▼                  │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐        │
+│  │ Simulation      │  │ Party           │  │ Scoring         │        │
+│  │ Repository      │  │ Repository      │  │ Repository      │        │
+│  │ Adapter         │  │ Adapter         │  │ Adapter         │        │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘        │
+│                      INFRASTRUCTURE LAYER                              │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+#### New Components
+
+| Layer | Component | Description |
+|-------|-----------|-------------|
+| Domain | `Simulation` | Aggregate with form changes, simulated results, delta, and transient party |
+| Domain | `SimulationPortService` | Input port: `listSimulations()`, `getSimulationDetails()` |
+| Domain | `SimulationPortRepository` | Output port: `findById()`, `findWithFilters()` |
+| Application | `SimulationApplicationService` | Orchestrates Simulation + Party + Scoring aggregates |
+| Application | `SimulationSummaryDTO` | Summary for list view (scenario name, party, request, date) |
+| Application | `SimulationDetailsDTO` | Detail with base/simulated comparison and deltas |
+| Application | `SimulationDTOMapper` | Domain → DTO conversion (summary and detail) |
+| Infrastructure | `SimulationEntity` | `@Document(collection = "simulations")` with embedded entities |
+| Infrastructure | `FormChangesEntity` | Embedded: modified inputs (income, term, amount, rate, etc.) |
+| Infrastructure | `SimulatedResultsEntity` | Embedded: recalculated risk metrics (PD, LGD, EAD, ECL, risk grade, decision) |
+| Infrastructure | `DeltaEntity` | Embedded: differences (pd_change, el_change, risk_grade_change) |
+| Infrastructure | `SimulationMapper` | Entity → Domain (FormChanges→HashMap, SimulatedResults→RiskMetrics, Delta→fields) |
+| Infrastructure | `SimulationRepository` | Spring Data MongoDB with dynamic SpEL filtering (same pattern as `RequestRepository`) |
+| Infrastructure | `SimulationRepositoryAdapter` | String→ObjectId conversion, delegates to single dynamic query |
+| Infrastructure | `SimulationControllerAdapter` | REST controller at `/api/simulations` |
+
+#### Modified Components
+
+| Component | Change Description |
+|-----------|-------------------|
+| `ScoringPortRepository` | Added `findById(String scoringId)` method for simulation detail comparison |
+| `ScoringRepositoryAdapter` | Implemented `findById()` with EntityNotFoundException handling |
+| `LogMessage.java` | Added 20+ simulation-specific log constants (controller, service, repository layers) |
+
+#### Dynamic Filtering (SpEL)
+
+The `SimulationRepository` uses the same null-skipping pattern as `RequestRepository`, allowing optional filters:
+
+```java
+@Query("{ $and: [ " +
+       "{ $or: [ { $expr: { $eq: [:#{#requestId}, null] } }, { 'request_id': :#{#requestId} } ] }, " +
+       "{ $or: [ { $expr: { $eq: [:#{#partyId}, null] } }, { 'party_id': :#{#partyId} } ] } " +
+       "] }")
+List<SimulationEntity> findWithFilters(@Param("requestId") ObjectId requestId,
+                                       @Param("partyId") ObjectId partyId);
+```
+
+**Note:** Party name filtering is not possible at the database level because the `simulations` collection only stores `party_id` (ObjectId reference). Party name filtering is handled at the application layer via post-fetch in-memory filtering with case-insensitive `contains` matching.
+
+#### Known TODOs in Code
+
+| Location | TODO | Description |
+|----------|------|-------------|
+| `SimulationApplicationService.listSimulations()` | `TODO: To change because it is not working` | Party name post-fetch filtering needs to be reviewed/tested with actual data |
+| `SimulationApplicationService.getSimulationDetails()` | `TODO: Resolve base scoring for comparison` | Base scoring should always be persisted; null check may be unnecessary |
 
 ---
 
