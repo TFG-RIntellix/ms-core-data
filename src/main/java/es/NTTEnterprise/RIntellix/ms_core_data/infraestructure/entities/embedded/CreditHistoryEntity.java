@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * Embedded document for party credit history.
  * Contains information about previous loans and payment behavior.
  * This subdocument is optional and may not exist for new customers.
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 03-01-2026
  */

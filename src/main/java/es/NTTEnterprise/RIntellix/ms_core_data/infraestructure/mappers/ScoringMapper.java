@@ -17,11 +17,12 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.TopFeatureEntity;
 
 /**
- * Mapper class to convert between ScoringEntity (infrastructure) and Scoring (domain).
+ * Mapper class to convert between ScoringEntity (infrastructure) and Scoring
+ * (domain).
  * Transforms the flat MongoDB document structure into the clean domain model:
- *   - InputFeaturesEntity  → ModelInputs (HashMap-based feature map)
- *   - ResultsEntity        → RiskMetrics
- *   - XaiEntity            → baseValue (Double) + List&lt;RiskFeature&gt;
+ * - InputFeaturesEntity → ModelInputs (HashMap-based feature map)
+ * - ResultsEntity → RiskMetrics
+ * - XaiEntity → baseValue (Double) + List&lt;RiskFeature&gt;
  *
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026
@@ -31,11 +32,14 @@ public class ScoringMapper {
 
     /**
      * Converts a ScoringEntity (infrastructure) into a Scoring domain entity.
+     * 
      * @param entity The ScoringEntity from MongoDB.
      * @return The Scoring domain entity, or null if the input is null.
      */
     public Scoring toDomain(ScoringEntity entity) {
-        if (entity == null) { return null; }
+        if (entity == null) {
+            return null;
+        }
 
         Scoring scoring = new Scoring();
         scoring.setId(entity.getId());
@@ -61,7 +65,9 @@ public class ScoringMapper {
      * Each known field is placed into the map only if it is not null.
      */
     private ModelInputs mapInputFeatures(InputFeaturesEntity entity) {
-        if (entity == null) { return null; }
+        if (entity == null) {
+            return null;
+        }
 
         HashMap<String, Object> features = new HashMap<>();
 
@@ -92,21 +98,24 @@ public class ScoringMapper {
      * Maps ResultsEntity to RiskMetrics domain object.
      */
     private RiskMetrics mapResults(ResultsEntity entity) {
-        if (entity == null) { return null; }
+        if (entity == null) {
+            return null;
+        }
         return new RiskMetrics(
-            entity.getPd(),
-            entity.getLgd(),
-            entity.getEad(),
-            entity.getEcl(),
-            entity.getRiskGrade()
-        );
+                entity.getPd(),
+                entity.getLgd(),
+                entity.getEad(),
+                entity.getEcl(),
+                entity.getRiskGrade());
     }
 
     /**
      * Maps a list of TopFeatureEntity to a list of RiskFeature domain objects.
      */
     private List<RiskFeature> mapTopFeatures(List<TopFeatureEntity> entities) {
-        if (entities == null || entities.isEmpty()) { return new ArrayList<>(); }
+        if (entities == null || entities.isEmpty()) {
+            return new ArrayList<>();
+        }
         return entities.stream()
                 .map(e -> new RiskFeature(e.getFeatureName(), e.getFeatureValue(), e.getShapValue(), null))
                 .collect(Collectors.toList());

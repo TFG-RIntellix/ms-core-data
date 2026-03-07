@@ -12,7 +12,9 @@ import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Implements ScoringPortService interface handling business logic for scoring retrieval.
+ * Implements ScoringPortService interface handling business logic for scoring
+ * retrieval.
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026
  */
@@ -24,7 +26,7 @@ public class ScoringApplicationService implements ScoringPortService {
     private final ScoringDTOMapper scoringDTOMapper;
 
     public ScoringApplicationService(ScoringPortRepository scoringPortRepository,
-                                     ScoringDTOMapper scoringDTOMapper) {
+            ScoringDTOMapper scoringDTOMapper) {
         this.scoringPortRepository = scoringPortRepository;
         this.scoringDTOMapper = scoringDTOMapper;
     }

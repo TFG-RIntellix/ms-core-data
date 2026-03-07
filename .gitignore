@@ -39,3 +39,7 @@ compose.yaml*
 
 *mvn*
 .gitattributes
+
+## Ignore the logs folder and spanish readme
+logs/**
+README_ES.md

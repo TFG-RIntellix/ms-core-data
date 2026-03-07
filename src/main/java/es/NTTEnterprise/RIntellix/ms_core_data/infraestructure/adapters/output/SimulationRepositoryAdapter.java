@@ -16,7 +16,8 @@ import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Infrastructure adapter that implements the SimulationPortRepository output port.
+ * Infrastructure adapter that implements the SimulationPortRepository output
+ * port.
  * Delegates persistence operations to the Spring Data SimulationRepository
  * and uses SimulationMapper to convert entities to domain objects.
  * Party resolution is handled at the application layer to respect SRP.

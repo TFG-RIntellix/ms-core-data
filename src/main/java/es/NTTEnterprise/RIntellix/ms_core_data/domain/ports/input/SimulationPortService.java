@@ -16,18 +16,21 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundE
 public interface SimulationPortService {
 
     /**
-     * Retrieves a list of simulations with their basic information, supporting optional filtering
+     * Retrieves a list of simulations with their basic information, supporting
+     * optional filtering
      * by associated request ID, party name or party ID.
      *
      * @param requestId the ID of the associated request (optional filter)
-     * @param partyName the name of the client (optional filter, resolved at application layer)
+     * @param partyName the name of the client (optional filter, resolved at
+     *                  application layer)
      * @param partyId   the ID of the client (optional filter)
      * @return a list of SimulationSummaryDTO objects matching the filters
      */
     List<SimulationSummaryDTO> listSimulations(String requestId, String partyName, String partyId);
 
     /**
-     * Retrieves the detailed information of a specific simulation, including modified values,
+     * Retrieves the detailed information of a specific simulation, including
+     * modified values,
      * simulated results, base scoring results and the computed delta comparison.
      *
      * @param simulationId the unique identifier of the simulation
@@ -35,6 +38,7 @@ public interface SimulationPortService {
      * @throws IllegalArgumentException if the simulationId is null or empty
      * @throws EntityNotFoundException  if no simulation is found with the given ID
      */
-    SimulationDetailsDTO getSimulationDetails(String simulationId) throws IllegalArgumentException, EntityNotFoundException;
+    SimulationDetailsDTO getSimulationDetails(String simulationId)
+            throws IllegalArgumentException, EntityNotFoundException;
 
 }

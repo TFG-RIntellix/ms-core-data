@@ -13,6 +13,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestType;
 /**
  * Entity representing a financial product request in MongoDB.
  * Central point for risk analysis.
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 02-28-2026
  */

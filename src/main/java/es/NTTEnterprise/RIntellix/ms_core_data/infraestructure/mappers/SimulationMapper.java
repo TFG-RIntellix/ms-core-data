@@ -11,11 +11,12 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.SimulatedResultsEntity;
 
 /**
- * Mapper class to convert between SimulationEntity (infrastructure) and Simulation (domain).
+ * Mapper class to convert between SimulationEntity (infrastructure) and
+ * Simulation (domain).
  * Transforms the MongoDB document structure into the clean domain model:
- *   - FormChangesEntity        → HashMap&lt;String, Object&gt; (flexible feature map)
- *   - SimulatedResultsEntity   → RiskMetrics + simulatedDecision
- *   - DeltaEntity              → pdChange, elChange, riskGradeChange
+ * - FormChangesEntity → HashMap&lt;String, Object&gt; (flexible feature map)
+ * - SimulatedResultsEntity → RiskMetrics + simulatedDecision
+ * - DeltaEntity → pdChange, elChange, riskGradeChange
  *
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026
@@ -25,11 +26,14 @@ public class SimulationMapper {
 
     /**
      * Converts a SimulationEntity (infrastructure) into a Simulation domain entity.
+     * 
      * @param entity The SimulationEntity from MongoDB.
      * @return The Simulation domain entity, or null if the input is null.
      */
     public Simulation toDomain(SimulationEntity entity) {
-        if (entity == null) { return null; }
+        if (entity == null) {
+            return null;
+        }
 
         Simulation simulation = new Simulation();
         simulation.setId(entity.getId());
@@ -65,7 +69,9 @@ public class SimulationMapper {
      * Each known field is placed into the map only if it is not null.
      */
     private HashMap<String, Object> mapFormChanges(FormChangesEntity entity) {
-        if (entity == null) { return null; }
+        if (entity == null) {
+            return null;
+        }
 
         HashMap<String, Object> changes = new HashMap<>();
 
@@ -84,14 +90,15 @@ public class SimulationMapper {
      * Maps SimulatedResultsEntity to RiskMetrics domain object.
      */
     private RiskMetrics mapSimulatedResults(SimulatedResultsEntity entity) {
-        if (entity == null) { return null; }
+        if (entity == null) {
+            return null;
+        }
         return new RiskMetrics(
-            entity.getPd(),
-            entity.getLgd(),
-            entity.getEad(),
-            entity.getEcl(),
-            entity.getRiskGrade()
-        );
+                entity.getPd(),
+                entity.getLgd(),
+                entity.getEad(),
+                entity.getEcl(),
+                entity.getRiskGrade());
     }
 
     private void putIfNotNull(HashMap<String, Object> map, String key, Object value) {

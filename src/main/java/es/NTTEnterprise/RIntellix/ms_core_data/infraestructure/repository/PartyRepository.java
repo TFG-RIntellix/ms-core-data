@@ -7,15 +7,19 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.PartyEnt
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.projections.PartyNameProjection;
 
 /**
- * Repository interface for Party entities, extending Spring Data MongoDB's MongoRepository.
- * Provides CRUD operations and custom query methods for PartyEntity documents in the MongoDB collection.
+ * Repository interface for Party entities, extending Spring Data MongoDB's
+ * MongoRepository.
+ * Provides CRUD operations and custom query methods for PartyEntity documents
+ * in the MongoDB collection.
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 03-01-2026
  */
 public interface PartyRepository extends MongoRepository<PartyEntity, String> {
 
     /**
-     * Retrieves only the demographics name fields (firstName, lastName) for a party.
+     * Retrieves only the demographics name fields (firstName, lastName) for a
+     * party.
      * Uses projection for efficient query, avoiding retrieval of the full document.
      * 
      * @param partyId the unique identifier of the party

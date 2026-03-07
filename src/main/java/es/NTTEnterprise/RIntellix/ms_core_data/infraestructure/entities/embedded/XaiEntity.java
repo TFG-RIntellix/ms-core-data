@@ -5,7 +5,8 @@ import java.util.List;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * Embedded entity mapping the "xai" sub-document from the "scorings" MongoDB collection.
+ * Embedded entity mapping the "xai" sub-document from the "scorings" MongoDB
+ * collection.
  * Contains the SHAP base value and the list of top contributing features.
  *
  * @author Lucía Fernández Mancebo

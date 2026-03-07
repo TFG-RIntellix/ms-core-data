@@ -10,7 +10,8 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Simulation;
 
 /**
- * Mapper class to convert between Simulation (domain) and Simulation DTOs (application).
+ * Mapper class to convert between Simulation (domain) and Simulation DTOs
+ * (application).
  * Handles both summary and detail conversions for the two simulation endpoints.
  *
  * @author Lucía Fernández Mancebo
@@ -30,14 +31,17 @@ public class SimulationDTOMapper {
      * @return The SimulationSummaryDTO ready for the REST response.
      */
     public SimulationSummaryDTO toSummaryDTO(Simulation simulation) {
-        if (simulation == null) { return null; }
+        if (simulation == null) {
+            return null;
+        }
 
         SimulationSummaryDTO dto = new SimulationSummaryDTO();
         dto.setSimulationId(simulation.getId());
         dto.setScenarioName(simulation.getScenarioName());
         dto.setRequestId(simulation.getRequestId());
         dto.setSimulationDate(simulation.getSimulationDate() != null
-                ? DATE_FORMAT.format(simulation.getSimulationDate()) : null);
+                ? DATE_FORMAT.format(simulation.getSimulationDate())
+                : null);
 
         // Party name (resolved at application layer)
         dto.setPartyName(simulation.getParty() != null && simulation.getParty().getPersonDetails() != null
@@ -48,21 +52,27 @@ public class SimulationDTOMapper {
     }
 
     /**
-     * Converts a Simulation domain entity and its associated base Scoring into a SimulationDetailsDTO.
-     * Includes modified values, simulated results, base scoring results and the computed deltas.
+     * Converts a Simulation domain entity and its associated base Scoring into a
+     * SimulationDetailsDTO.
+     * Includes modified values, simulated results, base scoring results and the
+     * computed deltas.
      *
      * @param simulation  The domain Simulation entity.
-     * @param baseScoring The base Scoring entity from which the simulation was derived (may be null).
+     * @param baseScoring The base Scoring entity from which the simulation was
+     *                    derived (may be null).
      * @return The SimulationDetailsDTO ready for the REST response.
      */
     public SimulationDetailsDTO toDetailsDTO(Simulation simulation, Scoring baseScoring) {
-        if (simulation == null) { return null; }
+        if (simulation == null) {
+            return null;
+        }
 
         SimulationDetailsDTO dto = new SimulationDetailsDTO();
         dto.setSimulationId(simulation.getId());
         dto.setScenarioName(simulation.getScenarioName());
         dto.setSimulationDate(simulation.getSimulationDate() != null
-                ? DATE_FORMAT.format(simulation.getSimulationDate()) : null);
+                ? DATE_FORMAT.format(simulation.getSimulationDate())
+                : null);
         dto.setRequestId(simulation.getRequestId());
         dto.setBaseScoringId(simulation.getBaseScoringId());
 

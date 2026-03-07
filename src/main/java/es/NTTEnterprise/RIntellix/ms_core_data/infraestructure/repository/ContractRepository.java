@@ -9,7 +9,8 @@ import org.springframework.data.mongodb.repository.Query;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.ContractEntity;
 
 /**
- * Repository interface for Contract entities in the "contracts" MongoDB collection.
+ * Repository interface for Contract entities in the "contracts" MongoDB
+ * collection.
  * Extends Spring Data MongoDB's MongoRepository for standard CRUD operations.
  *
  * @author Lucía Fernández Mancebo

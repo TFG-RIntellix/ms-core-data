@@ -1,32 +1,39 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output;
 
 /**
- * Data Transfer Object (DTO) class that represents a summary of a request, containing only the most relevant information about the request.
- * This class is used to transfer data between the application layer and the presentation layer, allowing to display a summary of the request without exposing all the details of the request entity.
+ * Data Transfer Object (DTO) class that represents a summary of a request,
+ * containing only the most relevant information about the request.
+ * This class is used to transfer data between the application layer and the
+ * presentation layer, allowing to display a summary of the request without
+ * exposing all the details of the request entity.
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 02-28-2026
  */
 public class RequestSummaryDTO {
 
     private String requestId;
-    // TODO: Include the partyName and the relationship between Request & Party
-     String partyName;
+    String partyName;
     private String status;
     private String requestType;
     private Double amount;
     private String currency;
     private String creationDate;
     private String lastReviewDate;
-    
+
     /**
-     * Constructor for the RequestSummaryDTO class, which initializes all the fields of the DTO with the provided values.
-     * @param requestId the unique identifier of the request
-     * @param partyName the name of the party associated with the request
-     * @param status the current status of the request (e.g., "Pendiente de Revision", "Revisado", "Aprobado", "Rechazado")
-     * @param requestType the type of the request (e.g., "Solicitud de Crédito", "Solicitud de Pago", "Solicitud de Devolución")
-     * @param amount the amount of money involved in the request
-     * @param currency the currency of the amount (e.g., "USD", "EUR", "GBP")
-     * @param creationDate the date when the request was created
+     * Constructor for the RequestSummaryDTO class, which initializes all the fields
+     * of the DTO with the provided values.
+     * 
+     * @param requestId      the unique identifier of the request
+     * @param partyName      the name of the party associated with the request
+     * @param status         the current status of the request (e.g., "Pendiente de
+     *                       Revision", "Revisado", "Aprobado", "Rechazado")
+     * @param requestType    the type of the request (e.g., "Solicitud de Crédito",
+     *                       "Solicitud de Pago", "Solicitud de Devolución")
+     * @param amount         the amount of money involved in the request
+     * @param currency       the currency of the amount (e.g., "USD", "EUR", "GBP")
+     * @param creationDate   the date when the request was created
      * @param lastReviewDate the date when the request was last reviewed
      */
     public RequestSummaryDTO(String requestId, String partyName, String status, String requestType, Double amount,
@@ -42,7 +49,8 @@ public class RequestSummaryDTO {
     }
 
     /**
-     * Default constructor for the RequestSummaryDTO class, which initializes all the fields of the DTO with default values (null or zero).
+     * Default constructor for the RequestSummaryDTO class, which initializes all
+     * the fields of the DTO with default values (null or zero).
      */
     public RequestSummaryDTO() {
     }

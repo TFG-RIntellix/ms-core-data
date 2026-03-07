@@ -1,214 +1,72 @@
-2026-03-03 00:55:14.898 INFO  [main] e.N.R.m.MsCoreDataApplication : Starting MsCoreDataApplication using Java 17.0.12 with PID 15256 (C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data\target\classes started by ferna in C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data)
-2026-03-03 00:55:14.911 DEBUG [main] e.N.R.m.MsCoreDataApplication : Running with Spring Boot v4.0.3, Spring v7.0.5
-2026-03-03 00:55:14.912 INFO  [main] e.N.R.m.MsCoreDataApplication : No active profile set, falling back to 1 default profile: "default"
-2026-03-03 00:55:16.064 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2026-03-03 00:55:16.422 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 344 ms. Found 3 MongoDB repository interfaces.
-2026-03-03 00:55:17.139 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat initialized with port 8080 (http)
-2026-03-03 00:55:17.160 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Initializing ProtocolHandler ["http-nio-8080"]
-2026-03-03 00:55:17.164 INFO  [main] o.a.catalina.core.StandardService : Starting service [Tomcat]
-2026-03-03 00:55:17.165 INFO  [main] o.a.catalina.core.StandardEngine : Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-03-03 00:55:17.298 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2237 ms
-2026-03-03 00:55:19.407 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Starting ProtocolHandler ["http-nio-8080"]
-2026-03-03 00:55:19.463 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat started on port 8080 (http) with context path '/'
-2026-03-03 00:55:19.480 INFO  [main] e.N.R.m.MsCoreDataApplication : Started MsCoreDataApplication in 5.508 seconds (process running for 6.161)
-2026-03-03 00:55:35.541 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-03-03 00:55:35.542 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet : Initializing Servlet 'dispatcherServlet'
-2026-03-03 00:55:35.544 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet : Completed initialization in 2 ms
-2026-03-03 00:55:35.619 INFO  [http-nio-8080-exec-1] e.N.R.m.i.a.i.RequestControllerAdapter : Request received: GET /api/requests/665c1b2c3d4e5f6a7b8c9d01
-2026-03-03 00:55:35.620 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : Starting getRequestDetails operation - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 00:55:35.620 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : Validating requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 00:55:35.622 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.RequestRepositoryAdapter : Executing findById operation - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 00:55:35.816 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.RequestRepositoryAdapter : Entity found in database - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 00:55:35.817 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.RequestRepositoryAdapter : Mapping RequestEntity to Request domain - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 00:55:35.820 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : Request found - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 00:55:35.820 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findById operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 00:55:35.889 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party found in database - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 00:55:35.889 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Mapping PartyEntity to Party domain - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 00:55:35.890 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Loading active contracts for Party aggregate - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 00:55:35.891 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.ContractRepositoryAdapter : Executing findActiveByPartyId operation on contracts - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 00:55:35.927 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.ContractRepositoryAdapter : findActiveByPartyId operation completed - partyId: [665a1b2c3d4e5f6a7b8c9d01], active contracts found: 0
-2026-03-03 00:55:35.927 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Active contracts loaded for Party aggregate - partyId: [665a1b2c3d4e5f6a7b8c9d01], count: 0
-2026-03-03 00:55:35.929 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : getRequestDetails operation completed successfully - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 00:55:35.930 INFO  [http-nio-8080-exec-1] e.N.R.m.i.a.i.RequestControllerAdapter : Response sent successfully - Status: 200 - RequestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:27:38.921 INFO  [main] e.N.R.m.MsCoreDataApplication : Starting MsCoreDataApplication using Java 17.0.12 with PID 33472 (C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data\target\classes started by ferna in C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data)
-2026-03-03 01:27:38.926 DEBUG [main] e.N.R.m.MsCoreDataApplication : Running with Spring Boot v4.0.3, Spring v7.0.5
-2026-03-03 01:27:38.929 INFO  [main] e.N.R.m.MsCoreDataApplication : No active profile set, falling back to 1 default profile: "default"
-2026-03-03 01:27:40.090 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2026-03-03 01:27:40.351 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 250 ms. Found 3 MongoDB repository interfaces.
-2026-03-03 01:27:41.126 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat initialized with port 8080 (http)
-2026-03-03 01:27:41.152 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Initializing ProtocolHandler ["http-nio-8080"]
-2026-03-03 01:27:41.159 INFO  [main] o.a.catalina.core.StandardService : Starting service [Tomcat]
-2026-03-03 01:27:41.160 INFO  [main] o.a.catalina.core.StandardEngine : Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-03-03 01:27:41.272 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2161 ms
-2026-03-03 01:27:43.319 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Starting ProtocolHandler ["http-nio-8080"]
-2026-03-03 01:27:43.362 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat started on port 8080 (http) with context path '/'
-2026-03-03 01:27:43.377 INFO  [main] e.N.R.m.MsCoreDataApplication : Started MsCoreDataApplication in 5.513 seconds (process running for 6.158)
-2026-03-03 01:27:49.032 INFO  [http-nio-8080-exec-3] o.a.c.c.C.[Tomcat].[localhost].[/] : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-03-03 01:27:49.033 INFO  [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet : Initializing Servlet 'dispatcherServlet'
-2026-03-03 01:27:49.035 INFO  [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet : Completed initialization in 2 ms
-2026-03-03 01:27:49.106 INFO  [http-nio-8080-exec-3] e.N.R.m.i.a.i.RequestControllerAdapter : Request received: GET /api/requests/665c1b2c3d4e5f6a7b8c9d01
-2026-03-03 01:27:49.107 DEBUG [http-nio-8080-exec-3] e.N.R.m.a.u.RequestApplicationService : Starting getRequestDetails operation - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:27:49.108 DEBUG [http-nio-8080-exec-3] e.N.R.m.a.u.RequestApplicationService : Validating requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:27:49.110 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.RequestRepositoryAdapter : Executing findById operation - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:27:49.280 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.RequestRepositoryAdapter : Entity found in database - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:27:49.281 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.RequestRepositoryAdapter : Mapping RequestEntity to Request domain - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:27:49.284 DEBUG [http-nio-8080-exec-3] e.N.R.m.a.u.RequestApplicationService : Request found - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:27:49.284 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findById operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:27:49.321 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party found in database - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:27:49.321 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.PartyRepositoryAdapter : Mapping PartyEntity to Party domain - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:27:49.324 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.ContractRepositoryAdapter : Executing findActiveByPartyId operation on contracts - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:27:49.370 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.ContractRepositoryAdapter : findActiveByPartyId operation completed - partyId: [665a1b2c3d4e5f6a7b8c9d01], active contracts found: 0
-2026-03-03 01:27:49.371 DEBUG [http-nio-8080-exec-3] e.N.R.m.a.u.RequestApplicationService : Active contracts loaded for Party aggregate - partyId: [665a1b2c3d4e5f6a7b8c9d01], count: 0
-2026-03-03 01:27:49.372 DEBUG [http-nio-8080-exec-3] e.N.R.m.a.u.RequestApplicationService : getRequestDetails operation completed successfully - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:27:49.374 INFO  [http-nio-8080-exec-3] e.N.R.m.i.a.i.RequestControllerAdapter : Response sent successfully - Status: 200 - RequestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:30:56.842 INFO  [main] e.N.R.m.MsCoreDataApplication : Starting MsCoreDataApplication using Java 17.0.12 with PID 34432 (C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data\target\classes started by ferna in C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data)
-2026-03-03 01:30:56.853 DEBUG [main] e.N.R.m.MsCoreDataApplication : Running with Spring Boot v4.0.3, Spring v7.0.5
-2026-03-03 01:30:56.856 INFO  [main] e.N.R.m.MsCoreDataApplication : No active profile set, falling back to 1 default profile: "default"
-2026-03-03 01:30:57.978 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2026-03-03 01:30:58.226 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 238 ms. Found 3 MongoDB repository interfaces.
-2026-03-03 01:30:59.015 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat initialized with port 8080 (http)
-2026-03-03 01:30:59.035 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Initializing ProtocolHandler ["http-nio-8080"]
-2026-03-03 01:30:59.039 INFO  [main] o.a.catalina.core.StandardService : Starting service [Tomcat]
-2026-03-03 01:30:59.040 INFO  [main] o.a.catalina.core.StandardEngine : Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-03-03 01:30:59.149 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2110 ms
-2026-03-03 01:31:01.108 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Starting ProtocolHandler ["http-nio-8080"]
-2026-03-03 01:31:01.146 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat started on port 8080 (http) with context path '/'
-2026-03-03 01:31:01.160 INFO  [main] e.N.R.m.MsCoreDataApplication : Started MsCoreDataApplication in 5.37 seconds (process running for 6.019)
-2026-03-03 01:31:16.015 INFO  [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/] : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-03-03 01:31:16.016 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet : Initializing Servlet 'dispatcherServlet'
-2026-03-03 01:31:16.017 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet : Completed initialization in 1 ms
-2026-03-03 01:31:16.083 INFO  [http-nio-8080-exec-2] e.N.R.m.i.a.i.RequestControllerAdapter : Request received: GET /api/requests/665c1b2c3d4e5f6a7b8c9d01
-2026-03-03 01:31:16.084 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.RequestApplicationService : Starting getRequestDetails operation - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:31:16.086 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.RequestApplicationService : Validating requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:31:16.088 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.RequestRepositoryAdapter : Executing findById operation - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:31:16.227 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.RequestRepositoryAdapter : Entity found in database - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:31:16.227 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.RequestRepositoryAdapter : Mapping RequestEntity to Request domain - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:31:16.231 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.RequestApplicationService : Request found - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:31:16.231 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findById operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:31:16.276 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party found in database - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:31:16.277 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Mapping PartyEntity to Party domain - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:31:16.282 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.ContractRepositoryAdapter : Executing findActiveByPartyId operation on contracts - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:31:16.316 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.ContractRepositoryAdapter : findActiveByPartyId operation completed - partyId: [665a1b2c3d4e5f6a7b8c9d01], active contracts found: 0
-2026-03-03 01:31:16.317 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.RequestApplicationService : Active contracts loaded for Party aggregate - partyId: [665a1b2c3d4e5f6a7b8c9d01], count: 0
-2026-03-03 01:31:16.318 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.RequestApplicationService : getRequestDetails operation completed successfully - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:31:16.319 INFO  [http-nio-8080-exec-2] e.N.R.m.i.a.i.RequestControllerAdapter : Response sent successfully - Status: 200 - RequestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:32:23.588 INFO  [http-nio-8080-exec-5] e.N.R.m.i.a.i.RequestControllerAdapter : Request received: GET /api/requests/665c1b2c3d4e5f6a7b8c9d02
-2026-03-03 01:32:23.589 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.RequestApplicationService : Starting getRequestDetails operation - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:32:23.589 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.RequestApplicationService : Validating requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:32:23.589 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.RequestRepositoryAdapter : Executing findById operation - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:32:23.596 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.RequestRepositoryAdapter : Entity found in database - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:32:23.596 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.RequestRepositoryAdapter : Mapping RequestEntity to Request domain - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:32:23.597 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.RequestApplicationService : Request found - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:32:23.597 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findById operation - partyId: [665a1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:32:23.602 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party found in database - partyId: [665a1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:32:23.604 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.PartyRepositoryAdapter : Mapping PartyEntity to Party domain - partyId: [665a1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:32:23.604 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.ContractRepositoryAdapter : Executing findActiveByPartyId operation on contracts - partyId: [665a1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:32:23.608 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.ContractRepositoryAdapter : findActiveByPartyId operation completed - partyId: [665a1b2c3d4e5f6a7b8c9d02], active contracts found: 0
-2026-03-03 01:32:23.609 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.RequestApplicationService : Active contracts loaded for Party aggregate - partyId: [665a1b2c3d4e5f6a7b8c9d02], count: 0
-2026-03-03 01:32:23.609 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.RequestApplicationService : getRequestDetails operation completed successfully - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:32:23.609 INFO  [http-nio-8080-exec-5] e.N.R.m.i.a.i.RequestControllerAdapter : Response sent successfully - Status: 200 - RequestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:34:40.766 INFO  [main] e.N.R.m.MsCoreDataApplication : Starting MsCoreDataApplication using Java 17.0.12 with PID 33112 (C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data\target\classes started by ferna in C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data)
-2026-03-03 01:34:40.773 DEBUG [main] e.N.R.m.MsCoreDataApplication : Running with Spring Boot v4.0.3, Spring v7.0.5
-2026-03-03 01:34:40.775 INFO  [main] e.N.R.m.MsCoreDataApplication : No active profile set, falling back to 1 default profile: "default"
-2026-03-03 01:34:41.893 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2026-03-03 01:34:42.164 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 253 ms. Found 3 MongoDB repository interfaces.
-2026-03-03 01:34:42.800 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat initialized with port 8080 (http)
-2026-03-03 01:34:42.824 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Initializing ProtocolHandler ["http-nio-8080"]
-2026-03-03 01:34:42.828 INFO  [main] o.a.catalina.core.StandardService : Starting service [Tomcat]
-2026-03-03 01:34:42.829 INFO  [main] o.a.catalina.core.StandardEngine : Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-03-03 01:34:42.955 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2026 ms
-2026-03-03 01:34:44.866 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Starting ProtocolHandler ["http-nio-8080"]
-2026-03-03 01:34:44.910 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat started on port 8080 (http) with context path '/'
-2026-03-03 01:34:44.920 INFO  [main] e.N.R.m.MsCoreDataApplication : Started MsCoreDataApplication in 5.098 seconds (process running for 5.739)
-2026-03-03 01:34:53.811 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-03-03 01:34:53.811 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet : Initializing Servlet 'dispatcherServlet'
-2026-03-03 01:34:53.813 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet : Completed initialization in 1 ms
-2026-03-03 01:34:53.879 INFO  [http-nio-8080-exec-1] e.N.R.m.i.a.i.RequestControllerAdapter : Request received: GET /api/requests/665c1b2c3d4e5f6a7b8c9d02
-2026-03-03 01:34:53.879 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : Starting getRequestDetails operation - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:34:53.880 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : Validating requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:34:53.881 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.RequestRepositoryAdapter : Executing findById operation - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:34:54.048 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.RequestRepositoryAdapter : Entity found in database - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:34:54.049 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.RequestRepositoryAdapter : Mapping RequestEntity to Request domain - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:34:54.050 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : Request found - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:34:54.051 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findById operation - partyId: [665a1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:34:54.092 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party found in database - partyId: [665a1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:34:54.093 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Mapping PartyEntity to Party domain - partyId: [665a1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:34:54.096 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.ContractRepositoryAdapter : Executing findActiveByPartyId operation on contracts - partyId: [665a1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:34:54.144 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.ContractRepositoryAdapter : findActiveByPartyId operation completed - partyId: [665a1b2c3d4e5f6a7b8c9d02], active contracts found: 1
-2026-03-03 01:34:54.146 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : Active contracts loaded for Party aggregate - partyId: [665a1b2c3d4e5f6a7b8c9d02], count: 1
-2026-03-03 01:34:54.147 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : getRequestDetails operation completed successfully - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:34:54.149 INFO  [http-nio-8080-exec-1] e.N.R.m.i.a.i.RequestControllerAdapter : Response sent successfully - Status: 200 - RequestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:37:41.970 INFO  [main] e.N.R.m.MsCoreDataApplication : Starting MsCoreDataApplication using Java 17.0.12 with PID 30292 (C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data\target\classes started by ferna in C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data)
-2026-03-03 01:37:41.974 DEBUG [main] e.N.R.m.MsCoreDataApplication : Running with Spring Boot v4.0.3, Spring v7.0.5
-2026-03-03 01:37:41.976 INFO  [main] e.N.R.m.MsCoreDataApplication : No active profile set, falling back to 1 default profile: "default"
-2026-03-03 01:37:42.994 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2026-03-03 01:37:43.232 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 218 ms. Found 3 MongoDB repository interfaces.
-2026-03-03 01:37:43.863 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat initialized with port 8080 (http)
-2026-03-03 01:37:43.879 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Initializing ProtocolHandler ["http-nio-8080"]
-2026-03-03 01:37:43.882 INFO  [main] o.a.catalina.core.StandardService : Starting service [Tomcat]
-2026-03-03 01:37:43.883 INFO  [main] o.a.catalina.core.StandardEngine : Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-03-03 01:37:43.987 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1853 ms
-2026-03-03 01:37:45.624 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Starting ProtocolHandler ["http-nio-8080"]
-2026-03-03 01:37:45.674 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat started on port 8080 (http) with context path '/'
-2026-03-03 01:37:45.686 INFO  [main] e.N.R.m.MsCoreDataApplication : Started MsCoreDataApplication in 4.724 seconds (process running for 5.408)
-2026-03-03 01:37:52.207 INFO  [http-nio-8080-exec-4] o.a.c.c.C.[Tomcat].[localhost].[/] : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-03-03 01:37:52.208 INFO  [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet : Initializing Servlet 'dispatcherServlet'
-2026-03-03 01:37:52.211 INFO  [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet : Completed initialization in 2 ms
-2026-03-03 01:37:52.287 INFO  [http-nio-8080-exec-4] e.N.R.m.i.a.i.RequestControllerAdapter : Request received: GET /api/requests/665c1b2c3d4e5f6a7b8c9d02
-2026-03-03 01:37:52.288 DEBUG [http-nio-8080-exec-4] e.N.R.m.a.u.RequestApplicationService : Starting getRequestDetails operation - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:37:52.289 DEBUG [http-nio-8080-exec-4] e.N.R.m.a.u.RequestApplicationService : Validating requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:37:52.292 DEBUG [http-nio-8080-exec-4] e.N.R.m.i.a.o.RequestRepositoryAdapter : Executing findById operation - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:37:52.453 DEBUG [http-nio-8080-exec-4] e.N.R.m.i.a.o.RequestRepositoryAdapter : Entity found in database - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:37:52.453 DEBUG [http-nio-8080-exec-4] e.N.R.m.i.a.o.RequestRepositoryAdapter : Mapping RequestEntity to Request domain - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:37:52.455 DEBUG [http-nio-8080-exec-4] e.N.R.m.a.u.RequestApplicationService : Request found - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:37:52.455 DEBUG [http-nio-8080-exec-4] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findById operation - partyId: [665a1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:37:52.494 DEBUG [http-nio-8080-exec-4] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party found in database - partyId: [665a1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:37:52.494 DEBUG [http-nio-8080-exec-4] e.N.R.m.i.a.o.PartyRepositoryAdapter : Mapping PartyEntity to Party domain - partyId: [665a1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:37:52.498 DEBUG [http-nio-8080-exec-4] e.N.R.m.i.a.o.ContractRepositoryAdapter : Executing findActiveByPartyId operation on contracts - partyId: [665a1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:37:52.546 DEBUG [http-nio-8080-exec-4] e.N.R.m.i.a.o.ContractRepositoryAdapter : findActiveByPartyId operation completed - partyId: [665a1b2c3d4e5f6a7b8c9d02], active contracts found: 1
-2026-03-03 01:37:52.548 DEBUG [http-nio-8080-exec-4] e.N.R.m.a.u.RequestApplicationService : Active contracts loaded for Party aggregate - partyId: [665a1b2c3d4e5f6a7b8c9d02], count: 1
-2026-03-03 01:37:52.548 DEBUG [http-nio-8080-exec-4] e.N.R.m.domain.entities.Person : Total monthly debt payment calculated - result: 0.0 EUR
-2026-03-03 01:37:52.549 DEBUG [http-nio-8080-exec-4] e.N.R.m.domain.entities.Person : Global DTI calculated - totalMonthlyPayment: 0.0 EUR, grossMonthlyIncome: 3166.6708333333336, DTI: 0.0
-2026-03-03 01:37:52.550 DEBUG [http-nio-8080-exec-4] e.N.R.m.domain.entities.Person : Total outstanding debt calculated - result: 145000.06 EUR
-2026-03-03 01:37:52.551 DEBUG [http-nio-8080-exec-4] e.N.R.m.a.u.RequestApplicationService : getRequestDetails operation completed successfully - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:37:52.552 INFO  [http-nio-8080-exec-4] e.N.R.m.i.a.i.RequestControllerAdapter : Response sent successfully - Status: 200 - RequestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:42:41.989 INFO  [http-nio-8080-exec-5] e.N.R.m.i.a.i.RequestControllerAdapter : Request received: GET /api/requests/665c1b2c3d4e5f6a7b8c9d01
-2026-03-03 01:42:41.990 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.RequestApplicationService : Starting getRequestDetails operation - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:42:41.990 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.RequestApplicationService : Validating requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:42:41.990 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.RequestRepositoryAdapter : Executing findById operation - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:42:41.995 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.RequestRepositoryAdapter : Entity found in database - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:42:41.995 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.RequestRepositoryAdapter : Mapping RequestEntity to Request domain - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:42:41.997 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.RequestApplicationService : Request found - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:42:41.997 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findById operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:42:42.001 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party found in database - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:42:42.002 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.PartyRepositoryAdapter : Mapping PartyEntity to Party domain - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:42:42.002 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.ContractRepositoryAdapter : Executing findActiveByPartyId operation on contracts - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:42:42.009 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.ContractRepositoryAdapter : findActiveByPartyId operation completed - partyId: [665a1b2c3d4e5f6a7b8c9d01], active contracts found: 2
-2026-03-03 01:42:42.010 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.RequestApplicationService : Active contracts loaded for Party aggregate - partyId: [665a1b2c3d4e5f6a7b8c9d01], count: 2
-2026-03-03 01:42:42.010 DEBUG [http-nio-8080-exec-5] e.N.R.m.domain.entities.Person : Total monthly debt payment calculated - result: 125.00333333333333 EUR
-2026-03-03 01:42:42.011 DEBUG [http-nio-8080-exec-5] e.N.R.m.domain.entities.Person : Global DTI calculated - totalMonthlyPayment: 125.00333333333333 EUR, grossMonthlyIncome: 4333.3358333333335, DTI: 0.028846906434477054
-2026-03-03 01:42:42.011 DEBUG [http-nio-8080-exec-5] e.N.R.m.domain.entities.Person : Total outstanding debt calculated - result: 10000.05 EUR
-2026-03-03 01:42:42.012 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.RequestApplicationService : getRequestDetails operation completed successfully - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:42:42.012 INFO  [http-nio-8080-exec-5] e.N.R.m.i.a.i.RequestControllerAdapter : Response sent successfully - Status: 200 - RequestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:44:50.169 INFO  [http-nio-8080-exec-8] e.N.R.m.i.a.i.RequestControllerAdapter : Request received: GET /api/requests/665c1b2c3d4e5f6a7b8c9d03
-2026-03-03 01:44:50.169 DEBUG [http-nio-8080-exec-8] e.N.R.m.a.u.RequestApplicationService : Starting getRequestDetails operation - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:44:50.170 DEBUG [http-nio-8080-exec-8] e.N.R.m.a.u.RequestApplicationService : Validating requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:44:50.170 DEBUG [http-nio-8080-exec-8] e.N.R.m.i.a.o.RequestRepositoryAdapter : Executing findById operation - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:44:50.173 DEBUG [http-nio-8080-exec-8] e.N.R.m.i.a.o.RequestRepositoryAdapter : Entity found in database - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:44:50.173 DEBUG [http-nio-8080-exec-8] e.N.R.m.i.a.o.RequestRepositoryAdapter : Mapping RequestEntity to Request domain - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:44:50.174 DEBUG [http-nio-8080-exec-8] e.N.R.m.a.u.RequestApplicationService : Request found - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:44:50.174 DEBUG [http-nio-8080-exec-8] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findById operation - partyId: [665a1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:44:50.178 DEBUG [http-nio-8080-exec-8] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party found in database - partyId: [665a1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:44:50.178 DEBUG [http-nio-8080-exec-8] e.N.R.m.i.a.o.PartyRepositoryAdapter : Mapping PartyEntity to Party domain - partyId: [665a1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:44:50.179 DEBUG [http-nio-8080-exec-8] e.N.R.m.i.a.o.ContractRepositoryAdapter : Executing findActiveByPartyId operation on contracts - partyId: [665a1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:44:50.182 DEBUG [http-nio-8080-exec-8] e.N.R.m.i.a.o.ContractRepositoryAdapter : findActiveByPartyId operation completed - partyId: [665a1b2c3d4e5f6a7b8c9d03], active contracts found: 0
-2026-03-03 01:44:50.183 DEBUG [http-nio-8080-exec-8] e.N.R.m.a.u.RequestApplicationService : Active contracts loaded for Party aggregate - partyId: [665a1b2c3d4e5f6a7b8c9d03], count: 0
-2026-03-03 01:44:50.183 DEBUG [http-nio-8080-exec-8] e.N.R.m.domain.entities.Person : Global DTI calculated - totalMonthlyPayment: 0.0 EUR, grossMonthlyIncome: 1541.6674999999998, DTI: 0.0
-2026-03-03 01:44:50.184 ERROR [http-nio-8080-exec-8] e.N.R.m.i.a.i.RequestControllerAdapter : Unexpected error processing request: Cannot invoke "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Money.toString()" because the return value of "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RequestDetails.getRequestedAmount()" is null
-java.lang.NullPointerException: Cannot invoke "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Money.toString()" because the return value of "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RequestDetails.getRequestedAmount()" is null
-	at es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestDetailsDTOMapper.toDTO(RequestDetailsDTOMapper.java:28)
-	at es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.RequestApplicationService.getRequestDetails(RequestApplicationService.java:103)
-	at es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.input.RequestControllerAdapter.getRequestDetails(RequestControllerAdapter.java:71)
+2026-03-07 15:12:35.614 INFO  [main] e.N.R.m.MsCoreDataApplication : Starting MsCoreDataApplication using Java 17.0.12 with PID 33596 (C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data\target\classes started by ferna in C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data)
+2026-03-07 15:12:35.632 DEBUG [main] e.N.R.m.MsCoreDataApplication : Running with Spring Boot v4.0.3, Spring v7.0.5
+2026-03-07 15:12:35.635 INFO  [main] e.N.R.m.MsCoreDataApplication : No active profile set, falling back to 1 default profile: "default"
+2026-03-07 15:12:37.288 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-03-07 15:12:37.692 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 379 ms. Found 5 MongoDB repository interfaces.
+2026-03-07 15:12:38.719 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat initialized with port 8080 (http)
+2026-03-07 15:12:38.746 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Initializing ProtocolHandler ["http-nio-8080"]
+2026-03-07 15:12:38.754 INFO  [main] o.a.catalina.core.StandardService : Starting service [Tomcat]
+2026-03-07 15:12:38.759 INFO  [main] o.a.catalina.core.StandardEngine : Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-03-07 15:12:38.925 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 3111 ms
+2026-03-07 15:12:41.543 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Starting ProtocolHandler ["http-nio-8080"]
+2026-03-07 15:12:41.603 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat started on port 8080 (http) with context path '/'
+2026-03-07 15:12:41.622 INFO  [main] e.N.R.m.MsCoreDataApplication : Started MsCoreDataApplication in 7.201 seconds (process running for 7.985)
+2026-03-07 15:16:29.354 INFO  [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/] : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-07 15:16:29.355 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet : Initializing Servlet 'dispatcherServlet'
+2026-03-07 15:16:29.357 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet : Completed initialization in 1 ms
+2026-03-07 15:16:29.425 INFO  [http-nio-8080-exec-2] e.N.R.m.i.a.i.ScoringControllerAdapter : Request received: GET /api/requests/665c1b2c3d4e5f6a7b8c9d01/scoring
+2026-03-07 15:16:29.427 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.ScoringApplicationService : Starting getScoringByRequestId operation - requestId: [665c1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:16:29.427 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.ScoringApplicationService : Validating requestId for scoring: [665c1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:16:29.429 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.ScoringRepositoryAdapter : Executing findLatestByRequestId operation on scorings - requestId: [665c1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:16:29.669 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.ScoringRepositoryAdapter : Scoring found for request - requestId: [665c1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:16:29.671 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.ScoringApplicationService : Scoring found for request - requestId: [665c1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:16:29.672 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.ScoringApplicationService : getScoringByRequestId operation completed successfully - requestId: [665c1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:16:29.673 INFO  [http-nio-8080-exec-2] e.N.R.m.i.a.i.ScoringControllerAdapter : Response sent successfully - Status: 200 - RequestId: [665c1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:26:47.968 INFO  [main] e.N.R.m.MsCoreDataApplication : Starting MsCoreDataApplication using Java 17.0.12 with PID 1956 (C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data\target\classes started by ferna in C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data)
+2026-03-07 15:26:47.973 DEBUG [main] e.N.R.m.MsCoreDataApplication : Running with Spring Boot v4.0.3, Spring v7.0.5
+2026-03-07 15:26:47.974 INFO  [main] e.N.R.m.MsCoreDataApplication : No active profile set, falling back to 1 default profile: "default"
+2026-03-07 15:26:49.159 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-03-07 15:26:49.386 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 216 ms. Found 5 MongoDB repository interfaces.
+2026-03-07 15:26:50.059 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat initialized with port 8080 (http)
+2026-03-07 15:26:50.077 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Initializing ProtocolHandler ["http-nio-8080"]
+2026-03-07 15:26:50.080 INFO  [main] o.a.catalina.core.StandardService : Starting service [Tomcat]
+2026-03-07 15:26:50.080 INFO  [main] o.a.catalina.core.StandardEngine : Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-03-07 15:26:50.183 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2082 ms
+2026-03-07 15:26:52.249 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Starting ProtocolHandler ["http-nio-8080"]
+2026-03-07 15:26:52.311 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat started on port 8080 (http) with context path '/'
+2026-03-07 15:26:52.320 INFO  [main] e.N.R.m.MsCoreDataApplication : Started MsCoreDataApplication in 5.376 seconds (process running for 6.056)
+2026-03-07 15:27:35.965 INFO  [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/] : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-07 15:27:35.966 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet : Initializing Servlet 'dispatcherServlet'
+2026-03-07 15:27:35.967 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet : Completed initialization in 1 ms
+2026-03-07 15:27:36.032 INFO  [http-nio-8080-exec-2] e.N.R.m.i.a.i.SimulationControllerAdapter : Request received: GET /api/simulations
+2026-03-07 15:27:36.033 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.SimulationApplicationService : Starting listSimulations operation with filters - requestId: [null], partyName: ["Maria"], partyId: [null]
+2026-03-07 15:27:36.036 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.SimulationRepositoryAdapter : Executing findWithFilters operation on simulations - requestId: [null], partyId: [null]
+2026-03-07 15:27:36.278 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.SimulationRepositoryAdapter : findWithFilters operation on simulations completed - Retrieved 4 entity(ies)
+2026-03-07 15:27:36.279 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.SimulationApplicationService : listSimulations operation completed - Found 4 simulation(s)
+2026-03-07 15:27:36.280 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [694eb632b6ddf3754f1e2625]
+2026-03-07 15:27:36.310 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party not found for name query - partyId: [694eb632b6ddf3754f1e2625]
+2026-03-07 15:27:36.310 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [694eb632b6ddf3754f1e2626]
+2026-03-07 15:27:36.314 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party not found for name query - partyId: [694eb632b6ddf3754f1e2626]
+2026-03-07 15:27:36.315 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [694eb632b6ddf3754f1e2626]
+2026-03-07 15:27:36.318 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party not found for name query - partyId: [694eb632b6ddf3754f1e2626]
+2026-03-07 15:27:36.319 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:27:36.355 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:27:36.356 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.SimulationApplicationService : Applying post-fetch partyName filter: ["Maria"]
+2026-03-07 15:27:36.357 ERROR [http-nio-8080-exec-2] e.N.R.m.i.a.i.SimulationControllerAdapter : Unexpected error processing request: Cannot invoke "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party.getPersonDetails()" because the return value of "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Simulation.getParty()" is null
+java.lang.NullPointerException: Cannot invoke "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party.getPersonDetails()" because the return value of "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Simulation.getParty()" is null
+	at es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.SimulationApplicationService.lambda$2(SimulationApplicationService.java:125)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:178)
+	at java.base/java.util.AbstractList$RandomAccessSpliterator.forEachRemaining(AbstractList.java:720)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:575)
+	at java.base/java.util.stream.AbstractPipeline.evaluateToArrayNode(AbstractPipeline.java:260)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:616)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:622)
+	at java.base/java.util.stream.ReferencePipeline.toList(ReferencePipeline.java:627)
+	at es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.SimulationApplicationService.filterByPartyName(SimulationApplicationService.java:127)
+	at es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.SimulationApplicationService.listSimulations(SimulationApplicationService.java:62)
+	at es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.input.SimulationControllerAdapter.listSimulations(SimulationControllerAdapter.java:58)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -254,140 +112,152 @@ java.lang.NullPointerException: Cannot invoke "es.NTTEnterprise.RIntellix.ms_cor
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
 	at java.base/java.lang.Thread.run(Thread.java:842)
-2026-03-03 01:44:50.193 ERROR [http-nio-8080-exec-8] e.N.R.m.i.a.i.RequestControllerAdapter : Error response sent - Status: 500 - Reason: Internal server error
-2026-03-03 01:45:58.753 INFO  [main] e.N.R.m.MsCoreDataApplication : Starting MsCoreDataApplication using Java 17.0.12 with PID 14312 (C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data\target\classes started by ferna in C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data)
-2026-03-03 01:45:58.765 DEBUG [main] e.N.R.m.MsCoreDataApplication : Running with Spring Boot v4.0.3, Spring v7.0.5
-2026-03-03 01:45:58.767 INFO  [main] e.N.R.m.MsCoreDataApplication : No active profile set, falling back to 1 default profile: "default"
-2026-03-03 01:45:59.903 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2026-03-03 01:46:00.172 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 250 ms. Found 3 MongoDB repository interfaces.
-2026-03-03 01:46:00.858 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat initialized with port 8080 (http)
-2026-03-03 01:46:00.876 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Initializing ProtocolHandler ["http-nio-8080"]
-2026-03-03 01:46:00.879 INFO  [main] o.a.catalina.core.StandardService : Starting service [Tomcat]
-2026-03-03 01:46:00.880 INFO  [main] o.a.catalina.core.StandardEngine : Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-03-03 01:46:00.989 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2049 ms
-2026-03-03 01:46:02.894 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Starting ProtocolHandler ["http-nio-8080"]
-2026-03-03 01:46:02.947 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat started on port 8080 (http) with context path '/'
-2026-03-03 01:46:02.960 INFO  [main] e.N.R.m.MsCoreDataApplication : Started MsCoreDataApplication in 5.19 seconds (process running for 5.827)
-2026-03-03 01:46:28.868 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-03-03 01:46:28.869 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet : Initializing Servlet 'dispatcherServlet'
-2026-03-03 01:46:28.871 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet : Completed initialization in 2 ms
-2026-03-03 01:46:28.945 INFO  [http-nio-8080-exec-1] e.N.R.m.i.a.i.RequestControllerAdapter : Request received: GET /api/requests/665c1b2c3d4e5f6a7b8c9d03
-2026-03-03 01:46:28.946 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : Starting getRequestDetails operation - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:46:28.946 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : Validating requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:46:28.948 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.RequestRepositoryAdapter : Executing findById operation - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:46:29.094 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.RequestRepositoryAdapter : Entity found in database - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:46:29.094 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.RequestRepositoryAdapter : Mapping RequestEntity to Request domain - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:46:29.096 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : Request found - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:46:29.097 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findById operation - partyId: [665a1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:46:29.139 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party found in database - partyId: [665a1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:46:29.139 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Mapping PartyEntity to Party domain - partyId: [665a1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:46:29.143 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.ContractRepositoryAdapter : Executing findActiveByPartyId operation on contracts - partyId: [665a1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:46:29.188 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.ContractRepositoryAdapter : findActiveByPartyId operation completed - partyId: [665a1b2c3d4e5f6a7b8c9d03], active contracts found: 0
-2026-03-03 01:46:29.189 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : Active contracts loaded for Party aggregate - partyId: [665a1b2c3d4e5f6a7b8c9d03], count: 0
-2026-03-03 01:46:29.189 DEBUG [http-nio-8080-exec-1] e.N.R.m.domain.entities.Person : Global DTI calculated - totalMonthlyPayment: 0.0 EUR, grossMonthlyIncome: 1541.6674999999998, DTI: 0.0
-2026-03-03 01:46:29.192 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : getRequestDetails operation completed successfully - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:46:29.193 INFO  [http-nio-8080-exec-1] e.N.R.m.i.a.i.RequestControllerAdapter : Response sent successfully - Status: 200 - RequestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:46:46.962 INFO  [http-nio-8080-exec-3] e.N.R.m.i.a.i.RequestControllerAdapter : Request received: GET /api/requests/665c1b2c3d4e5f6a7b8c9d01
-2026-03-03 01:46:46.963 DEBUG [http-nio-8080-exec-3] e.N.R.m.a.u.RequestApplicationService : Starting getRequestDetails operation - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:46:46.963 DEBUG [http-nio-8080-exec-3] e.N.R.m.a.u.RequestApplicationService : Validating requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:46:46.963 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.RequestRepositoryAdapter : Executing findById operation - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:46:46.968 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.RequestRepositoryAdapter : Entity found in database - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:46:46.968 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.RequestRepositoryAdapter : Mapping RequestEntity to Request domain - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:46:46.969 DEBUG [http-nio-8080-exec-3] e.N.R.m.a.u.RequestApplicationService : Request found - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:46:46.969 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findById operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:46:46.972 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party found in database - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:46:46.973 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.PartyRepositoryAdapter : Mapping PartyEntity to Party domain - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:46:46.973 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.ContractRepositoryAdapter : Executing findActiveByPartyId operation on contracts - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:46:46.985 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.ContractRepositoryAdapter : findActiveByPartyId operation completed - partyId: [665a1b2c3d4e5f6a7b8c9d01], active contracts found: 2
-2026-03-03 01:46:46.988 DEBUG [http-nio-8080-exec-3] e.N.R.m.a.u.RequestApplicationService : Active contracts loaded for Party aggregate - partyId: [665a1b2c3d4e5f6a7b8c9d01], count: 2
-2026-03-03 01:46:46.989 DEBUG [http-nio-8080-exec-3] e.N.R.m.domain.entities.Person : Total monthly debt payment calculated - result: 411.5333333333333 EUR
-2026-03-03 01:46:46.990 DEBUG [http-nio-8080-exec-3] e.N.R.m.domain.entities.Person : Global DTI calculated - totalMonthlyPayment: 411.5333333333333 EUR, grossMonthlyIncome: 4333.3358333333335, DTI: 0.09496917597932154
-2026-03-03 01:46:46.990 DEBUG [http-nio-8080-exec-3] e.N.R.m.domain.entities.Person : Total outstanding debt calculated - result: 10000.05 EUR
-2026-03-03 01:46:46.991 DEBUG [http-nio-8080-exec-3] e.N.R.m.a.u.RequestApplicationService : getRequestDetails operation completed successfully - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:46:46.991 INFO  [http-nio-8080-exec-3] e.N.R.m.i.a.i.RequestControllerAdapter : Response sent successfully - Status: 200 - RequestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:47:41.965 INFO  [http-nio-8080-exec-2] e.N.R.m.i.a.i.RequestControllerAdapter : Request received: GET /api/requests/665c1b2c3d4e5f6a7b8c9d02
-2026-03-03 01:47:41.965 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.RequestApplicationService : Starting getRequestDetails operation - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:47:41.965 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.RequestApplicationService : Validating requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:47:41.965 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.RequestRepositoryAdapter : Executing findById operation - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:47:41.969 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.RequestRepositoryAdapter : Entity found in database - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:47:41.969 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.RequestRepositoryAdapter : Mapping RequestEntity to Request domain - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:47:41.970 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.RequestApplicationService : Request found - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:47:41.970 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findById operation - partyId: [665a1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:47:41.977 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party found in database - partyId: [665a1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:47:41.977 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Mapping PartyEntity to Party domain - partyId: [665a1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:47:41.979 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.ContractRepositoryAdapter : Executing findActiveByPartyId operation on contracts - partyId: [665a1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:47:41.988 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.ContractRepositoryAdapter : findActiveByPartyId operation completed - partyId: [665a1b2c3d4e5f6a7b8c9d02], active contracts found: 1
-2026-03-03 01:47:41.988 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.RequestApplicationService : Active contracts loaded for Party aggregate - partyId: [665a1b2c3d4e5f6a7b8c9d02], count: 1
-2026-03-03 01:47:41.989 DEBUG [http-nio-8080-exec-2] e.N.R.m.domain.entities.Person : Total monthly debt payment calculated - result: 711.28 EUR
-2026-03-03 01:47:41.989 DEBUG [http-nio-8080-exec-2] e.N.R.m.domain.entities.Person : Global DTI calculated - totalMonthlyPayment: 711.28 EUR, grossMonthlyIncome: 3166.6708333333336, DTI: 0.22461444129678773
-2026-03-03 01:47:41.993 DEBUG [http-nio-8080-exec-2] e.N.R.m.domain.entities.Person : Total outstanding debt calculated - result: 145000.06 EUR
-2026-03-03 01:47:41.995 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.RequestApplicationService : getRequestDetails operation completed successfully - requestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:47:41.996 INFO  [http-nio-8080-exec-2] e.N.R.m.i.a.i.RequestControllerAdapter : Response sent successfully - Status: 200 - RequestId: [665c1b2c3d4e5f6a7b8c9d02]
-2026-03-03 01:48:47.436 INFO  [http-nio-8080-exec-7] e.N.R.m.i.a.i.RequestControllerAdapter : Request received: GET /api/requests/665c1b2c3d4e5f6a7b8c9d01
-2026-03-03 01:48:47.437 DEBUG [http-nio-8080-exec-7] e.N.R.m.a.u.RequestApplicationService : Starting getRequestDetails operation - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:48:47.437 DEBUG [http-nio-8080-exec-7] e.N.R.m.a.u.RequestApplicationService : Validating requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:48:47.437 DEBUG [http-nio-8080-exec-7] e.N.R.m.i.a.o.RequestRepositoryAdapter : Executing findById operation - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:48:47.440 DEBUG [http-nio-8080-exec-7] e.N.R.m.i.a.o.RequestRepositoryAdapter : Entity found in database - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:48:47.441 DEBUG [http-nio-8080-exec-7] e.N.R.m.i.a.o.RequestRepositoryAdapter : Mapping RequestEntity to Request domain - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:48:47.441 DEBUG [http-nio-8080-exec-7] e.N.R.m.a.u.RequestApplicationService : Request found - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:48:47.442 DEBUG [http-nio-8080-exec-7] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findById operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:48:47.447 DEBUG [http-nio-8080-exec-7] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party found in database - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:48:47.448 DEBUG [http-nio-8080-exec-7] e.N.R.m.i.a.o.PartyRepositoryAdapter : Mapping PartyEntity to Party domain - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:48:47.448 DEBUG [http-nio-8080-exec-7] e.N.R.m.i.a.o.ContractRepositoryAdapter : Executing findActiveByPartyId operation on contracts - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:48:47.454 DEBUG [http-nio-8080-exec-7] e.N.R.m.i.a.o.ContractRepositoryAdapter : findActiveByPartyId operation completed - partyId: [665a1b2c3d4e5f6a7b8c9d01], active contracts found: 2
-2026-03-03 01:48:47.455 DEBUG [http-nio-8080-exec-7] e.N.R.m.a.u.RequestApplicationService : Active contracts loaded for Party aggregate - partyId: [665a1b2c3d4e5f6a7b8c9d01], count: 2
-2026-03-03 01:48:47.456 DEBUG [http-nio-8080-exec-7] e.N.R.m.domain.entities.Person : Total monthly debt payment calculated - result: 411.5333333333333 EUR
-2026-03-03 01:48:47.457 DEBUG [http-nio-8080-exec-7] e.N.R.m.domain.entities.Person : Global DTI calculated - totalMonthlyPayment: 411.5333333333333 EUR, grossMonthlyIncome: 4333.3358333333335, DTI: 0.09496917597932154
-2026-03-03 01:48:47.457 DEBUG [http-nio-8080-exec-7] e.N.R.m.domain.entities.Person : Total outstanding debt calculated - result: 10000.05 EUR
-2026-03-03 01:48:47.458 DEBUG [http-nio-8080-exec-7] e.N.R.m.a.u.RequestApplicationService : getRequestDetails operation completed successfully - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:48:47.459 INFO  [http-nio-8080-exec-7] e.N.R.m.i.a.i.RequestControllerAdapter : Response sent successfully - Status: 200 - RequestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:49:46.927 INFO  [http-nio-8080-exec-8] e.N.R.m.i.a.i.RequestControllerAdapter : Request received: GET /api/requests/665c1b2c3d4e5f6a7b8c9d03
-2026-03-03 01:49:46.928 DEBUG [http-nio-8080-exec-8] e.N.R.m.a.u.RequestApplicationService : Starting getRequestDetails operation - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:49:46.929 DEBUG [http-nio-8080-exec-8] e.N.R.m.a.u.RequestApplicationService : Validating requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:49:46.929 DEBUG [http-nio-8080-exec-8] e.N.R.m.i.a.o.RequestRepositoryAdapter : Executing findById operation - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:49:46.933 DEBUG [http-nio-8080-exec-8] e.N.R.m.i.a.o.RequestRepositoryAdapter : Entity found in database - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:49:46.934 DEBUG [http-nio-8080-exec-8] e.N.R.m.i.a.o.RequestRepositoryAdapter : Mapping RequestEntity to Request domain - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:49:46.935 DEBUG [http-nio-8080-exec-8] e.N.R.m.a.u.RequestApplicationService : Request found - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:49:46.935 DEBUG [http-nio-8080-exec-8] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findById operation - partyId: [665a1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:49:46.941 DEBUG [http-nio-8080-exec-8] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party found in database - partyId: [665a1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:49:46.942 DEBUG [http-nio-8080-exec-8] e.N.R.m.i.a.o.PartyRepositoryAdapter : Mapping PartyEntity to Party domain - partyId: [665a1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:49:46.944 DEBUG [http-nio-8080-exec-8] e.N.R.m.i.a.o.ContractRepositoryAdapter : Executing findActiveByPartyId operation on contracts - partyId: [665a1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:49:46.951 DEBUG [http-nio-8080-exec-8] e.N.R.m.i.a.o.ContractRepositoryAdapter : findActiveByPartyId operation completed - partyId: [665a1b2c3d4e5f6a7b8c9d03], active contracts found: 0
-2026-03-03 01:49:46.953 DEBUG [http-nio-8080-exec-8] e.N.R.m.a.u.RequestApplicationService : Active contracts loaded for Party aggregate - partyId: [665a1b2c3d4e5f6a7b8c9d03], count: 0
-2026-03-03 01:49:46.954 DEBUG [http-nio-8080-exec-8] e.N.R.m.domain.entities.Person : Global DTI calculated - totalMonthlyPayment: 0.0 EUR, grossMonthlyIncome: 1541.6674999999998, DTI: 0.0
-2026-03-03 01:49:46.957 DEBUG [http-nio-8080-exec-8] e.N.R.m.a.u.RequestApplicationService : getRequestDetails operation completed successfully - requestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:49:46.957 INFO  [http-nio-8080-exec-8] e.N.R.m.i.a.i.RequestControllerAdapter : Response sent successfully - Status: 200 - RequestId: [665c1b2c3d4e5f6a7b8c9d03]
-2026-03-03 01:50:54.517 INFO  [main] e.N.R.m.MsCoreDataApplication : Starting MsCoreDataApplication using Java 17.0.12 with PID 12268 (C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data\target\classes started by ferna in C:\Users\ferna\Escritorio\Escritorio\TFG\Implementacion\ms-core-data)
-2026-03-03 01:50:54.528 DEBUG [main] e.N.R.m.MsCoreDataApplication : Running with Spring Boot v4.0.3, Spring v7.0.5
-2026-03-03 01:50:54.530 INFO  [main] e.N.R.m.MsCoreDataApplication : No active profile set, falling back to 1 default profile: "default"
-2026-03-03 01:50:55.563 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2026-03-03 01:50:55.804 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 230 ms. Found 3 MongoDB repository interfaces.
-2026-03-03 01:50:56.415 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat initialized with port 8080 (http)
-2026-03-03 01:50:56.438 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Initializing ProtocolHandler ["http-nio-8080"]
-2026-03-03 01:50:56.441 INFO  [main] o.a.catalina.core.StandardService : Starting service [Tomcat]
-2026-03-03 01:50:56.442 INFO  [main] o.a.catalina.core.StandardEngine : Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-03-03 01:50:56.545 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1873 ms
-2026-03-03 01:50:58.274 INFO  [main] o.a.coyote.http11.Http11NioProtocol : Starting ProtocolHandler ["http-nio-8080"]
-2026-03-03 01:50:58.328 INFO  [main] o.s.boot.tomcat.TomcatWebServer : Tomcat started on port 8080 (http) with context path '/'
-2026-03-03 01:50:58.342 INFO  [main] e.N.R.m.MsCoreDataApplication : Started MsCoreDataApplication in 4.819 seconds (process running for 5.457)
-2026-03-03 01:51:00.124 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-03-03 01:51:00.125 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet : Initializing Servlet 'dispatcherServlet'
-2026-03-03 01:51:00.127 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet : Completed initialization in 2 ms
-2026-03-03 01:51:00.198 INFO  [http-nio-8080-exec-1] e.N.R.m.i.a.i.RequestControllerAdapter : Request received: GET /api/requests/665c1b2c3d4e5f6a7b8c9d01
-2026-03-03 01:51:00.199 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : Starting getRequestDetails operation - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:51:00.200 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : Validating requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:51:00.202 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.RequestRepositoryAdapter : Executing findById operation - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:51:00.343 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.RequestRepositoryAdapter : Entity found in database - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:51:00.344 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.RequestRepositoryAdapter : Mapping RequestEntity to Request domain - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:51:00.346 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : Request found - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:51:00.347 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findById operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:51:00.386 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Party found in database - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:51:00.387 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Mapping PartyEntity to Party domain - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:51:00.391 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.ContractRepositoryAdapter : Executing findActiveByPartyId operation on contracts - partyId: [665a1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:51:00.453 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.ContractRepositoryAdapter : findActiveByPartyId operation completed - partyId: [665a1b2c3d4e5f6a7b8c9d01], active contracts found: 2
-2026-03-03 01:51:00.455 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : Active contracts loaded for Party aggregate - partyId: [665a1b2c3d4e5f6a7b8c9d01], count: 2
-2026-03-03 01:51:00.456 DEBUG [http-nio-8080-exec-1] e.N.R.m.domain.entities.Person : Total monthly debt payment calculated - result: 411.5333333333333 EUR
-2026-03-03 01:51:00.457 DEBUG [http-nio-8080-exec-1] e.N.R.m.domain.entities.Person : Global DTI calculated - totalMonthlyPayment: 411.5333333333333 EUR, grossMonthlyIncome: 4333.3358333333335, DTI: 0.09496917597932154
-2026-03-03 01:51:00.457 DEBUG [http-nio-8080-exec-1] e.N.R.m.domain.entities.Person : Total outstanding debt calculated - result: 10000.05 EUR
-2026-03-03 01:51:00.459 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.RequestApplicationService : getRequestDetails operation completed successfully - requestId: [665c1b2c3d4e5f6a7b8c9d01]
-2026-03-03 01:51:00.460 INFO  [http-nio-8080-exec-1] e.N.R.m.i.a.i.RequestControllerAdapter : Response sent successfully - Status: 200 - RequestId: [665c1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:27:36.369 ERROR [http-nio-8080-exec-2] e.N.R.m.i.a.i.SimulationControllerAdapter : Error response sent - Status: 500 - Reason: Internal server error
+2026-03-07 15:29:40.684 INFO  [http-nio-8080-exec-4] e.N.R.m.i.a.i.SimulationControllerAdapter : Request received: GET /api/simulations
+2026-03-07 15:29:40.684 DEBUG [http-nio-8080-exec-4] e.N.R.m.a.u.SimulationApplicationService : Starting listSimulations operation with filters - requestId: [null], partyName: ["Maria"], partyId: [null]
+2026-03-07 15:29:40.684 DEBUG [http-nio-8080-exec-4] e.N.R.m.i.a.o.SimulationRepositoryAdapter : Executing findWithFilters operation on simulations - requestId: [null], partyId: [null]
+2026-03-07 15:29:40.690 DEBUG [http-nio-8080-exec-4] e.N.R.m.i.a.o.SimulationRepositoryAdapter : findWithFilters operation on simulations completed - Retrieved 1 entity(ies)
+2026-03-07 15:29:40.692 DEBUG [http-nio-8080-exec-4] e.N.R.m.a.u.SimulationApplicationService : listSimulations operation completed - Found 1 simulation(s)
+2026-03-07 15:29:40.693 DEBUG [http-nio-8080-exec-4] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:29:40.698 DEBUG [http-nio-8080-exec-4] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:29:40.698 DEBUG [http-nio-8080-exec-4] e.N.R.m.a.u.SimulationApplicationService : Applying post-fetch partyName filter: ["Maria"]
+2026-03-07 15:29:40.699 DEBUG [http-nio-8080-exec-4] e.N.R.m.a.u.SimulationApplicationService : After partyName filter - 1 simulation(s) remaining
+2026-03-07 15:29:40.699 DEBUG [http-nio-8080-exec-4] e.N.R.m.a.u.SimulationApplicationService : Mapping 0 simulation(s) to SimulationSummaryDTO
+2026-03-07 15:29:40.700 INFO  [http-nio-8080-exec-4] e.N.R.m.i.a.i.SimulationControllerAdapter : Response sent successfully - Status: 200 - Items count: 0
+2026-03-07 15:30:06.950 INFO  [http-nio-8080-exec-5] e.N.R.m.i.a.i.SimulationControllerAdapter : Request received: GET /api/simulations
+2026-03-07 15:30:06.951 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.SimulationApplicationService : Starting listSimulations operation with filters - requestId: [null], partyName: [Maria], partyId: [null]
+2026-03-07 15:30:06.951 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.SimulationRepositoryAdapter : Executing findWithFilters operation on simulations - requestId: [null], partyId: [null]
+2026-03-07 15:30:06.958 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.SimulationRepositoryAdapter : findWithFilters operation on simulations completed - Retrieved 1 entity(ies)
+2026-03-07 15:30:06.958 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.SimulationApplicationService : listSimulations operation completed - Found 1 simulation(s)
+2026-03-07 15:30:06.959 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:30:06.964 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:30:06.964 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.SimulationApplicationService : Applying post-fetch partyName filter: [Maria]
+2026-03-07 15:30:06.965 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.SimulationApplicationService : After partyName filter - 1 simulation(s) remaining
+2026-03-07 15:30:06.965 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.SimulationApplicationService : Mapping 1 simulation(s) to SimulationSummaryDTO
+2026-03-07 15:30:06.965 INFO  [http-nio-8080-exec-5] e.N.R.m.i.a.i.SimulationControllerAdapter : Response sent successfully - Status: 200 - Items count: 1
+2026-03-07 15:30:13.386 INFO  [http-nio-8080-exec-6] e.N.R.m.i.a.i.SimulationControllerAdapter : Request received: GET /api/simulations
+2026-03-07 15:30:13.387 DEBUG [http-nio-8080-exec-6] e.N.R.m.a.u.SimulationApplicationService : Starting listSimulations operation with filters - requestId: [null], partyName: [Mar], partyId: [null]
+2026-03-07 15:30:13.387 DEBUG [http-nio-8080-exec-6] e.N.R.m.i.a.o.SimulationRepositoryAdapter : Executing findWithFilters operation on simulations - requestId: [null], partyId: [null]
+2026-03-07 15:30:13.392 DEBUG [http-nio-8080-exec-6] e.N.R.m.i.a.o.SimulationRepositoryAdapter : findWithFilters operation on simulations completed - Retrieved 1 entity(ies)
+2026-03-07 15:30:13.393 DEBUG [http-nio-8080-exec-6] e.N.R.m.a.u.SimulationApplicationService : listSimulations operation completed - Found 1 simulation(s)
+2026-03-07 15:30:13.393 DEBUG [http-nio-8080-exec-6] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:30:13.397 DEBUG [http-nio-8080-exec-6] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:30:13.398 DEBUG [http-nio-8080-exec-6] e.N.R.m.a.u.SimulationApplicationService : Applying post-fetch partyName filter: [Mar]
+2026-03-07 15:30:13.398 DEBUG [http-nio-8080-exec-6] e.N.R.m.a.u.SimulationApplicationService : After partyName filter - 1 simulation(s) remaining
+2026-03-07 15:30:13.398 DEBUG [http-nio-8080-exec-6] e.N.R.m.a.u.SimulationApplicationService : Mapping 1 simulation(s) to SimulationSummaryDTO
+2026-03-07 15:30:13.399 INFO  [http-nio-8080-exec-6] e.N.R.m.i.a.i.SimulationControllerAdapter : Response sent successfully - Status: 200 - Items count: 1
+2026-03-07 15:39:05.139 INFO  [http-nio-8080-exec-9] e.N.R.m.i.a.i.SimulationControllerAdapter : Request received: GET /api/simulations
+2026-03-07 15:39:05.141 DEBUG [http-nio-8080-exec-9] e.N.R.m.a.u.SimulationApplicationService : Starting listSimulations operation with filters - requestId: [null], partyName: [Mar], partyId: [null]
+2026-03-07 15:39:05.141 DEBUG [http-nio-8080-exec-9] e.N.R.m.i.a.o.SimulationRepositoryAdapter : Executing findWithFilters operation on simulations - requestId: [null], partyId: [null]
+2026-03-07 15:39:05.152 DEBUG [http-nio-8080-exec-9] e.N.R.m.i.a.o.SimulationRepositoryAdapter : findWithFilters operation on simulations completed - Retrieved 5 entity(ies)
+2026-03-07 15:39:05.153 DEBUG [http-nio-8080-exec-9] e.N.R.m.a.u.SimulationApplicationService : listSimulations operation completed - Found 5 simulation(s)
+2026-03-07 15:39:05.153 DEBUG [http-nio-8080-exec-9] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:05.158 DEBUG [http-nio-8080-exec-9] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:39:05.159 DEBUG [http-nio-8080-exec-9] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d02]
+2026-03-07 15:39:05.166 DEBUG [http-nio-8080-exec-9] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d02], fullName: [Carlos Rodríguez Martín]
+2026-03-07 15:39:05.167 DEBUG [http-nio-8080-exec-9] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d03]
+2026-03-07 15:39:05.174 DEBUG [http-nio-8080-exec-9] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d03], fullName: [Ana López Ruiz]
+2026-03-07 15:39:05.175 DEBUG [http-nio-8080-exec-9] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:05.180 DEBUG [http-nio-8080-exec-9] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:39:05.180 DEBUG [http-nio-8080-exec-9] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:05.185 DEBUG [http-nio-8080-exec-9] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:39:05.185 DEBUG [http-nio-8080-exec-9] e.N.R.m.a.u.SimulationApplicationService : Applying post-fetch partyName filter: [Mar]
+2026-03-07 15:39:05.186 DEBUG [http-nio-8080-exec-9] e.N.R.m.a.u.SimulationApplicationService : After partyName filter - 5 simulation(s) remaining
+2026-03-07 15:39:05.186 DEBUG [http-nio-8080-exec-9] e.N.R.m.a.u.SimulationApplicationService : Mapping 4 simulation(s) to SimulationSummaryDTO
+2026-03-07 15:39:05.186 INFO  [http-nio-8080-exec-9] e.N.R.m.i.a.i.SimulationControllerAdapter : Response sent successfully - Status: 200 - Items count: 4
+2026-03-07 15:39:16.043 INFO  [http-nio-8080-exec-10] e.N.R.m.i.a.i.SimulationControllerAdapter : Request received: GET /api/simulations
+2026-03-07 15:39:16.043 DEBUG [http-nio-8080-exec-10] e.N.R.m.a.u.SimulationApplicationService : Starting listSimulations operation with filters - requestId: [null], partyName: [Maria], partyId: [null]
+2026-03-07 15:39:16.045 DEBUG [http-nio-8080-exec-10] e.N.R.m.i.a.o.SimulationRepositoryAdapter : Executing findWithFilters operation on simulations - requestId: [null], partyId: [null]
+2026-03-07 15:39:16.051 DEBUG [http-nio-8080-exec-10] e.N.R.m.i.a.o.SimulationRepositoryAdapter : findWithFilters operation on simulations completed - Retrieved 5 entity(ies)
+2026-03-07 15:39:16.052 DEBUG [http-nio-8080-exec-10] e.N.R.m.a.u.SimulationApplicationService : listSimulations operation completed - Found 5 simulation(s)
+2026-03-07 15:39:16.052 DEBUG [http-nio-8080-exec-10] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:16.056 DEBUG [http-nio-8080-exec-10] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:39:16.057 DEBUG [http-nio-8080-exec-10] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d02]
+2026-03-07 15:39:16.063 DEBUG [http-nio-8080-exec-10] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d02], fullName: [Carlos Rodríguez Martín]
+2026-03-07 15:39:16.064 DEBUG [http-nio-8080-exec-10] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d03]
+2026-03-07 15:39:16.070 DEBUG [http-nio-8080-exec-10] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d03], fullName: [Ana López Ruiz]
+2026-03-07 15:39:16.070 DEBUG [http-nio-8080-exec-10] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:16.075 DEBUG [http-nio-8080-exec-10] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:39:16.075 DEBUG [http-nio-8080-exec-10] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:16.082 DEBUG [http-nio-8080-exec-10] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:39:16.082 DEBUG [http-nio-8080-exec-10] e.N.R.m.a.u.SimulationApplicationService : Applying post-fetch partyName filter: [Maria]
+2026-03-07 15:39:16.083 DEBUG [http-nio-8080-exec-10] e.N.R.m.a.u.SimulationApplicationService : After partyName filter - 5 simulation(s) remaining
+2026-03-07 15:39:16.083 DEBUG [http-nio-8080-exec-10] e.N.R.m.a.u.SimulationApplicationService : Mapping 3 simulation(s) to SimulationSummaryDTO
+2026-03-07 15:39:16.083 INFO  [http-nio-8080-exec-10] e.N.R.m.i.a.i.SimulationControllerAdapter : Response sent successfully - Status: 200 - Items count: 3
+2026-03-07 15:39:20.869 INFO  [http-nio-8080-exec-1] e.N.R.m.i.a.i.SimulationControllerAdapter : Request received: GET /api/simulations
+2026-03-07 15:39:20.870 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.SimulationApplicationService : Starting listSimulations operation with filters - requestId: [null], partyName: [Mar], partyId: [null]
+2026-03-07 15:39:20.870 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.SimulationRepositoryAdapter : Executing findWithFilters operation on simulations - requestId: [null], partyId: [null]
+2026-03-07 15:39:20.876 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.SimulationRepositoryAdapter : findWithFilters operation on simulations completed - Retrieved 5 entity(ies)
+2026-03-07 15:39:20.876 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.SimulationApplicationService : listSimulations operation completed - Found 5 simulation(s)
+2026-03-07 15:39:20.876 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:20.880 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:39:20.882 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d02]
+2026-03-07 15:39:20.889 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d02], fullName: [Carlos Rodríguez Martín]
+2026-03-07 15:39:20.892 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d03]
+2026-03-07 15:39:20.902 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d03], fullName: [Ana López Ruiz]
+2026-03-07 15:39:20.903 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:20.909 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:39:20.910 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:20.914 DEBUG [http-nio-8080-exec-1] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:39:20.916 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.SimulationApplicationService : Applying post-fetch partyName filter: [Mar]
+2026-03-07 15:39:20.917 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.SimulationApplicationService : After partyName filter - 5 simulation(s) remaining
+2026-03-07 15:39:20.918 DEBUG [http-nio-8080-exec-1] e.N.R.m.a.u.SimulationApplicationService : Mapping 4 simulation(s) to SimulationSummaryDTO
+2026-03-07 15:39:20.918 INFO  [http-nio-8080-exec-1] e.N.R.m.i.a.i.SimulationControllerAdapter : Response sent successfully - Status: 200 - Items count: 4
+2026-03-07 15:39:27.064 INFO  [http-nio-8080-exec-2] e.N.R.m.i.a.i.SimulationControllerAdapter : Request received: GET /api/simulations
+2026-03-07 15:39:27.064 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.SimulationApplicationService : Starting listSimulations operation with filters - requestId: [null], partyName: [Mar], partyId: [null]
+2026-03-07 15:39:27.064 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.SimulationRepositoryAdapter : Executing findWithFilters operation on simulations - requestId: [null], partyId: [null]
+2026-03-07 15:39:27.071 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.SimulationRepositoryAdapter : findWithFilters operation on simulations completed - Retrieved 5 entity(ies)
+2026-03-07 15:39:27.071 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.SimulationApplicationService : listSimulations operation completed - Found 5 simulation(s)
+2026-03-07 15:39:27.072 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:27.078 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:39:27.079 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d02]
+2026-03-07 15:39:27.084 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d02], fullName: [Carlos Rodríguez Martín]
+2026-03-07 15:39:27.085 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d03]
+2026-03-07 15:39:27.090 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d03], fullName: [Ana López Ruiz]
+2026-03-07 15:39:27.091 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:27.096 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:39:27.097 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:27.101 DEBUG [http-nio-8080-exec-2] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:39:27.101 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.SimulationApplicationService : Applying post-fetch partyName filter: [Mar]
+2026-03-07 15:39:27.102 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.SimulationApplicationService : After partyName filter - 5 simulation(s) remaining
+2026-03-07 15:39:27.103 DEBUG [http-nio-8080-exec-2] e.N.R.m.a.u.SimulationApplicationService : Mapping 4 simulation(s) to SimulationSummaryDTO
+2026-03-07 15:39:27.104 INFO  [http-nio-8080-exec-2] e.N.R.m.i.a.i.SimulationControllerAdapter : Response sent successfully - Status: 200 - Items count: 4
+2026-03-07 15:39:29.484 INFO  [http-nio-8080-exec-3] e.N.R.m.i.a.i.SimulationControllerAdapter : Request received: GET /api/simulations
+2026-03-07 15:39:29.484 DEBUG [http-nio-8080-exec-3] e.N.R.m.a.u.SimulationApplicationService : Starting listSimulations operation with filters - requestId: [null], partyName: [null], partyId: [null]
+2026-03-07 15:39:29.484 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.SimulationRepositoryAdapter : Executing findWithFilters operation on simulations - requestId: [null], partyId: [null]
+2026-03-07 15:39:29.490 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.SimulationRepositoryAdapter : findWithFilters operation on simulations completed - Retrieved 5 entity(ies)
+2026-03-07 15:39:29.490 DEBUG [http-nio-8080-exec-3] e.N.R.m.a.u.SimulationApplicationService : listSimulations operation completed - Found 5 simulation(s)
+2026-03-07 15:39:29.491 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:29.496 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:39:29.496 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d02]
+2026-03-07 15:39:29.500 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d02], fullName: [Carlos Rodríguez Martín]
+2026-03-07 15:39:29.500 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d03]
+2026-03-07 15:39:29.506 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d03], fullName: [Ana López Ruiz]
+2026-03-07 15:39:29.506 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:29.511 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:39:29.511 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.PartyRepositoryAdapter : Executing findPartyWithNameOnly operation - partyId: [665a1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:29.516 DEBUG [http-nio-8080-exec-3] e.N.R.m.i.a.o.PartyRepositoryAdapter : Partial Party retrieved - partyId: [665a1b2c3d4e5f6a7b8c9d01], fullName: [Maria Garcia Fernandez]
+2026-03-07 15:39:29.516 DEBUG [http-nio-8080-exec-3] e.N.R.m.a.u.SimulationApplicationService : Mapping 5 simulation(s) to SimulationSummaryDTO
+2026-03-07 15:39:29.516 INFO  [http-nio-8080-exec-3] e.N.R.m.i.a.i.SimulationControllerAdapter : Response sent successfully - Status: 200 - Items count: 5
+2026-03-07 15:39:46.409 INFO  [http-nio-8080-exec-4] e.N.R.m.i.a.i.SimulationControllerAdapter : Request received: GET /api/simulations/665f1b2c3d4e5f6a7b8c9d01
+2026-03-07 15:39:46.410 DEBUG [http-nio-8080-exec-4] e.N.R.m.a.u.SimulationApplicationService : Starting getSimulationDetails operation - simulationId: [665f1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:46.410 DEBUG [http-nio-8080-exec-4] e.N.R.m.a.u.SimulationApplicationService : Validating simulationId: [665f1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:46.410 DEBUG [http-nio-8080-exec-4] e.N.R.m.i.a.o.SimulationRepositoryAdapter : Executing findById operation on simulations - simulationId: [665f1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:46.422 DEBUG [http-nio-8080-exec-4] e.N.R.m.i.a.o.SimulationRepositoryAdapter : Simulation found in database - simulationId: [665f1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:46.422 DEBUG [http-nio-8080-exec-4] e.N.R.m.a.u.SimulationApplicationService : Simulation found - simulationId: [665f1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:46.423 DEBUG [http-nio-8080-exec-4] e.N.R.m.i.a.o.ScoringRepositoryAdapter : Executing findById operation on scorings - scoringId: [665d1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:46.454 DEBUG [http-nio-8080-exec-4] e.N.R.m.i.a.o.ScoringRepositoryAdapter : Scoring found in database - scoringId: [665d1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:46.457 DEBUG [http-nio-8080-exec-4] e.N.R.m.a.u.SimulationApplicationService : Base scoring resolved for simulation comparison - scoringId: [665d1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:46.457 DEBUG [http-nio-8080-exec-4] e.N.R.m.a.u.SimulationApplicationService : getSimulationDetails operation completed successfully - simulationId: [665f1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:46.458 INFO  [http-nio-8080-exec-4] e.N.R.m.i.a.i.SimulationControllerAdapter : Response sent successfully - Status: 200 - RequestId: [665f1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:51.925 INFO  [http-nio-8080-exec-5] e.N.R.m.i.a.i.SimulationControllerAdapter : Request received: GET /api/simulations/665f1b2c3d4e5f6a7b8c9d01
+2026-03-07 15:39:51.925 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.SimulationApplicationService : Starting getSimulationDetails operation - simulationId: [665f1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:51.925 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.SimulationApplicationService : Validating simulationId: [665f1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:51.925 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.SimulationRepositoryAdapter : Executing findById operation on simulations - simulationId: [665f1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:51.928 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.SimulationRepositoryAdapter : Simulation found in database - simulationId: [665f1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:51.928 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.SimulationApplicationService : Simulation found - simulationId: [665f1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:51.928 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.ScoringRepositoryAdapter : Executing findById operation on scorings - scoringId: [665d1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:51.930 DEBUG [http-nio-8080-exec-5] e.N.R.m.i.a.o.ScoringRepositoryAdapter : Scoring found in database - scoringId: [665d1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:51.930 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.SimulationApplicationService : Base scoring resolved for simulation comparison - scoringId: [665d1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:51.931 DEBUG [http-nio-8080-exec-5] e.N.R.m.a.u.SimulationApplicationService : getSimulationDetails operation completed successfully - simulationId: [665f1b2c3d4e5f6a7b8c9d01]
+2026-03-07 15:39:51.931 INFO  [http-nio-8080-exec-5] e.N.R.m.i.a.i.SimulationControllerAdapter : Response sent successfully - Status: 200 - RequestId: [665f1b2c3d4e5f6a7b8c9d01]

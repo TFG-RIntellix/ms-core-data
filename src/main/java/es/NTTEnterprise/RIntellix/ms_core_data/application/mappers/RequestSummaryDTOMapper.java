@@ -17,36 +17,39 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 @Component
 public class RequestSummaryDTOMapper {
 
-    /**
-     * Maps a Request domain object to a RequestSummaryDTO.
-     * 
-     * @param request the Request domain object to map
-     * @return the mapped RequestSummaryDTO
-     */
-    public RequestSummaryDTO toDTO(Request request) {
-        RequestSummaryDTO requestSummaryDTO = new RequestSummaryDTO();
-        requestSummaryDTO.setRequestId(request.getId());
-        requestSummaryDTO.setStatus(request.getRequestStatus().toString());
-        requestSummaryDTO.setRequestType(request.getRequestDetails().getRequestType().toString());
-        requestSummaryDTO.setAmount(request.getRequestDetails().getRequestedAmount() != null
-                ? request.getRequestDetails().getRequestedAmount().getAmount()
-                : null);
-        requestSummaryDTO.setCurrency(request.getRequestDetails().getRequestedAmount() != null
-                ? request.getRequestDetails().getRequestedAmount().getCurrency()
-                : null);
-        requestSummaryDTO.setCreationDate(request.getCreationDate().toString());
-        requestSummaryDTO
-                .setLastReviewDate(request.getLastReviewDate() != null ? request.getLastReviewDate().toString() : null);
-        requestSummaryDTO.setPartyName(request.getParty() != null && request.getParty().getPersonDetails() != null
-                ? request.getParty().getPersonDetails().getFullName()
-                : null);
+        /**
+         * Maps a Request domain object to a RequestSummaryDTO.
+         * 
+         * @param request the Request domain object to map
+         * @return the mapped RequestSummaryDTO
+         */
+        public RequestSummaryDTO toDTO(Request request) {
+                RequestSummaryDTO requestSummaryDTO = new RequestSummaryDTO();
+                requestSummaryDTO.setRequestId(request.getId());
+                requestSummaryDTO.setStatus(request.getRequestStatus().toString());
+                requestSummaryDTO.setRequestType(request.getRequestDetails().getRequestType().toString());
+                requestSummaryDTO.setAmount(request.getRequestDetails().getRequestedAmount() != null
+                                ? request.getRequestDetails().getRequestedAmount().getAmount()
+                                : null);
+                requestSummaryDTO.setCurrency(request.getRequestDetails().getRequestedAmount() != null
+                                ? request.getRequestDetails().getRequestedAmount().getCurrency()
+                                : null);
+                requestSummaryDTO.setCreationDate(request.getCreationDate().toString());
+                requestSummaryDTO
+                                .setLastReviewDate(request.getLastReviewDate() != null
+                                                ? request.getLastReviewDate().toString()
+                                                : null);
+                requestSummaryDTO.setPartyName(
+                                request.getParty() != null && request.getParty().getPersonDetails() != null
+                                                ? request.getParty().getPersonDetails().getFullName()
+                                                : null);
 
-        return requestSummaryDTO;
-    }
+                return requestSummaryDTO;
+        }
 
-    public List<RequestSummaryDTO> toDTOList(List<Request> requests) {
-        return requests.stream()
-                .map(this::toDTO)
-                .toList();
-    }
+        public List<RequestSummaryDTO> toDTOList(List<Request> requests) {
+                return requests.stream()
+                                .map(this::toDTO)
+                                .toList();
+        }
 }

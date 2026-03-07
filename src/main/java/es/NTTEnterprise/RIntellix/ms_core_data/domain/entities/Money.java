@@ -1,7 +1,11 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.domain.entities;
+
 /**
- * This class represents a monetary amount with its currency. It contains the amount as a double and the currency as a string. 
- * It also has a method to add two Money objects together, but only if they have the same currency.
+ * This class represents a monetary amount with its currency. It contains the
+ * amount as a double and the currency as a string.
+ * It also has a method to add two Money objects together, but only if they have
+ * the same currency.
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 02-28-2026
  */
@@ -11,8 +15,9 @@ public class Money {
     private String currency;
 
     /**
-     * Constructor for Money class. 
-     * @param amount the amount of money as a double
+     * Constructor for Money class.
+     * 
+     * @param amount   the amount of money as a double
      * @param currency the currency of the money as a string
      */
     public Money(Double amount, String currency) {
@@ -21,9 +26,13 @@ public class Money {
     }
 
     /**
-     * This method adds two Money objects together, but only if they have the same currency. If they have different currencies, it throws an IllegalArgumentException.
+     * This method adds two Money objects together, but only if they have the same
+     * currency. If they have different currencies, it throws an
+     * IllegalArgumentException.
+     * 
      * @param other the other Money object to be added to this one
-     * @return a new Money object that is the sum of this and the other Money object, if they have the same currency
+     * @return a new Money object that is the sum of this and the other Money
+     *         object, if they have the same currency
      */
     public Money add(Money other) {
         if (!this.currency.equals(other.currency)) {
@@ -45,15 +54,24 @@ public class Money {
     public void setAmount(Double amount) {
         this.amount = amount;
     }
-    
+
     public void setCurrency(String currency) {
         this.currency = currency;
     }
 
+    // toString, hashCode and equals
+
+    @Override
+    public String toString() {
+        return amount + " " + currency;
+    }
+
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
         Money money = (Money) obj;
         return amount.equals(money.amount) && currency.equals(money.currency);
     }
@@ -63,8 +81,4 @@ public class Money {
         return amount.hashCode() + currency.hashCode();
     }
 
-    @Override
-    public String toString() {
-        return amount + " " + currency;
-    }
 }

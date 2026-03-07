@@ -3,7 +3,8 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedde
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * Embedded entity mapping the "form_changes" sub-document from the "simulations" MongoDB collection.
+ * Embedded entity mapping the "form_changes" sub-document from the
+ * "simulations" MongoDB collection.
  * Contains the user-modified input values for the simulation scenario.
  *
  * @author Lucía Fernández Mancebo

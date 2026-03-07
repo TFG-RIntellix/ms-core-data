@@ -17,22 +17,27 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundE
 public interface RequestPortService {
 
     /**
-     * Retrieves a list of rqeuests with their detailed information based on a defined number of maximun requests per page.
-     * @param partyName the name of the party that made the request, which can be used to filter the requests by the party that made them.
-     * @param requestType the type of request, which can be used to filter the requests by their type (loan, mortgage or credit card).
-     * @return a list of RequestSummaryDTO objects. 
+     * Retrieves a list of rqeuests with their detailed information based on a
+     * defined number of maximun requests per page.
+     * 
+     * @param partyName   the name of the party that made the request, which can be
+     *                    used to filter the requests by the party that made them.
+     * @param requestType the type of request, which can be used to filter the
+     *                    requests by their type (loan, mortgage or credit card).
+     * @return a list of RequestSummaryDTO objects.
      */
-    List<RequestSummaryDTO> listRequests( String partyName, String requestType);
-
+    List<RequestSummaryDTO> listRequests(String partyName, String requestType);
 
     /**
      * Retrieves the detailed information of a specific request.
+     * 
      * @param requestId the unique identifier of the request.
-     * @return a RequestDetailsDTO object with the detailed information of the request.
+     * @return a RequestDetailsDTO object with the detailed information of the
+     *         request.
      * @throws IllegalArgumentException if the requestId is null or empty.
-     * @throws EntityNotFoundException if no request is found with the given requestId.
+     * @throws EntityNotFoundException  if no request is found with the given
+     *                                  requestId.
      */
     RequestDetailsDTO getRequestDetails(String requestId) throws IllegalArgumentException, EntityNotFoundException;
-
 
 }

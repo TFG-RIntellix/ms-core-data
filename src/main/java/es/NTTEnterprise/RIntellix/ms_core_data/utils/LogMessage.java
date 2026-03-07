@@ -17,7 +17,7 @@ public final class LogMessage {
     // ============================================================
     // CONTROLLER LAYER - Input Adapter
     // ============================================================
-    
+
     public static final String CONTROLLER_REQUEST_RECEIVED = "Request received: {} {}";
     public static final String CONTROLLER_REQUEST_PARAMS = "Request parameters - partyName: [{}], requestStatus: [{}]";
     public static final String CONTROLLER_SIMULATION_REQUEST_PARAMS = "Request parameters - requestId: [{}], partyName: [{}], partyId: [{}]";
@@ -31,11 +31,11 @@ public final class LogMessage {
     // ============================================================
     // APPLICATION LAYER - Use Cases / Services
     // ============================================================
-    
+
     public static final String SERVICE_LIST_REQUESTS_START = "Starting listRequests operation with filters - partyName: [{}], requestStatus: [{}]";
     public static final String SERVICE_LIST_REQUESTS_RESULT = "listRequests operation completed - Found {} request(s)";
     public static final String SERVICE_LIST_REQUESTS_MAPPING = "Mapping {} request(s) to RequestSummaryDTO";
-    
+
     public static final String SERVICE_GET_DETAILS_START = "Starting getRequestDetails operation - requestId: [{}]";
     public static final String SERVICE_GET_DETAILS_VALIDATION = "Validating requestId: [{}]";
     public static final String SERVICE_GET_DETAILS_VALIDATION_ERROR = "Validation failed for requestId - Value is null or blank";
@@ -68,15 +68,15 @@ public final class LogMessage {
     // ============================================================
     // INFRASTRUCTURE LAYER - Repository Adapter
     // ============================================================
-    
+
     public static final String REPOSITORY_FIND_ALL_START = "Executing findAll operation on database";
     public static final String REPOSITORY_FIND_ALL_RESULT = "findAll operation completed - Retrieved {} entity(ies)";
-    
+
     public static final String REPOSITORY_FIND_BY_ID_START = "Executing findById operation - requestId: [{}]";
     public static final String REPOSITORY_FIND_BY_ID_FOUND = "Entity found in database - requestId: [{}]";
     public static final String REPOSITORY_FIND_BY_ID_NOT_FOUND = "Entity not found in database - requestId: [{}]";
     public static final String REPOSITORY_FIND_BY_ID_MAPPING = "Mapping RequestEntity to Request domain - requestId: [{}]";
-    
+
     public static final String REPOSITORY_FIND_WITH_FILTERS_START = "Executing findWithFilters operation - partyName: [{}], requestStatus: [{}]";
     public static final String REPOSITORY_FIND_WITH_FILTERS_RESULT = "findWithFilters operation completed - Retrieved {} entity(ies)";
     public static final String REPOSITORY_FIND_WITH_FILTERS_MAPPING = "Mapping {} RequestEntity(ies) to Request domain objects";
@@ -86,7 +86,7 @@ public final class LogMessage {
     public static final String REPOSITORY_PARTY_FIND_BY_ID_FOUND = "Party found in database - partyId: [{}]";
     public static final String REPOSITORY_PARTY_FIND_BY_ID_NOT_FOUND = "Party not found in database - partyId: [{}]";
     public static final String REPOSITORY_PARTY_FIND_BY_ID_MAPPING = "Mapping PartyEntity to Party domain - partyId: [{}]";
-    
+
     public static final String REPOSITORY_PARTY_FIND_NAME_ONLY_START = "Executing findPartyWithNameOnly operation - partyId: [{}]";
     public static final String REPOSITORY_PARTY_FIND_NAME_ONLY_NOT_FOUND = "Party not found for name query - partyId: [{}]";
     public static final String REPOSITORY_PARTY_FIND_NAME_ONLY_RESULT = "Partial Party retrieved - partyId: [{}], fullName: [{}]";
@@ -119,12 +119,12 @@ public final class LogMessage {
     // ============================================================
     // INFRASTRUCTURE LAYER - Mappers
     // ============================================================
-    
+
     public static final String MAPPER_TO_DOMAIN_START = "Starting conversion from RequestEntity to Request domain";
     public static final String MAPPER_TO_DOMAIN_NULL = "Received null RequestEntity - returning null";
     public static final String MAPPER_TO_DOMAIN_COMPLETE = "Conversion to Request domain completed successfully";
     public static final String MAPPER_TO_DOMAIN_COLLATERAL = "Building PropertyCollateral for mortgage request";
-    
+
     public static final String MAPPER_TO_DTO_START = "Starting conversion from Request to DTO";
     public static final String MAPPER_TO_DTO_NULL = "Received null Request - returning null";
     public static final String MAPPER_TO_DTO_COMPLETE = "Conversion to DTO completed successfully";
@@ -143,7 +143,7 @@ public final class LogMessage {
     // ============================================================
     // EXCEPTION MESSAGES
     // ============================================================
-    
+
     public static final String EXCEPTION_ENTITY_NOT_FOUND = "Entity not found - Type: {} - ID: [{}]";
     public static final String EXCEPTION_ILLEGAL_ARGUMENT = "Illegal argument: {}";
     public static final String EXCEPTION_UNEXPECTED = "Unexpected exception occurred: {}";
@@ -151,7 +151,7 @@ public final class LogMessage {
     // ============================================================
     // APPLICATION LIFECYCLE
     // ============================================================
-    
+
     public static final String APP_STARTING = "Starting ms-core-data microservice...";
     public static final String APP_STARTED = "ms-core-data microservice started successfully";
     public static final String APP_SHUTTING_DOWN = "Shutting down ms-core-data microservice...";

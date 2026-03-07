@@ -3,8 +3,10 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedde
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * Embedded entity mapping the "results" sub-document from the "scorings" MongoDB collection.
- * Contains the standard Basel II/III risk metrics: PD, LGD, EAD, ECL and a risk grade.
+ * Embedded entity mapping the "results" sub-document from the "scorings"
+ * MongoDB collection.
+ * Contains the standard Basel II/III risk metrics: PD, LGD, EAD, ECL and a risk
+ * grade.
  *
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026

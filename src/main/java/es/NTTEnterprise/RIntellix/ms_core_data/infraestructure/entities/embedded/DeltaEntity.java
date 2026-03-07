@@ -3,8 +3,10 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedde
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * Embedded entity mapping the "delta" sub-document from the "simulations" MongoDB collection.
- * Contains the computed differences between the base scoring and the simulated scenario.
+ * Embedded entity mapping the "delta" sub-document from the "simulations"
+ * MongoDB collection.
+ * Contains the computed differences between the base scoring and the simulated
+ * scenario.
  *
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026

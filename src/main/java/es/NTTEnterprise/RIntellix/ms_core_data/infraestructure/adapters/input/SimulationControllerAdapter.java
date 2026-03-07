@@ -19,7 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * REST controller that exposes simulation-related endpoints.
- * Acts as the input adapter in the hexagonal architecture for the simulation aggregate.
+ * Acts as the input adapter in the hexagonal architecture for the simulation
+ * aggregate.
  *
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026
@@ -37,13 +38,15 @@ public class SimulationControllerAdapter {
 
     /**
      * GET /api/simulations
-     * Retrieves a list of simulations with optional filtering by request ID, party name or party ID.
+     * Retrieves a list of simulations with optional filtering by request ID, party
+     * name or party ID.
      * Example: GET /api/simulations?requestId=abc123&partyName=John%20Doe
      *
      * @param requestId the ID of the associated request (optional filter)
      * @param partyName the name of the client (optional filter)
      * @param partyId   the ID of the client (optional filter)
-     * @return 200 OK with list of SimulationSummaryDTO, or appropriate error response.
+     * @return 200 OK with list of SimulationSummaryDTO, or appropriate error
+     *         response.
      */
     @GetMapping
     public ResponseEntity<List<SimulationSummaryDTO>> listSimulations(
@@ -55,7 +58,8 @@ public class SimulationControllerAdapter {
         log.debug(LogMessage.CONTROLLER_SIMULATION_REQUEST_PARAMS, requestId, partyName, partyId);
 
         try {
-            List<SimulationSummaryDTO> simulations = simulationPortService.listSimulations(requestId, partyName, partyId);
+            List<SimulationSummaryDTO> simulations = simulationPortService.listSimulations(requestId, partyName,
+                    partyId);
 
             log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS, HttpStatus.OK.value(), simulations.size());
             return ResponseEntity.ok(simulations);
@@ -67,18 +71,21 @@ public class SimulationControllerAdapter {
 
         } catch (Exception e) {
             log.error(LogMessage.CONTROLLER_UNEXPECTED_ERROR, e.getMessage(), e);
-            log.error(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+            log.error(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Internal server error");
             return ResponseEntity.internalServerError().build();
         }
     }
 
     /**
      * GET /api/simulations/{simulationId}
-     * Retrieves the detailed information of a specific simulation, including modified values,
+     * Retrieves the detailed information of a specific simulation, including
+     * modified values,
      * simulated results, base scoring results and the computed delta comparison.
      *
      * @param simulationId the unique identifier of the simulation
-     * @return 200 OK with SimulationDetailsDTO, 404 if not found, 400 if invalid ID.
+     * @return 200 OK with SimulationDetailsDTO, 404 if not found, 400 if invalid
+     *         ID.
      */
     @GetMapping("/{simulationId}")
     public ResponseEntity<SimulationDetailsDTO> getSimulationDetails(@PathVariable String simulationId) {
@@ -104,7 +111,8 @@ public class SimulationControllerAdapter {
 
         } catch (Exception e) {
             log.error(LogMessage.CONTROLLER_UNEXPECTED_ERROR, e.getMessage(), e);
-            log.error(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+            log.error(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Internal server error");
             return ResponseEntity.internalServerError().build();
         }
     }

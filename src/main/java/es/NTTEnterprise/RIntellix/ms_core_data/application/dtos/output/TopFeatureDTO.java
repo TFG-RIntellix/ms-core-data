@@ -1,8 +1,11 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output;
 
 /**
- * Data Transfer Object (DTO) for a top contributing feature in the SHAP explainability.
- * Represents a single feature with its name, value at calculation time, and SHAP contribution.
+ * Data Transfer Object (DTO) for a top contributing feature in the SHAP
+ * explainability.
+ * Represents a single feature with its name, value at calculation time, and
+ * SHAP contribution.
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026
  */

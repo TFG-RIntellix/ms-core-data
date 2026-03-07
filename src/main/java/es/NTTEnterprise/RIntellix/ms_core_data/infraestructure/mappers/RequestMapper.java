@@ -13,7 +13,9 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RequestDetails;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.RequestEntity;
 
 /**
- * Mapper class to convert between RequestEntity (infrastructure) and Request (domain).
+ * Mapper class to convert between RequestEntity (infrastructure) and Request
+ * (domain).
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 02-28-2026
  */
@@ -22,6 +24,7 @@ public class RequestMapper {
 
     /**
      * Converts a RequestEntity to a Request domain object.
+     * 
      * @param entity the RequestEntity to convert
      * @return the converted Request domain object
      */
@@ -35,9 +38,8 @@ public class RequestMapper {
         if (entity.getPropertyValue() != null) {
             Money propertyValue = new Money(entity.getPropertyValue(), entity.getCurrency());
             collateral = new PropertyCollateral(
-                propertyValue,
-                entity.getIsFirstHome() != null ? entity.getIsFirstHome() : false
-            );
+                    propertyValue,
+                    entity.getIsFirstHome() != null ? entity.getIsFirstHome() : false);
         }
 
         // Build Money objects
@@ -53,15 +55,14 @@ public class RequestMapper {
 
         // Build RequestDetails
         RequestDetails requestDetails = new RequestDetails(
-            entity.getRequestType(),
-            entity.getPurpose(),
-            requestedAmount,
-            entity.getRequestedTermMonths(),
-            entity.getRequestedInterestRate(),
-            creditLimit,
-            entity.getIsRevolving() != null ? entity.getIsRevolving() : false,
-            entity.getRepaymentSystem()
-        );
+                entity.getRequestType(),
+                entity.getPurpose(),
+                requestedAmount,
+                entity.getRequestedTermMonths(),
+                entity.getRequestedInterestRate(),
+                creditLimit,
+                entity.getIsRevolving() != null ? entity.getIsRevolving() : false,
+                entity.getRepaymentSystem());
 
         // Convert LocalDate to Date
         Date creationDate = localDateToDate(entity.getRequestDate());
@@ -76,6 +77,7 @@ public class RequestMapper {
 
     /**
      * Helper method to convert LocalDate to Date.
+     * 
      * @param localDate
      * @return the converted Date object, or null if localDate is null
      */

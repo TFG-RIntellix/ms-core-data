@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 /**
  * Embedded document for party employment information.
  * Contains employment status and work experience data.
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 03-01-2026
  */

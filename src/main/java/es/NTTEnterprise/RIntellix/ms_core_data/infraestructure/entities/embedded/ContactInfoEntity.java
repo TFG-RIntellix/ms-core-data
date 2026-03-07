@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * Contains phone, email and address data.
  * NOTE: These fields are not in the original Party schema but are required
  * for the RequestDetailsDTO mapping.
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 03-01-2026
  */

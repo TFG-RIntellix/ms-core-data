@@ -8,7 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Entity representing a Person (individual party).
- * Extends Party and contains identity, demographic, financial and contact information.
+ * Extends Party and contains identity, demographic, financial and contact
+ * information.
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 03-01-2026
  */
@@ -39,6 +41,7 @@ public class Person {
 
     /**
      * Gets the full name of the person.
+     * 
      * @return firstName + lastName
      */
     public String getFullName() {
@@ -47,6 +50,7 @@ public class Person {
 
     /**
      * Calculates the age based on demographics profile.
+     * 
      * @return the age in years, or null if demographics is not set
      */
     public Integer getAge() {
@@ -58,6 +62,7 @@ public class Person {
 
     /**
      * Adds a contract to the list of active contracts.
+     * 
      * @param contract the contract to add
      */
     public void addContract(Contract contract) {
@@ -91,8 +96,10 @@ public class Person {
     }
 
     /**
-     * Calculates the sum of all monthly payment contributions from active contracts.
-     * Each contract subtype calculates its own monthly payment using the appropriate formula.
+     * Calculates the sum of all monthly payment contributions from active
+     * contracts.
+     * Each contract subtype calculates its own monthly payment using the
+     * appropriate formula.
      *
      * @return the total monthly debt payment as a Money object
      */
@@ -111,12 +118,14 @@ public class Person {
         log.debug(LogMessage.DOMAIN_TOTAL_MONTHLY_PAYMENT_RESULT, totalMonthly);
         return totalMonthly;
     }
+
     /**
      * Calculates the global Debt-To-Income (DTI) ratio for the person.
      * Formula: DTI = Σ(monthly payments) / Gross Monthly Income
      * Where: Gross Monthly Income = Annual Income / 12
      *
-     * Each contract type contributes its monthly payment via calculateMonthlyPayment():
+     * Each contract type contributes its monthly payment via
+     * calculateMonthlyPayment():
      * - Loan/Mortgage: French amortization system (cuota constante)
      * - CreditCard Non-Revolving: currentBalance / 12
      * - CreditCard Revolving: French system over 12 months with interest
@@ -199,4 +208,73 @@ public class Person {
     public void setActiveContracts(List<Contract> activeContracts) {
         this.activeContracts = activeContracts;
     }
+
+    @Override
+    public String toString() {
+        return "Person [firstName=" + firstName + ", lastName=" + lastName + ", nif=" + nif + ", demographics="
+                + demographics + ", financials=" + financials + ", contactInfo=" + contactInfo + ", activeContracts="
+                + activeContracts + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+        result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+        result = prime * result + ((nif == null) ? 0 : nif.hashCode());
+        result = prime * result + ((demographics == null) ? 0 : demographics.hashCode());
+        result = prime * result + ((financials == null) ? 0 : financials.hashCode());
+        result = prime * result + ((contactInfo == null) ? 0 : contactInfo.hashCode());
+        result = prime * result + ((activeContracts == null) ? 0 : activeContracts.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Person other = (Person) obj;
+        if (firstName == null) {
+            if (other.firstName != null)
+                return false;
+        } else if (!firstName.equals(other.firstName))
+            return false;
+        if (lastName == null) {
+            if (other.lastName != null)
+                return false;
+        } else if (!lastName.equals(other.lastName))
+            return false;
+        if (nif == null) {
+            if (other.nif != null)
+                return false;
+        } else if (!nif.equals(other.nif))
+            return false;
+        if (demographics == null) {
+            if (other.demographics != null)
+                return false;
+        } else if (!demographics.equals(other.demographics))
+            return false;
+        if (financials == null) {
+            if (other.financials != null)
+                return false;
+        } else if (!financials.equals(other.financials))
+            return false;
+        if (contactInfo == null) {
+            if (other.contactInfo != null)
+                return false;
+        } else if (!contactInfo.equals(other.contactInfo))
+            return false;
+        if (activeContracts == null) {
+            if (other.activeContracts != null)
+                return false;
+        } else if (!activeContracts.equals(other.activeContracts))
+            return false;
+        return true;
+    }
+
 }

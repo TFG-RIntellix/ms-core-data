@@ -3,8 +3,10 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedde
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * Embedded entity representing the input features snapshot stored in a scoring document.
- * Maps the "input_features" sub-document from the "scorings" MongoDB collection.
+ * Embedded entity representing the input features snapshot stored in a scoring
+ * document.
+ * Maps the "input_features" sub-document from the "scorings" MongoDB
+ * collection.
  * Contains all features used as input for the credit risk model.
  *
  * @author Lucía Fernández Mancebo

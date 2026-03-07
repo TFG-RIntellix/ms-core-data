@@ -1,12 +1,12 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.mappers;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.time.LocalDate;
 
 import org.springframework.stereotype.Component;
 
@@ -21,14 +21,16 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.Purpose;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.ContractEntity;
 
 /**
- * Mapper class to convert between ContractEntity (infrastructure) and Contract domain hierarchy.
+ * Mapper class to convert between ContractEntity (infrastructure) and Contract
+ * domain hierarchy.
  * Uses a Map-based strategy pattern to dispatch mapping by contract type,
- * avoiding switch statements and ensuring easy extensibility when new contract types are added.
+ * avoiding switch statements and ensuring easy extensibility when new contract
+ * types are added.
  *
  * To add a new contract type:
- *   1. Create a new domain subclass of Contract
- *   2. Add a private mapping method in this class
- *   3. Register it in the MAPPERS map
+ * 1. Create a new domain subclass of Contract
+ * 2. Add a private mapping method in this class
+ * 3. Register it in the MAPPERS map
  *
  * @author Lucía Fernández Mancebo
  * @Date 03-02-2026
@@ -37,20 +39,21 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.Contract
 public class ContractMapper {
 
     /**
-     * Strategy map: maps each contract_type string to the function that produces the correct domain subclass.
+     * Strategy map: maps each contract_type string to the function that produces
+     * the correct domain subclass.
      * This replaces switches/if-else chains and scales linearly with new types.
      */
     private static final Map<String, Function<ContractEntity, Contract>> MAPPERS = Map.of(
-        "PRESTAMO", ContractMapper::mapToLoanContract,
-        "HIPOTECA", ContractMapper::mapToMortgageContract,
-        "TARJETA_CREDITO", ContractMapper::mapToCreditCardContract
-    );
+            "PRESTAMO", ContractMapper::mapToLoanContract,
+            "HIPOTECA", ContractMapper::mapToMortgageContract,
+            "TARJETA_CREDITO", ContractMapper::mapToCreditCardContract);
 
     /**
      * Converts a ContractEntity to the appropriate Contract domain subclass.
      *
      * @param entity the infrastructure entity from MongoDB
-     * @return the Contract domain object (LoanContract, MortgageContract or CreditCardContract)
+     * @return the Contract domain object (LoanContract, MortgageContract or
+     *         CreditCardContract)
      * @throws IllegalArgumentException if the contract type is unknown
      */
     public Contract toDomain(ContractEntity entity) {
@@ -124,7 +127,8 @@ public class ContractMapper {
 
     private static void mapCommonFields(Contract contract, ContractEntity entity) {
         contract.setId(entity.getId());
-        contract.setContractType(mapContractType(entity.getContractType()));;
+        contract.setContractType(mapContractType(entity.getContractType()));
+        ;
         contract.setStatus(mapContractStatus(entity.getStatus()));
         contract.setOpenDate(mapDate(entity.getOpenDate()));
         contract.setInterestRate(entity.getInterestRate());

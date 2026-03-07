@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 /**
  * Embedded document for party demographics information.
  * Contains personal identification and demographic data.
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 03-01-2026
  */

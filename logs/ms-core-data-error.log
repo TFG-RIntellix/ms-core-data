@@ -1,8 +1,18 @@
-2026-03-03 01:44:50.184 ERROR [http-nio-8080-exec-8] e.N.R.m.i.a.i.RequestControllerAdapter : Unexpected error processing request: Cannot invoke "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Money.toString()" because the return value of "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RequestDetails.getRequestedAmount()" is null
-java.lang.NullPointerException: Cannot invoke "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Money.toString()" because the return value of "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RequestDetails.getRequestedAmount()" is null
-	at es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestDetailsDTOMapper.toDTO(RequestDetailsDTOMapper.java:28)
-	at es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.RequestApplicationService.getRequestDetails(RequestApplicationService.java:103)
-	at es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.input.RequestControllerAdapter.getRequestDetails(RequestControllerAdapter.java:71)
+2026-03-07 15:27:36.357 ERROR [http-nio-8080-exec-2] e.N.R.m.i.a.i.SimulationControllerAdapter : Unexpected error processing request: Cannot invoke "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party.getPersonDetails()" because the return value of "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Simulation.getParty()" is null
+java.lang.NullPointerException: Cannot invoke "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party.getPersonDetails()" because the return value of "es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Simulation.getParty()" is null
+	at es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.SimulationApplicationService.lambda$2(SimulationApplicationService.java:125)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:178)
+	at java.base/java.util.AbstractList$RandomAccessSpliterator.forEachRemaining(AbstractList.java:720)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:575)
+	at java.base/java.util.stream.AbstractPipeline.evaluateToArrayNode(AbstractPipeline.java:260)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:616)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:622)
+	at java.base/java.util.stream.ReferencePipeline.toList(ReferencePipeline.java:627)
+	at es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.SimulationApplicationService.filterByPartyName(SimulationApplicationService.java:127)
+	at es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.SimulationApplicationService.listSimulations(SimulationApplicationService.java:62)
+	at es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.input.SimulationControllerAdapter.listSimulations(SimulationControllerAdapter.java:58)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -48,4 +58,4 @@ java.lang.NullPointerException: Cannot invoke "es.NTTEnterprise.RIntellix.ms_cor
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
 	at java.base/java.lang.Thread.run(Thread.java:842)
-2026-03-03 01:44:50.193 ERROR [http-nio-8080-exec-8] e.N.R.m.i.a.i.RequestControllerAdapter : Error response sent - Status: 500 - Reason: Internal server error
+2026-03-07 15:27:36.369 ERROR [http-nio-8080-exec-2] e.N.R.m.i.a.i.SimulationControllerAdapter : Error response sent - Status: 500 - Reason: Internal server error

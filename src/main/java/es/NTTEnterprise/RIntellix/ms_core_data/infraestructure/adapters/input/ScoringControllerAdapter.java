@@ -55,17 +55,18 @@ public class ScoringControllerAdapter {
             log.warn(LogMessage.CONTROLLER_VALIDATION_ERROR, e.getMessage());
             log.warn(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.BAD_REQUEST.value(), e.getMessage());
             return ResponseEntity.badRequest().build();
-        
+
         } catch (EntityNotFoundException e) {
-            
+
             log.warn(LogMessage.EXCEPTION_ENTITY_NOT_FOUND, "Scoring", requestId);
             log.warn(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.NOT_FOUND.value(), e.getMessage());
             return ResponseEntity.notFound().build();
-        
+
         } catch (Exception e) {
-            
+
             log.error(LogMessage.CONTROLLER_UNEXPECTED_ERROR, e.getMessage(), e);
-            log.error(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+            log.error(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Internal server error");
             return ResponseEntity.internalServerError().build();
         }
     }

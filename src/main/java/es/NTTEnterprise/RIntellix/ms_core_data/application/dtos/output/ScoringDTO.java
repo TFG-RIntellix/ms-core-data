@@ -7,6 +7,7 @@ import java.util.Map;
  * Data Transfer Object (DTO) for the scoring result associated with a request.
  * Contains all information displayed in the scoring detail view:
  * model metadata, input features, risk metrics and SHAP explainability.
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026
  */

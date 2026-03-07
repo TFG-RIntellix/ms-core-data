@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Repository
 public class RequestRepositoryAdapter implements RequestPortRepository {
-    
+
     private final RequestRepository requestRepository;
     private final RequestMapper requestMapper;
 
@@ -34,14 +34,13 @@ public class RequestRepositoryAdapter implements RequestPortRepository {
         this.requestMapper = requestMapper;
     }
 
-
     @Override
     public List<Request> findAll() {
         log.debug(LogMessage.REPOSITORY_FIND_ALL_START);
-        
+
         List<RequestEntity> entities = requestRepository.findAll();
         log.debug(LogMessage.REPOSITORY_FIND_ALL_RESULT, entities.size());
-        
+
         return entities.stream()
                 .map(requestMapper::toDomain)
                 .toList();
@@ -50,27 +49,27 @@ public class RequestRepositoryAdapter implements RequestPortRepository {
     @Override
     public Request findById(String requestId) throws EntityNotFoundException, IllegalArgumentException {
         log.debug(LogMessage.REPOSITORY_FIND_BY_ID_START, requestId);
-        
+
         Optional<RequestEntity> requestEntityOpt = requestRepository.findById(requestId);
-        
+
         if (requestEntityOpt.isEmpty()) {
             log.warn(LogMessage.REPOSITORY_FIND_BY_ID_NOT_FOUND, requestId);
             throw new EntityNotFoundException("Request with ID " + requestId + " not found");
         }
-        
+
         log.debug(LogMessage.REPOSITORY_FIND_BY_ID_FOUND, requestId);
         log.debug(LogMessage.REPOSITORY_FIND_BY_ID_MAPPING, requestId);
-        
+
         return requestMapper.toDomain(requestEntityOpt.get());
     }
 
     @Override
     public List<Request> findWithFilters(String partyName, String requestStatus) {
         log.debug(LogMessage.REPOSITORY_FIND_WITH_FILTERS_START, partyName, requestStatus);
-        
+
         List<RequestEntity> entities = requestRepository.findWithFilters(partyName, requestStatus);
         log.debug(LogMessage.REPOSITORY_FIND_WITH_FILTERS_RESULT, entities.size());
-        
+
         log.debug(LogMessage.REPOSITORY_FIND_WITH_FILTERS_MAPPING, entities.size());
         return entities.stream()
                 .map(requestMapper::toDomain)

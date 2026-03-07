@@ -3,8 +3,10 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedde
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * Embedded entity mapping the "simulated_results" sub-document from the "simulations" MongoDB collection.
- * Contains the risk metrics computed by the model with the simulation's modified inputs applied.
+ * Embedded entity mapping the "simulated_results" sub-document from the
+ * "simulations" MongoDB collection.
+ * Contains the risk metrics computed by the model with the simulation's
+ * modified inputs applied.
  *
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026

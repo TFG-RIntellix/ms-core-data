@@ -13,7 +13,9 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskFeature;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
 
 /**
- * Mapper class to convert between Scoring (domain) and ScoringDTO (application).
+ * Mapper class to convert between Scoring (domain) and ScoringDTO
+ * (application).
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026
  */
@@ -24,11 +26,14 @@ public class ScoringDTOMapper {
 
     /**
      * Converts a Scoring domain entity into a ScoringDTO.
+     * 
      * @param scoring The domain Scoring entity.
      * @return The ScoringDTO ready for the REST response.
      */
     public ScoringDTO toDTO(Scoring scoring) {
-        if (scoring == null) { return null; }
+        if (scoring == null) {
+            return null;
+        }
 
         ScoringDTO dto = new ScoringDTO();
         dto.setScoringId(scoring.getId());
@@ -58,7 +63,9 @@ public class ScoringDTOMapper {
     }
 
     private List<TopFeatureDTO> mapTopFeatures(List<RiskFeature> features) {
-        if (features == null || features.isEmpty()) { return new ArrayList<>(); }
+        if (features == null || features.isEmpty()) {
+            return new ArrayList<>();
+        }
         return features.stream()
                 .map(f -> new TopFeatureDTO(f.getFeatureName(), f.getFeatureValue(), f.getShapValue()))
                 .collect(Collectors.toList());

@@ -8,7 +8,8 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundE
 /**
  * Output port for Simulation aggregate persistence.
  * Defines the repository contract for simulation data access.
- * Since this is a READ-ONLY microservice, only retrieval operations are supported.
+ * Since this is a READ-ONLY microservice, only retrieval operations are
+ * supported.
  *
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026
@@ -24,7 +25,7 @@ public interface SimulationPortRepository {
      * @param simulationId the unique identifier of the simulation
      * @return Simulation aggregate with the specified ID
      * @throws IllegalArgumentException if simulationId is null or empty
-     * @throws EntityNotFoundException if no simulation is found with the given ID
+     * @throws EntityNotFoundException  if no simulation is found with the given ID
      */
     Simulation findById(String simulationId) throws EntityNotFoundException, IllegalArgumentException;
 
@@ -38,7 +39,7 @@ public interface SimulationPortRepository {
      * Party name filtering is handled at the application layer (post-fetch).
      *
      * @param requestId the ID of the associated request (optional filter)
-     * @param partyId the ID of the associated party (optional filter)
+     * @param partyId   the ID of the associated party (optional filter)
      * @return List of simulations matching the specified filters
      */
     List<Simulation> findWithFilters(String requestId, String partyId);

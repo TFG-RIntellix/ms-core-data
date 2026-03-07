@@ -15,9 +15,15 @@ import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Adapter class that implements the PartyPortRepository interface, providing the implementation for retrieving Party aggregates from the MongoDB database using the PartyRepository.
- * This class acts as a bridge between the domain layer and the infrastructure layer, converting PartyEntity objects from the database into Party domain objects using the PartyMapper.
- * Since this microservice is read-only, only retrieval methods are implemented in this adapter.
+ * Adapter class that implements the PartyPortRepository interface, providing
+ * the implementation for retrieving Party aggregates from the MongoDB database
+ * using the PartyRepository.
+ * This class acts as a bridge between the domain layer and the infrastructure
+ * layer, converting PartyEntity objects from the database into Party domain
+ * objects using the PartyMapper.
+ * Since this microservice is read-only, only retrieval methods are implemented
+ * in this adapter.
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 03-01-2026
  */
@@ -36,7 +42,7 @@ public class PartyRepositoryAdapter implements PartyPortRepository {
     @Override
     public Party findById(String partyId) throws EntityNotFoundException, IllegalArgumentException {
         log.debug(LogMessage.REPOSITORY_PARTY_FIND_BY_ID_START, partyId);
-            
+
         Optional<PartyEntity> partyEntityOpt = partyRepository.findById(partyId);
 
         if (partyEntityOpt.isEmpty()) {
@@ -55,18 +61,18 @@ public class PartyRepositoryAdapter implements PartyPortRepository {
     @Override
     public Party findPartyName(String partyId) {
         log.debug(LogMessage.REPOSITORY_PARTY_FIND_NAME_ONLY_START, partyId);
-        
+
         PartyNameProjection projection = partyRepository.findPartyNameProjectionById(partyId);
-        
+
         if (projection == null) {
             log.debug(LogMessage.REPOSITORY_PARTY_FIND_NAME_ONLY_NOT_FOUND, partyId);
             return null;
         }
-        
+
         Party party = partyMapper.toPartialDomain(projection);
-        log.debug(LogMessage.REPOSITORY_PARTY_FIND_NAME_ONLY_RESULT, partyId, 
-                  party.getPersonDetails() != null ? party.getPersonDetails().getFullName() : "null");
-        
+        log.debug(LogMessage.REPOSITORY_PARTY_FIND_NAME_ONLY_RESULT, partyId,
+                party.getPersonDetails() != null ? party.getPersonDetails().getFullName() : "null");
+
         return party;
     }
 

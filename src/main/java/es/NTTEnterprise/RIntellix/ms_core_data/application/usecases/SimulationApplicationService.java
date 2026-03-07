@@ -18,8 +18,10 @@ import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Implements SimulationPortService interface handling business logic for simulation retrieval.
- * Orchestrates simulation, party and scoring repositories to compose the required DTOs.
+ * Implements SimulationPortService interface handling business logic for
+ * simulation retrieval.
+ * Orchestrates simulation, party and scoring repositories to compose the
+ * required DTOs.
  *
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026
@@ -34,9 +36,9 @@ public class SimulationApplicationService implements SimulationPortService {
     private final SimulationDTOMapper simulationDTOMapper;
 
     public SimulationApplicationService(SimulationPortRepository simulationPortRepository,
-                                        PartyPortRepository partyPortRepository,
-                                        ScoringPortRepository scoringPortRepository,
-                                        SimulationDTOMapper simulationDTOMapper) {
+            PartyPortRepository partyPortRepository,
+            ScoringPortRepository scoringPortRepository,
+            SimulationDTOMapper simulationDTOMapper) {
         this.simulationPortRepository = simulationPortRepository;
         this.partyPortRepository = partyPortRepository;
         this.scoringPortRepository = scoringPortRepository;
@@ -51,14 +53,14 @@ public class SimulationApplicationService implements SimulationPortService {
         List<Simulation> simulations = simulationPortRepository.findWithFilters(requestId, partyId);
         log.debug(LogMessage.SERVICE_LIST_SIMULATIONS_RESULT, simulations.size());
 
-        // Resolve partyName for each simulation (following SRP: party resolution at application layer)
+        // Resolve partyName for each simulation (following SRP: party resolution at
+        // application layer)
         simulations.forEach(simulation -> {
             if (simulation.getPartyId() != null) {
                 simulation.setParty(partyPortRepository.findPartyName(simulation.getPartyId()));
             }
         });
 
-        //  TODO: To change because it is not working. Apply partyName filter (post-fetch, since party name is not stored in simulations collection)
         simulations = filterByPartyName(simulations, partyName);
 
         log.debug(LogMessage.SERVICE_LIST_SIMULATIONS_MAPPING, simulations.size());
@@ -82,7 +84,8 @@ public class SimulationApplicationService implements SimulationPortService {
         Simulation simulation = simulationPortRepository.findById(simulationId);
         log.debug(LogMessage.SERVICE_GET_SIMULATION_DETAILS_FOUND, simulationId);
 
-        // TODO: Resolve base scoring for comparison (original scenario), tocheck: because it should be always persisted, the baseScoring shuldn't be null. 
+        // TODO: Resolve base scoring for comparison (original scenario), tocheck:
+        // because it should be always persisted, the baseScoring shuldn't be null.
         Scoring baseScoring = null;
         if (simulation.getBaseScoringId() != null) {
             try {
@@ -101,30 +104,35 @@ public class SimulationApplicationService implements SimulationPortService {
     }
 
     /**
-     * Filters a list of simulations by party name (case-insensitive, partial match).
-     * This is a post-retrieval filter since party name is not stored in the simulations
-     * collection and must be resolved separately to respect SRP. If partyName is null or blank,
+     * Filters a list of simulations by party name (case-insensitive, partial
+     * match).
+     * This is a post-retrieval filter since party name is not stored in the
+     * simulations
+     * collection and must be resolved separately to respect SRP. If partyName is
+     * null or blank,
      * the original list is returned unfiltered.
      * 
      * @param simulations the list of simulations to filter
      * @param partyName   the party name to filter by (optional)
-     * @return a list of simulations whose associated party's full name contains the given partyName
+     * @return a list of simulations whose associated party's full name contains the
+     *         given partyName
      */
     public List<Simulation> filterByPartyName(List<Simulation> simulations, String partyName) {
-        
+
         List<Simulation> filteredSimulations = null;
-        
+
         if (partyName == null || partyName.isBlank()) {
             return simulations;
         }
 
         log.debug(LogMessage.SERVICE_LIST_SIMULATIONS_FILTERING_BY_NAME, partyName);
-    
-        // By contract we assume that a simulation always has a party associated with a full name.
-        filteredSimulations = simulations.stream().filter( 
-            simulation -> simulation.getParty().getPersonDetails().getFullName()
-                                .toLowerCase().contains(partyName.toLowerCase())
-        ).toList();
+
+        // By contract we assume that a simulation always has a party associated with a
+        // full name.
+        filteredSimulations = simulations.stream().filter(
+                simulation -> simulation.getParty().getPersonDetails().getFullName()
+                        .toLowerCase().contains(partyName.toLowerCase()))
+                .toList();
 
         log.debug(LogMessage.SERVICE_LIST_SIMULATIONS_AFTER_FILTER, simulations.size());
         return filteredSimulations;

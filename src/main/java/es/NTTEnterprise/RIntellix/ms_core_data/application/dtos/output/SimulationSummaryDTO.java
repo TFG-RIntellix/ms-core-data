@@ -29,7 +29,7 @@ public class SimulationSummaryDTO {
      * @param simulationDate the date when the simulation was created
      */
     public SimulationSummaryDTO(String simulationId, String scenarioName, String partyName,
-                                String requestId, String simulationDate) {
+            String requestId, String simulationDate) {
         this.simulationId = simulationId;
         this.scenarioName = scenarioName;
         this.partyName = partyName;

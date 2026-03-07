@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 /**
  * Embedded document for party economic data.
  * Contains income and financial information.
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 03-01-2026
  */

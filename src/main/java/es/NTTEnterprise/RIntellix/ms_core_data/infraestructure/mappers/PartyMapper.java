@@ -23,7 +23,9 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.projections.PartyNameProjection;
 
 /**
- * Mapper class to convert between PartyEntity (infrastructure) and Party/Person (domain).
+ * Mapper class to convert between PartyEntity (infrastructure) and Party/Person
+ * (domain).
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 03-01-2026
  */
@@ -32,6 +34,7 @@ public class PartyMapper {
 
     /**
      * Converts a PartyEntity from infrastructure layer to a Party domain object.
+     * 
      * @param entity the PartyEntity to convert
      * @return the Party domain object, or null if entity is null
      */
@@ -116,7 +119,8 @@ public class PartyMapper {
     }
 
     /**
-     * Maps EconomicDataEntity, EmploymentEntity and CreditHistoryEntity to FinancialProfile domain object.
+     * Maps EconomicDataEntity, EmploymentEntity and CreditHistoryEntity to
+     * FinancialProfile domain object.
      */
     private FinancialProfile mapFinancialProfile(PartyEntity entity) {
         FinancialProfile profile = new FinancialProfile();
@@ -157,7 +161,8 @@ public class PartyMapper {
         return profile;
     }
 
-    // Enum mapping methods, TODO: Manage the case when the value is not recognized (e.g., log a warning or throw an exception)
+    // Enum mapping methods, TODO: Manage the case when the value is not recognized
+    // (e.g., log a warning or throw an exception)
 
     private PartyType mapPartyType(String value) {
         if (value == null) {
@@ -231,7 +236,8 @@ public class PartyMapper {
      * Used for efficient queries when only the party name is needed.
      * 
      * @param projection the PartyNameProjection from the database query
-     * @return a partial Party with only name fields populated, or null if projection is null
+     * @return a partial Party with only name fields populated, or null if
+     *         projection is null
      */
     public Party toPartialDomain(PartyNameProjection projection) {
         if (projection == null) {

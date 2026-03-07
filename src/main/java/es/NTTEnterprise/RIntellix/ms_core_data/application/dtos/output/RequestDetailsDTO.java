@@ -2,14 +2,19 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output;
 
 /**
  * Data Transfer Object (DTO) for detailed information about a request.
- * This class is used to transfer detailed data about a request from the application layer to the presentation
- * layer, allowing to display all the relevant information about a specific request without exposing the internal structure of the request entity.
+ * This class is used to transfer detailed data about a request from the
+ * application layer to the presentation
+ * layer, allowing to display all the relevant information about a specific
+ * request without exposing the internal structure of the request entity.
+ * 
  * @author Lucía Fernández Mancebo
  * @Date 02-28-2026
  */
 public class RequestDetailsDTO {
 
-    // TODO: Change the requested amount into a String and convert it when it is necessary, in order to avoid problems with the currency and the amount when it is sent to the presentation layer. The same for the income of the party.
+    // TODO: Change the requested amount into a String and convert it when it is
+    // necessary, in order to avoid problems with the currency and the amount when
+    // it is sent to the presentation layer. The same for the income of the party.
     public String requestId;
     public String requestDate;
     public String partyName;
@@ -159,6 +164,5 @@ public class RequestDetailsDTO {
     public void setPurpose(String purpose) {
         this.purpose = purpose;
     }
-
 
 }

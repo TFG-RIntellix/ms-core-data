@@ -31,6 +31,13 @@ public class ContractRepositoryAdapter implements ContractPortRepository {
     private final ContractRepository contractRepository;
     private final ContractMapper contractMapper;
 
+    /**
+     * Constructor for ContractRepositoryAdapter.
+     * 
+     * @param contractRepository the Spring Data repository for ContractEntity
+     * @param contractMapper     the mapper to convert between ContractEntity and
+     *                           Contract domain objects
+     */
     public ContractRepositoryAdapter(ContractRepository contractRepository, ContractMapper contractMapper) {
         this.contractRepository = contractRepository;
         this.contractMapper = contractMapper;

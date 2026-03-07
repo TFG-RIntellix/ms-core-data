@@ -25,18 +25,23 @@ public class RequestDetailsDTOMapper {
               requestDetailsDTO.setRequestDate(request.getCreationDate().toString());
               requestDetailsDTO.setRequestType(request.getRequestDetails().getRequestType().toString());
               requestDetailsDTO.setStatus(request.getRequestStatus().toString());
-              requestDetailsDTO.setRequestedAmount(request.getRequestDetails().getRequestedAmount() != null ? request.getRequestDetails().getRequestedAmount().toString() : null);
+              requestDetailsDTO.setRequestedAmount(request.getRequestDetails().getRequestedAmount() != null
+                            ? request.getRequestDetails().getRequestedAmount().toString()
+                            : null);
               requestDetailsDTO.setRequestTermMonths(request.getRequestDetails().getTermMonths());
               requestDetailsDTO.setInterestRate(request.getRequestDetails().getInterestRate());
               requestDetailsDTO.setPurpose(request.getRequestDetails().getPurpose().toString());
               // Map party fields
               requestDetailsDTO.setPartyName(request.getParty().getPersonDetails().getFullName());
               requestDetailsDTO.setPartyNIF(request.getParty().getPersonDetails().getNif());
-              requestDetailsDTO.setPartyPhoneNumber(request.getParty().getPersonDetails().getContactInfo().getPhoneNumber());
+              requestDetailsDTO.setPartyPhoneNumber(
+                            request.getParty().getPersonDetails().getContactInfo().getPhoneNumber());
               requestDetailsDTO.setPartyEmail(request.getParty().getPersonDetails().getContactInfo().getEmail());
               requestDetailsDTO.setPartyAddress(request.getParty().getPersonDetails().getContactInfo().getAddress());
-              requestDetailsDTO.setPartyLaboralSituation(request.getParty().getPersonDetails().getFinancials().getEmploymentStatus().toString());
-              requestDetailsDTO.setPartyIncome(request.getParty().getPersonDetails().getFinancials().getAnnualIncome().toString());
+              requestDetailsDTO.setPartyLaboralSituation(
+                            request.getParty().getPersonDetails().getFinancials().getEmploymentStatus().toString());
+              requestDetailsDTO.setPartyIncome(
+                            request.getParty().getPersonDetails().getFinancials().getAnnualIncome().toString());
               return requestDetailsDTO;
        }
 

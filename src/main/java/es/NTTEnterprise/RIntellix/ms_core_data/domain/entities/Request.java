@@ -26,6 +26,13 @@ public class Request {
 
     /**
      * Constructor of the Request class.
+     */
+    private Request() {
+
+    }
+
+    /**
+     * Constructor of the Request class.
      * 
      * @param collateral     the collateral of the request, which can be null if the
      *                       request is not a mortgage.

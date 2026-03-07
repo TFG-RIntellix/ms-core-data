@@ -26,15 +26,33 @@ public class LoanContract extends Contract {
     private Money outstandingBalance;
     private Purpose purpose;
 
+    /**
+     * Default constructor for LoanContract.
+     */
+
     public LoanContract() {
         super();
     }
 
-
-    public LoanContract(String id, ContractType contractType,ContractStatus status,
-                           LocalDate openDate, Double interestRate,
-                           Money principalAmount, Integer termMonths, Money monthlyPayment,
-                           Money outstandingBalance, Purpose purpose) {
+    /**
+     * Constructor for LoanContract.
+     * 
+     * @param id                 the unique identifier of the contract
+     * @param contractType       the type of the contract (should be
+     *                           ContractType.PRESTAMO for this class)
+     * @param status             the status of the contract
+     * @param openDate           the date the contract was opened
+     * @param interestRate       the interest rate of the contract
+     * @param principalAmount    the principal amount of the loan
+     * @param termMonths         the term of the loan in months
+     * @param monthlyPayment     the monthly payment amount
+     * @param outstandingBalance the outstanding balance of the loan
+     * @param purpose            the purpose of the loan
+     */
+    public LoanContract(String id, ContractType contractType, ContractStatus status,
+            LocalDate openDate, Double interestRate,
+            Money principalAmount, Integer termMonths, Money monthlyPayment,
+            Money outstandingBalance, Purpose purpose) {
         super(id, contractType, status, openDate, interestRate);
         this.principalAmount = principalAmount;
         this.termMonths = termMonths;
@@ -43,9 +61,7 @@ public class LoanContract extends Contract {
         this.purpose = purpose;
     }
 
-
     // Getters and Setters
-    
 
     public void setPrincipalAmount(Money principalAmount) {
         this.principalAmount = principalAmount;
@@ -96,4 +112,58 @@ public class LoanContract extends Contract {
     public Money getOutstandingDebt() {
         return outstandingBalance;
     }
+
+    // toString, hashCode and equals
+    @Override
+    public String toString() {
+        return "LoanContract [principalAmount=" + principalAmount + ", termMonths=" + termMonths + ", monthlyPayment="
+                + monthlyPayment + ", outstandingBalance=" + outstandingBalance + ", purpose=" + purpose + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((principalAmount == null) ? 0 : principalAmount.hashCode());
+        result = prime * result + ((termMonths == null) ? 0 : termMonths.hashCode());
+        result = prime * result + ((monthlyPayment == null) ? 0 : monthlyPayment.hashCode());
+        result = prime * result + ((outstandingBalance == null) ? 0 : outstandingBalance.hashCode());
+        result = prime * result + ((purpose == null) ? 0 : purpose.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        LoanContract other = (LoanContract) obj;
+        if (principalAmount == null) {
+            if (other.principalAmount != null)
+                return false;
+        } else if (!principalAmount.equals(other.principalAmount))
+            return false;
+        if (termMonths == null) {
+            if (other.termMonths != null)
+                return false;
+        } else if (!termMonths.equals(other.termMonths))
+            return false;
+        if (monthlyPayment == null) {
+            if (other.monthlyPayment != null)
+                return false;
+        } else if (!monthlyPayment.equals(other.monthlyPayment))
+            return false;
+        if (outstandingBalance == null) {
+            if (other.outstandingBalance != null)
+                return false;
+        } else if (!outstandingBalance.equals(other.outstandingBalance))
+            return false;
+        if (purpose != other.purpose)
+            return false;
+        return true;
+    }
+
 }

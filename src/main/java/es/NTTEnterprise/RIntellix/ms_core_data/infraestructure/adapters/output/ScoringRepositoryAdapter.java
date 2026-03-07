@@ -38,10 +38,12 @@ public class ScoringRepositoryAdapter implements ScoringPortRepository {
     public Scoring findByRequestId(String requestId) throws EntityNotFoundException {
         log.debug(LogMessage.REPOSITORY_SCORING_FIND_BY_REQUEST_START, requestId);
         Optional<ScoringEntity> entityOpt = scoringRepository.findByRequestId(new ObjectId(requestId));
+
         if (entityOpt.isEmpty()) {
             log.warn(LogMessage.REPOSITORY_SCORING_FIND_BY_REQUEST_NOT_FOUND, requestId);
             throw new EntityNotFoundException("Scoring not found for request ID " + requestId);
         }
+
         log.debug(LogMessage.REPOSITORY_SCORING_FIND_BY_REQUEST_FOUND, requestId);
         return scoringMapper.toDomain(entityOpt.get());
     }
@@ -50,10 +52,12 @@ public class ScoringRepositoryAdapter implements ScoringPortRepository {
     public Scoring findById(String scoringId) throws EntityNotFoundException {
         log.debug(LogMessage.REPOSITORY_SCORING_FIND_BY_ID_START, scoringId);
         Optional<ScoringEntity> entityOpt = scoringRepository.findById(scoringId);
+
         if (entityOpt.isEmpty()) {
             log.warn(LogMessage.REPOSITORY_SCORING_FIND_BY_ID_NOT_FOUND, scoringId);
             throw new EntityNotFoundException("Scoring with ID " + scoringId + " not found");
         }
+
         log.debug(LogMessage.REPOSITORY_SCORING_FIND_BY_ID_FOUND, scoringId);
         return scoringMapper.toDomain(entityOpt.get());
     }
