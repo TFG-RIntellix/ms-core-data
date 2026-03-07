@@ -40,8 +40,18 @@ public interface SimulationPortRepository {
      *
      * @param requestId the ID of the associated request (optional filter)
      * @param partyId   the ID of the associated party (optional filter)
+     * @param archived  flag to filter archived simulations (optional filter)
      * @return List of simulations matching the specified filters
      */
-    List<Simulation> findWithFilters(String requestId, String partyId);
+    List<Simulation> findWithFilters(String requestId, String partyId, boolean archived);
+
+    /**
+     * Persists a simulation aggregate to the database.
+     * Used by update and archive operations.
+     *
+     * @param simulation the Simulation domain entity to save
+     * @return the saved Simulation domain entity
+     */
+    Simulation save(Simulation simulation);
 
 }

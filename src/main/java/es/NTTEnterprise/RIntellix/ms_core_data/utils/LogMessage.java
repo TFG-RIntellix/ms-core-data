@@ -65,6 +65,18 @@ public final class LogMessage {
     public static final String SERVICE_GET_SIMULATION_DETAILS_SCORING_NOT_FOUND = "Base scoring not found for simulation comparison - scoringId: [{}]";
     public static final String SERVICE_GET_SIMULATION_DETAILS_COMPLETE = "getSimulationDetails operation completed successfully - simulationId: [{}]";
 
+    // Simulation Update (PUT - Template)
+    public static final String SERVICE_UPDATE_SIMULATION_TEMPLATE_START = "Starting updateSimulationTemplate operation - simulationId: [{}]";
+    public static final String SERVICE_UPDATE_SIMULATION_TEMPLATE_VALIDATION_ERROR = "Validation failed for simulationId - Value is null or blank";
+    public static final String SERVICE_UPDATE_SIMULATION_TEMPLATE_FOUND = "Simulation template found - simulationId: [{}]";
+    public static final String SERVICE_UPDATE_SIMULATION_TEMPLATE_COMPLETE = "updateSimulationTemplate operation completed successfully - simulationId: [{}]";
+
+    // Simulation Archive (PATCH - Soft Delete)
+    public static final String SERVICE_ARCHIVE_SIMULATION_START = "Starting archiveSimulation operation - simulationId: [{}]";
+    public static final String SERVICE_ARCHIVE_SIMULATION_VALIDATION_ERROR = "Validation failed for simulationId - Value is null or blank";
+    public static final String SERVICE_ARCHIVE_SIMULATION_FOUND = "Simulation found for archiving - simulationId: [{}]";
+    public static final String SERVICE_ARCHIVE_SIMULATION_COMPLETE = "archiveSimulation operation completed successfully - simulationId: [{}], isArchived: [{}]";
+
     // ============================================================
     // INFRASTRUCTURE LAYER - Repository Adapter
     // ============================================================
@@ -115,6 +127,8 @@ public final class LogMessage {
     public static final String REPOSITORY_SIMULATION_FIND_BY_ID_NOT_FOUND = "Simulation not found in database - simulationId: [{}]";
     public static final String REPOSITORY_SIMULATION_FIND_WITH_FILTERS_START = "Executing findWithFilters operation on simulations - requestId: [{}], partyId: [{}]";
     public static final String REPOSITORY_SIMULATION_FIND_WITH_FILTERS_RESULT = "findWithFilters operation on simulations completed - Retrieved {} entity(ies)";
+    public static final String REPOSITORY_SIMULATION_SAVE_START = "Executing save operation on simulations - simulationId: [{}]";
+    public static final String REPOSITORY_SIMULATION_SAVE_COMPLETE = "Save operation on simulations completed - simulationId: [{}]";
 
     // ============================================================
     // INFRASTRUCTURE LAYER - Mappers

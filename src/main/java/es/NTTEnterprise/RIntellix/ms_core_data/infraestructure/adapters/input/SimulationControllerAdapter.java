@@ -2,19 +2,25 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.input;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ArchiveSimulationDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CalculatedSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationSummaryDTO;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input.SimulationPortService;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -39,7 +45,7 @@ public class SimulationControllerAdapter {
     /**
      * GET /api/simulations
      * Retrieves a list of simulations with optional filtering by request ID, party
-     * name or party ID.
+     * name or party ID, or all the archived simulations.
      * Example: GET /api/simulations?requestId=abc123&partyName=John%20Doe
      *
      * @param requestId the ID of the associated request (optional filter)
@@ -52,29 +58,17 @@ public class SimulationControllerAdapter {
     public ResponseEntity<List<SimulationSummaryDTO>> listSimulations(
             @RequestParam(required = false) String requestId,
             @RequestParam(required = false) String partyName,
-            @RequestParam(required = false) String partyId) {
+            @RequestParam(required = false) String partyId,
+            @RequestParam(required = false) Boolean archived) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/simulations");
-        log.debug(LogMessage.CONTROLLER_SIMULATION_REQUEST_PARAMS, requestId, partyName, partyId);
+        log.debug(LogMessage.CONTROLLER_SIMULATION_REQUEST_PARAMS, requestId, partyName, partyId, archived);
 
-        try {
-            List<SimulationSummaryDTO> simulations = simulationPortService.listSimulations(requestId, partyName,
-                    partyId);
+        List<SimulationSummaryDTO> simulations = simulationPortService.listSimulations(requestId, partyName, partyId,
+                archived);
 
-            log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS, HttpStatus.OK.value(), simulations.size());
-            return ResponseEntity.ok(simulations);
-
-        } catch (IllegalArgumentException e) {
-            log.warn(LogMessage.CONTROLLER_VALIDATION_ERROR, e.getMessage());
-            log.warn(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.BAD_REQUEST.value(), e.getMessage());
-            return ResponseEntity.badRequest().build();
-
-        } catch (Exception e) {
-            log.error(LogMessage.CONTROLLER_UNEXPECTED_ERROR, e.getMessage(), e);
-            log.error(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    "Internal server error");
-            return ResponseEntity.internalServerError().build();
-        }
+        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS, 200, simulations.size());
+        return ResponseEntity.ok(simulations);
     }
 
     /**
@@ -93,27 +87,78 @@ public class SimulationControllerAdapter {
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/simulations/" + simulationId);
         log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, simulationId);
 
-        try {
-            SimulationDetailsDTO details = simulationPortService.getSimulationDetails(simulationId);
+        SimulationDetailsDTO details = simulationPortService.getSimulationDetails(simulationId);
 
-            log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS_SINGLE, HttpStatus.OK.value(), simulationId);
-            return ResponseEntity.ok(details);
+        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS_SINGLE, 200, simulationId);
+        return ResponseEntity.ok(details);
+    }
 
-        } catch (IllegalArgumentException e) {
-            log.warn(LogMessage.CONTROLLER_VALIDATION_ERROR, e.getMessage());
-            log.warn(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.BAD_REQUEST.value(), e.getMessage());
-            return ResponseEntity.badRequest().build();
+    /**
+     * PUT /api/simulations/{simulationId}
+     * Replaces the simulation template with the provided data.
+     * Updates form changes, simulated results, deltas, and associated
+     * scoring/party references.
+     *
+     * @param simulationId the unique identifier of the simulation template
+     * @param dto          the complete replacement data
+     * @return 200 OK on success, 404 if not found, 400 if invalid input.
+     */
+    @PutMapping("/{simulationId}")
+    public ResponseEntity<Void> updateSimulationTemplate(@PathVariable String simulationId,
+            @Valid @RequestBody CalculatedSimulationDTO dto) {
 
-        } catch (EntityNotFoundException e) {
-            log.warn(LogMessage.EXCEPTION_ENTITY_NOT_FOUND, "Simulation", simulationId);
-            log.warn(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.NOT_FOUND.value(), e.getMessage());
-            return ResponseEntity.notFound().build();
+        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "PUT", "/api/simulations/" + simulationId);
+        log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, simulationId);
 
-        } catch (Exception e) {
-            log.error(LogMessage.CONTROLLER_UNEXPECTED_ERROR, e.getMessage(), e);
-            log.error(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    "Internal server error");
-            return ResponseEntity.internalServerError().build();
-        }
+        simulationPortService.updateSimulationTemplate(simulationId, dto);
+
+        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS_SINGLE, 200, simulationId);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * PATCH /api/simulations/{simulationId}
+     * Performs a soft delete (archive) on a simulation.
+     * Only the isArchived field can be modified through this operation.
+     *
+     * @param simulationId the unique identifier of the simulation to archive
+     * @param dto          the patch data containing only the isArchived flag
+     * @return 200 OK on success, 404 if not found, 400 if invalid input.
+     */
+    @PatchMapping("/{simulationId}")
+    public ResponseEntity<Void> archiveSimulation(@PathVariable String simulationId,
+            @Valid @RequestBody ArchiveSimulationDTO dto) {
+
+        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "PATCH", "/api/simulations/" + simulationId);
+        log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, simulationId);
+
+        simulationPortService.archiveSimulation(simulationId, dto);
+
+        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS_SINGLE, 200, simulationId);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * We created a simulation calculated before, so we get the template and save a
+     * new simulation entity.
+     * 
+     * @return
+     */
+    @PostMapping("/simulations")
+    public ResponseEntity<Void> createSimulation() {
+        // TODO: Implement by getting the template.
+        // We have to take account into the deficiencies of the template.
+        return ResponseEntity.status(501).build(); // 501 Not Implemented
+    }
+
+    /**
+     * Delete the simulation if it is archived before (soft delete).
+     * 
+     */
+    @DeleteMapping("/{simulationId}")
+    public ResponseEntity<Void> deleteSimulation(@PathVariable String simulationId) {
+        // TODO: Implement by checking if the simulation is archived before deleting it.
+
+        return ResponseEntity.noContent().build();
     }
 }

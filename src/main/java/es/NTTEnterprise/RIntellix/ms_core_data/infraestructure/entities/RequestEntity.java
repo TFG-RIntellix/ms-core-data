@@ -2,6 +2,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities;
 
 import java.time.LocalDate;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -21,13 +22,13 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestType;
 public class RequestEntity {
 
     @Id
-    private String id;
+    private ObjectId id;
 
     @Field("request_type")
     private RequestType requestType;
 
     @Field("party_id")
-    private String partyId;
+    private ObjectId partyId;
 
     @Field("currency")
     private String currency;
@@ -73,11 +74,11 @@ public class RequestEntity {
 
     // Getters and Setters
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
@@ -89,11 +90,11 @@ public class RequestEntity {
         this.requestType = requestType;
     }
 
-    public String getPartyId() {
+    public ObjectId getPartyId() {
         return partyId;
     }
 
-    public void setPartyId(String partyId) {
+    public void setPartyId(ObjectId partyId) {
         this.partyId = partyId;
     }
 

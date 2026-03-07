@@ -44,7 +44,7 @@ public class PartyMapper {
         }
 
         Party party = new Party();
-        party.setId(entity.getId());
+        party.setId(entity.getId().toHexString());
         party.setPartyType(mapPartyType(entity.getPartyType()));
 
         // Map Person details
@@ -61,20 +61,16 @@ public class PartyMapper {
         Person person = new Person();
 
         // Map identity from demographics
-        if (entity.getDemographics() != null) {
-            DemographicsEntity demographics = entity.getDemographics();
-            person.setFirstName(demographics.getFirstName());
-            person.setLastName(demographics.getLastName());
-            person.setNif(demographics.getNif());
+        DemographicsEntity demographics = entity.getDemographics();
+        person.setFirstName(demographics.getFirstName());
+        person.setLastName(demographics.getLastName());
+        person.setNif(demographics.getNif());
 
-            // Map SocioDemographicProfile
-            person.setDemographics(mapSocioDemographicProfile(demographics));
-        }
+        // Map SocioDemographicProfile
+        person.setDemographics(mapSocioDemographicProfile(demographics));
 
         // Map ContactInfo
-        if (entity.getContactInfo() != null) {
-            person.setContactInfo(mapContactInfo(entity.getContactInfo()));
-        }
+        person.setContactInfo(mapContactInfo(entity.getContactInfo()));
 
         // Map FinancialProfile
         person.setFinancials(mapFinancialProfile(entity));
@@ -86,10 +82,6 @@ public class PartyMapper {
      * Maps DemographicsEntity to SocioDemographicProfile domain object.
      */
     private SocioDemographicProfile mapSocioDemographicProfile(DemographicsEntity entity) {
-        if (entity == null) {
-            return null;
-        }
-
         SocioDemographicProfile profile = new SocioDemographicProfile();
         profile.setBirthDate(entity.getBirthDate());
         profile.setGender(mapGender(entity.getGender()));
@@ -106,10 +98,6 @@ public class PartyMapper {
      * Maps ContactInfoEntity to ContactInfo domain object.
      */
     private ContactInfo mapContactInfo(ContactInfoEntity entity) {
-        if (entity == null) {
-            return null;
-        }
-
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setPhoneNumber(entity.getPhoneNumber());
         contactInfo.setEmail(entity.getEmail());
@@ -127,19 +115,15 @@ public class PartyMapper {
 
         // Map from EconomicDataEntity
         EconomicDataEntity economicData = entity.getEconomicData();
-        if (economicData != null) {
-            Money annualIncome = new Money(economicData.getAnnualIncome(), economicData.getCurrency());
-            profile.setAnnualIncome(annualIncome);
-        }
+        Money annualIncome = new Money(economicData.getAnnualIncome(), economicData.getCurrency());
+        profile.setAnnualIncome(annualIncome);
 
         // Map from EmploymentEntity
         EmploymentEntity employment = entity.getEmployment();
-        if (employment != null) {
-            profile.setEmploymentStatus(mapEmploymentStatus(employment.getStatus()));
-            profile.setOccupation(employment.getOccupation());
-            if (employment.getEmployerSeniorityYears() != null) {
-                profile.setSeniorityYears(employment.getEmployerSeniorityYears().doubleValue());
-            }
+        profile.setEmploymentStatus(mapEmploymentStatus(employment.getStatus()));
+        profile.setOccupation(employment.getOccupation());
+        if (employment.getEmployerSeniorityYears() != null) {
+            profile.setSeniorityYears(employment.getEmployerSeniorityYears().doubleValue());
         }
 
         // Map from CreditHistoryEntity
@@ -149,7 +133,7 @@ public class PartyMapper {
             profile.setPreviousLoansCount(creditHistory.getPreviousLoansCount());
             profile.setIsNewCustomer(creditHistory.getIsNewCustomer());
 
-            String currency = economicData != null ? economicData.getCurrency() : "EUR";
+            String currency = economicData.getCurrency();
             if (creditHistory.getPreviousLoansAmount() != null) {
                 profile.setPreviousLoansAmount(new Money(creditHistory.getPreviousLoansAmount(), currency));
             }

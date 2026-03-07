@@ -18,7 +18,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.Simulati
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026
  */
-public interface SimulationRepository extends MongoRepository<SimulationEntity, String> {
+public interface SimulationRepository extends MongoRepository<SimulationEntity, ObjectId> {
 
     /**
      * Finds simulations with dynamic filtering based on request ID and party ID.
@@ -34,8 +34,10 @@ public interface SimulationRepository extends MongoRepository<SimulationEntity, 
      */
     @Query("{ $and: [ " +
             "{ $or: [ { $expr: { $eq: [:#{#requestId}, null] } }, { 'request_id': :#{#requestId} } ] }, " +
-            "{ $or: [ { $expr: { $eq: [:#{#partyId}, null] } }, { 'party_id': :#{#partyId} } ] } " +
+            "{ $or: [ { $expr: { $eq: [:#{#partyId}, null] } }, { 'party_id': :#{#partyId} } ] }, " +
+            "{ $or: [ { $expr: { $eq: [:#{#is_archived}, null] } }, { 'is_archived': :#{#is_archived} } ] } " +
             "] }")
-    List<SimulationEntity> findWithFilters(@Param("requestId") ObjectId requestId, @Param("partyId") ObjectId partyId);
+    List<SimulationEntity> findWithFilters(@Param("requestId") ObjectId requestId, @Param("partyId") ObjectId partyId,
+            @Param("is_archived") boolean archived);
 
 }

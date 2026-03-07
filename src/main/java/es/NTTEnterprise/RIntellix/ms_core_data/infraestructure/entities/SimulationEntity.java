@@ -2,6 +2,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities;
 
 import java.util.Date;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -22,16 +23,16 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded
 public class SimulationEntity {
 
     @Id
-    private String id;
+    private ObjectId id;
 
     @Field("request_id")
-    private String requestId;
+    private ObjectId requestId;
 
     @Field("party_id")
-    private String partyId;
+    private ObjectId partyId;
 
     @Field("base_scoring_id")
-    private String baseScoringId;
+    private ObjectId baseScoringId;
 
     @Field("scenario_name")
     private String scenarioName;
@@ -48,40 +49,43 @@ public class SimulationEntity {
     @Field("delta")
     private DeltaEntity delta;
 
+    @Field("is_archived")
+    private Boolean isArchived;
+
     public SimulationEntity() {
     }
 
     // Getters and Setters
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
-    public String getRequestId() {
+    public ObjectId getRequestId() {
         return requestId;
     }
 
-    public void setRequestId(String requestId) {
+    public void setRequestId(ObjectId requestId) {
         this.requestId = requestId;
     }
 
-    public String getPartyId() {
+    public ObjectId getPartyId() {
         return partyId;
     }
 
-    public void setPartyId(String partyId) {
+    public void setPartyId(ObjectId partyId) {
         this.partyId = partyId;
     }
 
-    public String getBaseScoringId() {
+    public ObjectId getBaseScoringId() {
         return baseScoringId;
     }
 
-    public void setBaseScoringId(String baseScoringId) {
+    public void setBaseScoringId(ObjectId baseScoringId) {
         this.baseScoringId = baseScoringId;
     }
 
@@ -123,5 +127,13 @@ public class SimulationEntity {
 
     public void setDelta(DeltaEntity delta) {
         this.delta = delta;
+    }
+
+    public Boolean getIsArchived() {
+        return isArchived;
+    }
+
+    public void setIsArchived(Boolean isArchived) {
+        this.isArchived = isArchived;
     }
 }

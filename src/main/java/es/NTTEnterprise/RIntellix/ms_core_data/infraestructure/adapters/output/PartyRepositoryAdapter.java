@@ -2,6 +2,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.output;
 
 import java.util.Optional;
 
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Repository;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
@@ -43,7 +44,7 @@ public class PartyRepositoryAdapter implements PartyPortRepository {
     public Party findById(String partyId) throws EntityNotFoundException, IllegalArgumentException {
         log.debug(LogMessage.REPOSITORY_PARTY_FIND_BY_ID_START, partyId);
 
-        Optional<PartyEntity> partyEntityOpt = partyRepository.findById(partyId);
+        Optional<PartyEntity> partyEntityOpt = partyRepository.findById(new ObjectId(partyId));
 
         if (partyEntityOpt.isEmpty()) {
             log.warn(LogMessage.REPOSITORY_PARTY_FIND_BY_ID_NOT_FOUND, partyId);
@@ -62,7 +63,7 @@ public class PartyRepositoryAdapter implements PartyPortRepository {
     public Party findPartyName(String partyId) {
         log.debug(LogMessage.REPOSITORY_PARTY_FIND_NAME_ONLY_START, partyId);
 
-        PartyNameProjection projection = partyRepository.findPartyNameProjectionById(partyId);
+        PartyNameProjection projection = partyRepository.findPartyNameProjectionById(new ObjectId(partyId));
 
         if (projection == null) {
             log.debug(LogMessage.REPOSITORY_PARTY_FIND_NAME_ONLY_NOT_FOUND, partyId);

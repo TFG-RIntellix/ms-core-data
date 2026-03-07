@@ -35,6 +35,9 @@ public class Simulation {
     private Double elChange;
     private String riskGradeChange;
 
+    // Soft delete flag
+    private boolean isArchived;
+
     // Transient: enriched party (resolved at application layer)
     private Party party;
 
@@ -151,6 +154,14 @@ public class Simulation {
 
     public void setRiskGradeChange(String riskGradeChange) {
         this.riskGradeChange = riskGradeChange;
+    }
+
+    public boolean isArchived() {
+        return isArchived;
+    }
+
+    public void setArchived(boolean isArchived) {
+        this.isArchived = isArchived;
     }
 
     public Party getParty() {

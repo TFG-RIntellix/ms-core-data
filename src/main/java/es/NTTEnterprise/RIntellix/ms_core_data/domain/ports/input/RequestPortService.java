@@ -22,11 +22,13 @@ public interface RequestPortService {
      * 
      * @param partyName   the name of the party that made the request, which can be
      *                    used to filter the requests by the party that made them.
+     * @param partyId     the ID of the party that made the request, which can be
+     *                    used to filter the requests by the party that made them.
      * @param requestType the type of request, which can be used to filter the
      *                    requests by their type (loan, mortgage or credit card).
      * @return a list of RequestSummaryDTO objects.
      */
-    List<RequestSummaryDTO> listRequests(String partyName, String requestType);
+    List<RequestSummaryDTO> listRequests(String partyName, String partyId, String requestType);
 
     /**
      * Retrieves the detailed information of a specific request.

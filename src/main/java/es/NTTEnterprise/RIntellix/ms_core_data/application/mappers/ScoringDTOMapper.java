@@ -39,21 +39,17 @@ public class ScoringDTOMapper {
         dto.setScoringId(scoring.getId());
         dto.setRequestId(scoring.getRequestId());
         dto.setModelVersion(scoring.getModelVersion());
-        dto.setScoringDate(scoring.getExecutionDate() != null ? DATE_FORMAT.format(scoring.getExecutionDate()) : null);
+        dto.setScoringDate(DATE_FORMAT.format(scoring.getExecutionDate()));
 
         // Input features (already a HashMap in domain)
-        if (scoring.getInputSnapshot() != null) {
-            dto.setInputFeatures(scoring.getInputSnapshot().getFeatures());
-        }
+        dto.setInputFeatures(scoring.getInputSnapshot().getFeatures());
 
         // Risk metrics
-        if (scoring.getResults() != null) {
-            dto.setPd(scoring.getResults().getProbabilityOfDefault());
-            dto.setLgd(scoring.getResults().getLossGivenDefault());
-            dto.setEad(scoring.getResults().getExposureAtDefault());
-            dto.setEcl(scoring.getResults().getExpectedCalculatedLoss());
-            dto.setRiskGrade(scoring.getResults().getRiskLevel());
-        }
+        dto.setPd(scoring.getResults().getProbabilityOfDefault());
+        dto.setLgd(scoring.getResults().getLossGivenDefault());
+        dto.setEad(scoring.getResults().getExposureAtDefault());
+        dto.setEcl(scoring.getResults().getExpectedCalculatedLoss());
+        dto.setRiskGrade(scoring.getResults().getRiskLevel());
 
         // Explainability
         dto.setBaseValue(scoring.getBaseValue());

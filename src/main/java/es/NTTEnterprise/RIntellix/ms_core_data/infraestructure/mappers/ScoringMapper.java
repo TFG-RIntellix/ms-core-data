@@ -42,18 +42,16 @@ public class ScoringMapper {
         }
 
         Scoring scoring = new Scoring();
-        scoring.setId(entity.getId());
-        scoring.setRequestId(entity.getRequestId());
+        scoring.setId(entity.getId().toHexString());
+        scoring.setRequestId(entity.getRequestId().toHexString());
         scoring.setModelVersion(entity.getModelVersion());
         scoring.setExecutionDate(entity.getScoringDate());
         scoring.setInputSnapshot(mapInputFeatures(entity.getInputFeatures()));
         scoring.setResults(mapResults(entity.getResults()));
 
         // XAI → baseValue + explainability
-        if (entity.getXai() != null) {
-            scoring.setBaseValue(entity.getXai().getBaseValue());
-            scoring.setExplainability(mapTopFeatures(entity.getXai().getTopFeatures()));
-        }
+        scoring.setBaseValue(entity.getXai().getBaseValue());
+        scoring.setExplainability(mapTopFeatures(entity.getXai().getTopFeatures()));
 
         return scoring;
     }
@@ -65,10 +63,6 @@ public class ScoringMapper {
      * Each known field is placed into the map only if it is not null.
      */
     private ModelInputs mapInputFeatures(InputFeaturesEntity entity) {
-        if (entity == null) {
-            return null;
-        }
-
         HashMap<String, Object> features = new HashMap<>();
 
         putIfNotNull(features, "age", entity.getAge());
@@ -98,9 +92,6 @@ public class ScoringMapper {
      * Maps ResultsEntity to RiskMetrics domain object.
      */
     private RiskMetrics mapResults(ResultsEntity entity) {
-        if (entity == null) {
-            return null;
-        }
         return new RiskMetrics(
                 entity.getPd(),
                 entity.getLgd(),
@@ -113,7 +104,7 @@ public class ScoringMapper {
      * Maps a list of TopFeatureEntity to a list of RiskFeature domain objects.
      */
     private List<RiskFeature> mapTopFeatures(List<TopFeatureEntity> entities) {
-        if (entities == null || entities.isEmpty()) {
+        if (entities.isEmpty()) {
             return new ArrayList<>();
         }
         return entities.stream()

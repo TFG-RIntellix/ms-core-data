@@ -126,7 +126,7 @@ public class ContractMapper {
     // ============================================================
 
     private static void mapCommonFields(Contract contract, ContractEntity entity) {
-        contract.setId(entity.getId());
+        contract.setId(entity.getId().toHexString());
         contract.setContractType(mapContractType(entity.getContractType()));
         ;
         contract.setStatus(mapContractStatus(entity.getStatus()));

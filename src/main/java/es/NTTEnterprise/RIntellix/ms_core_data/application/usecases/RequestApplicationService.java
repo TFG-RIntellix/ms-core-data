@@ -51,17 +51,15 @@ public class RequestApplicationService implements RequestPortService {
     }
 
     @Override
-    public List<RequestSummaryDTO> listRequests(String partyName, String requestStatus) {
-        log.debug(LogMessage.SERVICE_LIST_REQUESTS_START, partyName, requestStatus);
+    public List<RequestSummaryDTO> listRequests(String partyName, String partyId, String requestStatus) {
+        log.debug(LogMessage.SERVICE_LIST_REQUESTS_START, partyName, partyId, requestStatus);
 
-        List<Request> requests = requestPortRepository.findWithFilters(partyName, requestStatus);
+        List<Request> requests = requestPortRepository.findWithFilters(partyId, requestStatus);
         log.debug(LogMessage.SERVICE_LIST_REQUESTS_RESULT, requests.size());
 
         // Obtain partyName for each request arrending to SPA principles.
         requests.forEach(request -> {
-            if (request.getPartyId() != null) {
-                request.setParty(partyPortRepository.findPartyName(request.getPartyId()));
-            }
+            request.setParty(partyPortRepository.findPartyName(request.getPartyId()));
         });
 
         // Filter by name because repository does not support this direct filtering.
@@ -89,25 +87,21 @@ public class RequestApplicationService implements RequestPortService {
         log.debug(LogMessage.SERVICE_GET_DETAILS_FOUND, requestId);
 
         // Resolve full Party for detailed view (orchestration at application layer)
-        if (request.getPartyId() != null) {
-            Party party = partyPortRepository.findById(request.getPartyId());
+        Party party = partyPortRepository.findById(request.getPartyId());
 
-            // Load active contracts and assign to Party
-            List<Contract> activeContracts = contractPortRepository.findActiveByPartyId(request.getPartyId());
-            log.debug(LogMessage.REPOSITORY_PARTY_CONTRACTS_LOADED, request.getPartyId(), activeContracts.size());
+        // Load active contracts and assign to Party
+        List<Contract> activeContracts = contractPortRepository.findActiveByPartyId(request.getPartyId());
+        log.debug(LogMessage.REPOSITORY_PARTY_CONTRACTS_LOADED, request.getPartyId(), activeContracts.size());
 
-            if (party.getPersonDetails() != null) {
-                party.getPersonDetails().setActiveContracts(activeContracts);
-            }
+        party.getPersonDetails().setActiveContracts(activeContracts);
 
-            // TODO: This is a proof to make sure that the PersonDetails are fully loaded
-            // before mapping to DTO, we should remove this in the future or move it to a
-            // more appropriate place.
-            party.getPersonDetails().getGlobalDTI();
-            party.getPersonDetails().getTotalDebt();
+        // TODO: This is a proof to make sure that the PersonDetails are fully loaded
+        // before mapping to DTO, we should remove this in the future or move it to a
+        // more appropriate place.
+        party.getPersonDetails().getGlobalDTI();
+        party.getPersonDetails().getTotalDebt();
 
-            request.setParty(party);
-        }
+        request.setParty(party);
 
         RequestDetailsDTO result = requestDetailsDTOMapper.toDTO(request);
 

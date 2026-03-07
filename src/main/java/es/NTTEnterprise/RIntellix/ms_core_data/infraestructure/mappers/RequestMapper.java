@@ -69,8 +69,8 @@ public class RequestMapper {
         Date lastReviewDate = localDateToDate(entity.getLastReviewDate());
 
         Request request = new Request(collateral, creationDate, requestDetails, entity.getStatus());
-        request.setId(entity.getId());
-        request.setPartyId(entity.getPartyId()); // Set partyId for later resolution
+        request.setId(entity.getId().toHexString());
+        request.setPartyId(entity.getPartyId().toHexString());
         request.setLastReviewDate(lastReviewDate);
         return request;
     }

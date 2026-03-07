@@ -1,5 +1,6 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -21,7 +22,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded
 public class PartyEntity {
 
     @Id
-    private String id;
+    private ObjectId id;
 
     @Field("party_type")
     private String partyType;
@@ -46,11 +47,11 @@ public class PartyEntity {
 
     // Getters and Setters
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

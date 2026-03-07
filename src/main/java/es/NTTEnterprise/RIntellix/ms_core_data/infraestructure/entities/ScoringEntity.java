@@ -2,6 +2,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities;
 
 import java.util.Date;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -22,10 +23,10 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded
 public class ScoringEntity {
 
     @Id
-    private String id;
+    private ObjectId id;
 
     @Field("request_id")
-    private String requestId;
+    private ObjectId requestId;
 
     @Field("model_version")
     private String modelVersion;
@@ -47,19 +48,19 @@ public class ScoringEntity {
 
     // Getters and Setters
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
-    public String getRequestId() {
+    public ObjectId getRequestId() {
         return requestId;
     }
 
-    public void setRequestId(String requestId) {
+    public void setRequestId(ObjectId requestId) {
         this.requestId = requestId;
     }
 

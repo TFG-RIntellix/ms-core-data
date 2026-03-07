@@ -2,6 +2,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities;
 
 import java.util.Date;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -19,13 +20,13 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class ContractEntity {
 
     @Id
-    private String id;
+    private ObjectId id;
 
     @Field("contract_type")
     private String contractType;
 
     @Field("party_id")
-    private String partyId;
+    private ObjectId partyId;
 
     @Field("currency")
     private String currency;
@@ -80,11 +81,11 @@ public class ContractEntity {
 
     // Getters and Setters
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
@@ -96,11 +97,11 @@ public class ContractEntity {
         this.contractType = contractType;
     }
 
-    public String getPartyId() {
+    public ObjectId getPartyId() {
         return partyId;
     }
 
-    public void setPartyId(String partyId) {
+    public void setPartyId(ObjectId partyId) {
         this.partyId = partyId;
     }
 

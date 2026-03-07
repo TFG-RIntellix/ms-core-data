@@ -39,10 +39,7 @@ public class RequestSummaryDTOMapper {
                                 .setLastReviewDate(request.getLastReviewDate() != null
                                                 ? request.getLastReviewDate().toString()
                                                 : null);
-                requestSummaryDTO.setPartyName(
-                                request.getParty() != null && request.getParty().getPersonDetails() != null
-                                                ? request.getParty().getPersonDetails().getFullName()
-                                                : null);
+                requestSummaryDTO.setPartyName(request.getParty().getPersonDetails().getFullName());
 
                 return requestSummaryDTO;
         }

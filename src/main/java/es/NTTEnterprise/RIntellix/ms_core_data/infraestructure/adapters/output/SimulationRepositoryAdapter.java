@@ -41,7 +41,7 @@ public class SimulationRepositoryAdapter implements SimulationPortRepository {
     public Simulation findById(String simulationId) throws EntityNotFoundException, IllegalArgumentException {
         log.debug(LogMessage.REPOSITORY_SIMULATION_FIND_BY_ID_START, simulationId);
 
-        Optional<SimulationEntity> entityOpt = simulationRepository.findById(simulationId);
+        Optional<SimulationEntity> entityOpt = simulationRepository.findById(new ObjectId(simulationId));
 
         if (entityOpt.isEmpty()) {
             log.warn(LogMessage.REPOSITORY_SIMULATION_FIND_BY_ID_NOT_FOUND, simulationId);
@@ -53,17 +53,28 @@ public class SimulationRepositoryAdapter implements SimulationPortRepository {
     }
 
     @Override
-    public List<Simulation> findWithFilters(String requestId, String partyId) {
+    public List<Simulation> findWithFilters(String requestId, String partyId, boolean archived) {
         log.debug(LogMessage.REPOSITORY_SIMULATION_FIND_WITH_FILTERS_START, requestId, partyId);
 
         ObjectId requestOid = requestId != null ? new ObjectId(requestId) : null;
         ObjectId partyOid = partyId != null ? new ObjectId(partyId) : null;
 
-        List<SimulationEntity> entities = simulationRepository.findWithFilters(requestOid, partyOid);
+        List<SimulationEntity> entities = simulationRepository.findWithFilters(requestOid, partyOid, archived);
         log.debug(LogMessage.REPOSITORY_SIMULATION_FIND_WITH_FILTERS_RESULT, entities.size());
 
         return entities.stream()
                 .map(simulationMapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public Simulation save(Simulation simulation) {
+        log.debug(LogMessage.REPOSITORY_SIMULATION_SAVE_START, simulation.getId());
+
+        SimulationEntity entity = simulationMapper.toEntity(simulation);
+        SimulationEntity savedEntity = simulationRepository.save(entity);
+
+        log.debug(LogMessage.REPOSITORY_SIMULATION_SAVE_COMPLETE, savedEntity.getId());
+        return simulationMapper.toDomain(savedEntity);
     }
 }

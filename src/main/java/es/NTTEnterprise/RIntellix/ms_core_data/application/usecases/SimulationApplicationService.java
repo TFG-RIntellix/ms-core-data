@@ -1,12 +1,16 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ArchiveSimulationDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CalculatedSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.SimulationDTOMapper;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskMetrics;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Simulation;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
@@ -46,19 +50,22 @@ public class SimulationApplicationService implements SimulationPortService {
     }
 
     @Override
-    public List<SimulationSummaryDTO> listSimulations(String requestId, String partyName, String partyId) {
+    public List<SimulationSummaryDTO> listSimulations(String requestId, String partyName, String partyId,
+            Boolean archived) {
         log.debug(LogMessage.SERVICE_LIST_SIMULATIONS_START, requestId, partyName, partyId);
 
+        if (archived == null) {
+            archived = false;
+        }
+
         // Retrieve simulations applying direct-field filters (requestId, partyId)
-        List<Simulation> simulations = simulationPortRepository.findWithFilters(requestId, partyId);
+        List<Simulation> simulations = simulationPortRepository.findWithFilters(requestId, partyId, archived);
         log.debug(LogMessage.SERVICE_LIST_SIMULATIONS_RESULT, simulations.size());
 
         // Resolve partyName for each simulation (following SRP: party resolution at
         // application layer)
         simulations.forEach(simulation -> {
-            if (simulation.getPartyId() != null) {
-                simulation.setParty(partyPortRepository.findPartyName(simulation.getPartyId()));
-            }
+            simulation.setParty(partyPortRepository.findPartyName(simulation.getPartyId()));
         });
 
         simulations = filterByPartyName(simulations, partyName);
@@ -84,23 +91,63 @@ public class SimulationApplicationService implements SimulationPortService {
         Simulation simulation = simulationPortRepository.findById(simulationId);
         log.debug(LogMessage.SERVICE_GET_SIMULATION_DETAILS_FOUND, simulationId);
 
-        // TODO: Resolve base scoring for comparison (original scenario), tocheck:
-        // because it should be always persisted, the baseScoring shuldn't be null.
+        // Resolve base scoring for comparison (original scenario).
+        // base_scoring_id is guaranteed by schema, but the scoring document could have
+        // been removed.
         Scoring baseScoring = null;
-        if (simulation.getBaseScoringId() != null) {
-            try {
-                baseScoring = scoringPortRepository.findById(simulation.getBaseScoringId());
-                log.debug(LogMessage.SERVICE_GET_SIMULATION_DETAILS_SCORING_FOUND, simulation.getBaseScoringId());
-            } catch (EntityNotFoundException e) {
-                log.warn(LogMessage.SERVICE_GET_SIMULATION_DETAILS_SCORING_NOT_FOUND, simulation.getBaseScoringId());
-                // Continue without base scoring; the delta is still available in the simulation
-            }
+        try {
+            baseScoring = scoringPortRepository.findById(simulation.getBaseScoringId());
+            log.debug(LogMessage.SERVICE_GET_SIMULATION_DETAILS_SCORING_FOUND, simulation.getBaseScoringId());
+        } catch (EntityNotFoundException e) {
+            log.warn(LogMessage.SERVICE_GET_SIMULATION_DETAILS_SCORING_NOT_FOUND, simulation.getBaseScoringId());
+            // Continue without base scoring; the delta is still available in the simulation
         }
 
         SimulationDetailsDTO result = simulationDTOMapper.toDetailsDTO(simulation, baseScoring);
         log.debug(LogMessage.SERVICE_GET_SIMULATION_DETAILS_COMPLETE, simulationId);
 
         return result;
+    }
+
+    @Override
+    public void updateSimulationTemplate(String simulationId, CalculatedSimulationDTO dto)
+            throws IllegalArgumentException, EntityNotFoundException {
+
+        log.debug(LogMessage.SERVICE_UPDATE_SIMULATION_TEMPLATE_START, simulationId);
+
+        if (simulationId == null || simulationId.isBlank()) {
+            log.warn(LogMessage.SERVICE_UPDATE_SIMULATION_TEMPLATE_VALIDATION_ERROR);
+            throw new IllegalArgumentException("Simulation ID cannot be null or empty");
+        }
+
+        Simulation simulation = simulationPortRepository.findById(simulationId);
+        log.debug(LogMessage.SERVICE_UPDATE_SIMULATION_TEMPLATE_FOUND, simulationId);
+
+        // Apply the template changes to the existing simulation
+        applyTemplateChanges(simulation, dto);
+
+        simulationPortRepository.save(simulation);
+        log.debug(LogMessage.SERVICE_UPDATE_SIMULATION_TEMPLATE_COMPLETE, simulationId);
+    }
+
+    @Override
+    public void archiveSimulation(String simulationId, ArchiveSimulationDTO dto)
+            throws IllegalArgumentException, EntityNotFoundException {
+
+        log.debug(LogMessage.SERVICE_ARCHIVE_SIMULATION_START, simulationId);
+
+        if (simulationId == null || simulationId.isBlank()) {
+            log.warn(LogMessage.SERVICE_ARCHIVE_SIMULATION_VALIDATION_ERROR);
+            throw new IllegalArgumentException("Simulation ID cannot be null or empty");
+        }
+
+        Simulation simulation = simulationPortRepository.findById(simulationId);
+        log.debug(LogMessage.SERVICE_ARCHIVE_SIMULATION_FOUND, simulationId);
+
+        simulation.setArchived(dto.getIsArchived());
+
+        simulationPortRepository.save(simulation);
+        log.debug(LogMessage.SERVICE_ARCHIVE_SIMULATION_COMPLETE, simulationId, dto.getIsArchived());
     }
 
     /**
@@ -117,7 +164,7 @@ public class SimulationApplicationService implements SimulationPortService {
      * @return a list of simulations whose associated party's full name contains the
      *         given partyName
      */
-    public List<Simulation> filterByPartyName(List<Simulation> simulations, String partyName) {
+    private List<Simulation> filterByPartyName(List<Simulation> simulations, String partyName) {
 
         List<Simulation> filteredSimulations = null;
 
@@ -136,5 +183,42 @@ public class SimulationApplicationService implements SimulationPortService {
 
         log.debug(LogMessage.SERVICE_LIST_SIMULATIONS_AFTER_FILTER, simulations.size());
         return filteredSimulations;
+    }
+
+    /**
+     * Applies the changes from the UpdateSimulationTemplateDTO to the existing
+     * Simulation entity. This includes updating the party and base scoring
+     * references, form changes, simulated results and decisions, and the computed
+     * deltas. This method does not handle validation of the input data, which is
+     * assumed to be done at the controller layer before calling this method.
+     * 
+     * @param simulation the existing Simulation entity to update
+     * @param dto        the UpdateSimulationTemplateDTO containing the new values
+     *                   to apply to the simulation template
+     *
+     */
+    private void applyTemplateChanges(Simulation simulation, CalculatedSimulationDTO dto) {
+        simulation.setPartyId(dto.getPartyId());
+        simulation.setBaseScoringId(dto.getBaseScoringId());
+
+        // Form changes
+        simulation.setFormChanges(dto.getFormChanges() != null
+                ? new HashMap<>(dto.getFormChanges())
+                : new HashMap<>());
+        // Simulated results and decision
+        RiskMetrics simulatedResults = new RiskMetrics(
+                dto.getSimulatedPd(),
+                dto.getSimulatedLgd(),
+                dto.getSimulatedEad(),
+                dto.getSimulatedEcl(),
+                dto.getSimulatedRiskGrade());
+
+        simulation.setSimulatedResults(simulatedResults);
+        simulation.setSimulatedDecision(dto.getSimulatedDecision());
+
+        // Deltas
+        simulation.setPdChange(dto.getPdChange());
+        simulation.setElChange(dto.getElChange());
+        simulation.setRiskGradeChange(dto.getRiskGradeChange());
     }
 }

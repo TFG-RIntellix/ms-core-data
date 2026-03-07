@@ -3,6 +3,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.output;
 import java.util.List;
 import java.util.Optional;
 
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Repository;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
@@ -50,7 +51,7 @@ public class RequestRepositoryAdapter implements RequestPortRepository {
     public Request findById(String requestId) throws EntityNotFoundException, IllegalArgumentException {
         log.debug(LogMessage.REPOSITORY_FIND_BY_ID_START, requestId);
 
-        Optional<RequestEntity> requestEntityOpt = requestRepository.findById(requestId);
+        Optional<RequestEntity> requestEntityOpt = requestRepository.findById(new ObjectId(requestId));
 
         if (requestEntityOpt.isEmpty()) {
             log.warn(LogMessage.REPOSITORY_FIND_BY_ID_NOT_FOUND, requestId);

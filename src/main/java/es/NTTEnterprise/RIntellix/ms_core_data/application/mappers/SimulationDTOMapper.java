@@ -39,14 +39,10 @@ public class SimulationDTOMapper {
         dto.setSimulationId(simulation.getId());
         dto.setScenarioName(simulation.getScenarioName());
         dto.setRequestId(simulation.getRequestId());
-        dto.setSimulationDate(simulation.getSimulationDate() != null
-                ? DATE_FORMAT.format(simulation.getSimulationDate())
-                : null);
+        dto.setSimulationDate(DATE_FORMAT.format(simulation.getSimulationDate()));
 
         // Party name (resolved at application layer)
-        dto.setPartyName(simulation.getParty() != null && simulation.getParty().getPersonDetails() != null
-                ? simulation.getParty().getPersonDetails().getFullName()
-                : null);
+        dto.setPartyName(simulation.getParty().getPersonDetails().getFullName());
 
         return dto;
     }
@@ -70,9 +66,7 @@ public class SimulationDTOMapper {
         SimulationDetailsDTO dto = new SimulationDetailsDTO();
         dto.setSimulationId(simulation.getId());
         dto.setScenarioName(simulation.getScenarioName());
-        dto.setSimulationDate(simulation.getSimulationDate() != null
-                ? DATE_FORMAT.format(simulation.getSimulationDate())
-                : null);
+        dto.setSimulationDate(DATE_FORMAT.format(simulation.getSimulationDate()));
         dto.setRequestId(simulation.getRequestId());
         dto.setBaseScoringId(simulation.getBaseScoringId());
 
@@ -80,17 +74,15 @@ public class SimulationDTOMapper {
         dto.setFormChanges(simulation.getFormChanges());
 
         // Simulated results
-        if (simulation.getSimulatedResults() != null) {
-            dto.setSimulatedPd(simulation.getSimulatedResults().getProbabilityOfDefault());
-            dto.setSimulatedLgd(simulation.getSimulatedResults().getLossGivenDefault());
-            dto.setSimulatedEad(simulation.getSimulatedResults().getExposureAtDefault());
-            dto.setSimulatedEcl(simulation.getSimulatedResults().getExpectedCalculatedLoss());
-            dto.setSimulatedRiskGrade(simulation.getSimulatedResults().getRiskLevel());
-        }
+        dto.setSimulatedPd(simulation.getSimulatedResults().getProbabilityOfDefault());
+        dto.setSimulatedLgd(simulation.getSimulatedResults().getLossGivenDefault());
+        dto.setSimulatedEad(simulation.getSimulatedResults().getExposureAtDefault());
+        dto.setSimulatedEcl(simulation.getSimulatedResults().getExpectedCalculatedLoss());
+        dto.setSimulatedRiskGrade(simulation.getSimulatedResults().getRiskLevel());
         dto.setSimulatedDecision(simulation.getSimulatedDecision());
 
         // Base scoring results (original scenario for comparison)
-        if (baseScoring != null && baseScoring.getResults() != null) {
+        if (baseScoring != null) {
             dto.setBasePd(baseScoring.getResults().getProbabilityOfDefault());
             dto.setBaseLgd(baseScoring.getResults().getLossGivenDefault());
             dto.setBaseEad(baseScoring.getResults().getExposureAtDefault());

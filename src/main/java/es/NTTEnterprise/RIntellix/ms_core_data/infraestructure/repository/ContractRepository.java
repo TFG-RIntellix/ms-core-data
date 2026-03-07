@@ -16,7 +16,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.Contract
  * @author Lucía Fernández Mancebo
  * @Date 03-02-2026
  */
-public interface ContractRepository extends MongoRepository<ContractEntity, String> {
+public interface ContractRepository extends MongoRepository<ContractEntity, ObjectId> {
 
     /**
      * Retrieves all contracts associated with a given party.
