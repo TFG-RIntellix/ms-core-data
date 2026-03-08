@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Simulation;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.NotArchivedException;
 
 /**
  * Output port for Simulation aggregate persistence.
@@ -53,5 +54,18 @@ public interface SimulationPortRepository {
      * @return the saved Simulation domain entity
      */
     Simulation save(Simulation simulation);
+
+    /**
+     * Deletes a simulation from the database.
+     * Only archived simulations can be deleted; attempting to delete a
+     * non-archived simulation will throw NotArchivedException.
+     *
+     * @param simulationId the unique identifier of the simulation to delete
+     * @throws IllegalArgumentException if simulationId is null or empty
+     * @throws EntityNotFoundException  if no simulation is found with the given ID
+     * @throws NotArchivedException     if the simulation is not archived
+     */
+    public void delete(String simulationId)
+            throws IllegalArgumentException, EntityNotFoundException, NotArchivedException;
 
 }

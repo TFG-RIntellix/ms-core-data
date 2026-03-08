@@ -1,5 +1,6 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -7,15 +8,20 @@ import org.springframework.stereotype.Service;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ArchiveSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CalculatedSimulationDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.SimulationDTOMapper;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskMetrics;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Simulation;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.NotArchivedException;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.RequestPartyMismatchException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input.SimulationPortService;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.PartyPortRepository;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ScoringPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.SimulationPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
@@ -37,15 +43,18 @@ public class SimulationApplicationService implements SimulationPortService {
     private final SimulationPortRepository simulationPortRepository;
     private final PartyPortRepository partyPortRepository;
     private final ScoringPortRepository scoringPortRepository;
+    private final RequestPortRepository requestPortRepository;
     private final SimulationDTOMapper simulationDTOMapper;
 
     public SimulationApplicationService(SimulationPortRepository simulationPortRepository,
             PartyPortRepository partyPortRepository,
             ScoringPortRepository scoringPortRepository,
+            RequestPortRepository requestPortRepository,
             SimulationDTOMapper simulationDTOMapper) {
         this.simulationPortRepository = simulationPortRepository;
         this.partyPortRepository = partyPortRepository;
         this.scoringPortRepository = scoringPortRepository;
+        this.requestPortRepository = requestPortRepository;
         this.simulationDTOMapper = simulationDTOMapper;
     }
 
@@ -150,6 +159,44 @@ public class SimulationApplicationService implements SimulationPortService {
         log.debug(LogMessage.SERVICE_ARCHIVE_SIMULATION_COMPLETE, simulationId, dto.getIsArchived());
     }
 
+    @Override
+    public String createSimulation(CreateSimulationDTO dto) throws IllegalArgumentException {
+
+        log.debug(LogMessage.SERVICE_CREATE_SIMULATION_START, dto.getRequestId(), dto.getScenarioName());
+
+        // Verify that the request belongs to the specified party
+        Request request = requestPortRepository.findById(dto.getRequestId());
+
+        if (!request.getPartyId().equals(dto.getPartyId())) {
+
+            log.warn(LogMessage.SERVICE_CREATE_SIMULATION_PARTY_MISMATCH,
+                    dto.getRequestId(), dto.getPartyId(), request.getPartyId());
+
+            throw new RequestPartyMismatchException(
+                    "Request " + dto.getRequestId() + " belongs to party " + request.getPartyId()
+                            + ", not to " + dto.getPartyId());
+        }
+
+        Simulation simulation = buildSimulation(dto);
+
+        Simulation saved = simulationPortRepository.save(simulation);
+        log.debug(LogMessage.SERVICE_CREATE_SIMULATION_COMPLETE, saved.getId());
+
+        return saved.getId();
+    }
+
+    @Override
+    public String deleteSimulation(String simulationId)
+            throws IllegalArgumentException, EntityNotFoundException, NotArchivedException {
+
+        log.debug(LogMessage.SERVICE_DELETE_SIMULATION_START, simulationId);
+
+        simulationPortRepository.delete(simulationId);
+        log.debug(LogMessage.SERVICE_DELETE_SIMULATION_COMPLETE, simulationId);
+
+        return simulationId;
+    }
+
     /**
      * Filters a list of simulations by party name (case-insensitive, partial
      * match).
@@ -220,5 +267,45 @@ public class SimulationApplicationService implements SimulationPortService {
         simulation.setPdChange(dto.getPdChange());
         simulation.setElChange(dto.getElChange());
         simulation.setRiskGradeChange(dto.getRiskGradeChange());
+    }
+
+    /**
+     * Builds a new Simulation domain entity from the CreateSimulationDTO.
+     * Maps all DTO fields to the domain model, setting the simulation date
+     * to the current timestamp and initializing the archived flag to false.
+     *
+     * @param dto the creation DTO with all simulation data
+     * @return a fully populated Simulation domain entity ready for persistence
+     */
+    private Simulation buildSimulation(CreateSimulationDTO dto) {
+        Simulation simulation = new Simulation();
+
+        simulation.setScenarioName(dto.getScenarioName());
+        simulation.setRequestId(dto.getRequestId());
+        simulation.setPartyId(dto.getPartyId());
+        simulation.setBaseScoringId(dto.getBaseScoringId());
+        simulation.setSimulationDate(new Date());
+
+        simulation.setFormChanges(dto.getFormChanges() != null
+                ? new HashMap<>(dto.getFormChanges())
+                : new HashMap<>());
+
+        RiskMetrics simulatedResults = new RiskMetrics(
+                dto.getSimulatedPd(),
+                dto.getSimulatedLgd(),
+                dto.getSimulatedEad(),
+                dto.getSimulatedEcl(),
+                dto.getSimulatedRiskGrade());
+
+        simulation.setSimulatedResults(simulatedResults);
+        simulation.setSimulatedDecision(dto.getSimulatedDecision());
+
+        simulation.setPdChange(dto.getPdChange());
+        simulation.setElChange(dto.getElChange());
+        simulation.setRiskGradeChange(dto.getRiskGradeChange());
+
+        simulation.setArchived(false);
+
+        return simulation;
     }
 }

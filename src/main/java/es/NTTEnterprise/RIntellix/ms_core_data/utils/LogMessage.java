@@ -71,11 +71,20 @@ public final class LogMessage {
     public static final String SERVICE_UPDATE_SIMULATION_TEMPLATE_FOUND = "Simulation template found - simulationId: [{}]";
     public static final String SERVICE_UPDATE_SIMULATION_TEMPLATE_COMPLETE = "updateSimulationTemplate operation completed successfully - simulationId: [{}]";
 
+    // Simulation Create (POST)
+    public static final String SERVICE_CREATE_SIMULATION_START = "Starting createSimulation operation - requestId: [{}], scenarioName: [{}]";
+    public static final String SERVICE_CREATE_SIMULATION_PARTY_MISMATCH = "Party mismatch for simulation creation - requestId: [{}], provided partyId: [{}], actual partyId: [{}]";
+    public static final String SERVICE_CREATE_SIMULATION_COMPLETE = "createSimulation operation completed successfully - simulationId: [{}]";
+
     // Simulation Archive (PATCH - Soft Delete)
     public static final String SERVICE_ARCHIVE_SIMULATION_START = "Starting archiveSimulation operation - simulationId: [{}]";
     public static final String SERVICE_ARCHIVE_SIMULATION_VALIDATION_ERROR = "Validation failed for simulationId - Value is null or blank";
     public static final String SERVICE_ARCHIVE_SIMULATION_FOUND = "Simulation found for archiving - simulationId: [{}]";
     public static final String SERVICE_ARCHIVE_SIMULATION_COMPLETE = "archiveSimulation operation completed successfully - simulationId: [{}], isArchived: [{}]";
+
+    // Simulation Delete (DELETE)
+    public static final String SERVICE_DELETE_SIMULATION_START = "Starting deleteSimulation operation - simulationId: [{}]";
+    public static final String SERVICE_DELETE_SIMULATION_COMPLETE = "deleteSimulation operation completed successfully - simulationId: [{}]";
 
     // ============================================================
     // INFRASTRUCTURE LAYER - Repository Adapter
@@ -129,6 +138,10 @@ public final class LogMessage {
     public static final String REPOSITORY_SIMULATION_FIND_WITH_FILTERS_RESULT = "findWithFilters operation on simulations completed - Retrieved {} entity(ies)";
     public static final String REPOSITORY_SIMULATION_SAVE_START = "Executing save operation on simulations - simulationId: [{}]";
     public static final String REPOSITORY_SIMULATION_SAVE_COMPLETE = "Save operation on simulations completed - simulationId: [{}]";
+    public static final String REPOSITORY_SIMULATION_DELETE_START = "Executing delete operation on simulations - simulationId: [{}]";
+    public static final String REPOSITORY_SIMULATION_DELETE_NOT_FOUND = "Simulation not found for deletion - simulationId: [{}]";
+    public static final String REPOSITORY_SIMULATION_DELETE_NOT_ARCHIVED = "Cannot delete simulation - simulation is not archived - simulationId: [{}]";
+    public static final String REPOSITORY_SIMULATION_DELETE_COMPLETE = "Delete operation on simulations completed - simulationId: [{}]";
 
     // ============================================================
     // INFRASTRUCTURE LAYER - Mappers

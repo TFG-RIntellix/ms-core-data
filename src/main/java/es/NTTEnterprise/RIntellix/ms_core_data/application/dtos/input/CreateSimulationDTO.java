@@ -7,15 +7,22 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Input DTO for the PUT endpoint that updates an existing persisted simulation.
- * Contains all modifiable fields of a simulation: form changes,
- * simulated results, deltas, and the associated scoring and party references.
- * Used when the user recalculates and updates a simulation that was already saved.
+ * Input DTO for the POST endpoint that creates a new simulation.
+ * Contains all required fields to persist a simulation: scenario name,
+ * request and party references, form changes, simulated results and deltas.
+ * This DTO is used when the user has completed the simulation workflow
+ * (modifying parameters, recalculating) and decides to save the final result.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-07-2026
+ * @Date 03-08-2026
  */
-public class CalculatedSimulationDTO {
+public class CreateSimulationDTO {
+
+    @NotBlank(message = "Scenario name must be provided")
+    private String scenarioName;
+
+    @NotBlank(message = "Request ID must be provided")
+    private String requestId;
 
     @NotBlank(message = "Party ID must be provided")
     private String partyId;
@@ -56,10 +63,26 @@ public class CalculatedSimulationDTO {
     @NotBlank(message = "Risk grade change must be provided")
     private String riskGradeChange;
 
-    public CalculatedSimulationDTO() {
+    public CreateSimulationDTO() {
     }
 
     // Getters and Setters
+
+    public String getScenarioName() {
+        return scenarioName;
+    }
+
+    public void setScenarioName(String scenarioName) {
+        this.scenarioName = scenarioName;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
 
     public String getPartyId() {
         return partyId;

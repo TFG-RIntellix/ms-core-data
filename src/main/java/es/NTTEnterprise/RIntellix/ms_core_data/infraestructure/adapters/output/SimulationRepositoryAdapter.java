@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Simulation;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.NotArchivedException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.SimulationPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.SimulationEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.mappers.SimulationMapper;
@@ -76,5 +77,30 @@ public class SimulationRepositoryAdapter implements SimulationPortRepository {
 
         log.debug(LogMessage.REPOSITORY_SIMULATION_SAVE_COMPLETE, savedEntity.getId());
         return simulationMapper.toDomain(savedEntity);
+    }
+
+    @Override
+    public void delete(String simulationId)
+            throws IllegalArgumentException, EntityNotFoundException, NotArchivedException {
+        log.debug(LogMessage.REPOSITORY_SIMULATION_DELETE_START, simulationId);
+
+        ObjectId oid = new ObjectId(simulationId);
+
+        Optional<SimulationEntity> entityOpt = simulationRepository.findById(oid);
+
+        if (entityOpt.isEmpty()) {
+            log.warn(LogMessage.REPOSITORY_SIMULATION_DELETE_NOT_FOUND, simulationId);
+            throw new EntityNotFoundException("Simulation with ID " + simulationId + " not found");
+        }
+
+        SimulationEntity entity = entityOpt.get();
+        if (!Boolean.TRUE.equals(entity.getIsArchived())) {
+            log.warn(LogMessage.REPOSITORY_SIMULATION_DELETE_NOT_ARCHIVED, simulationId);
+            throw new NotArchivedException(
+                    "Cannot delete simulation that is not archived - simulationId: " + simulationId);
+        }
+
+        simulationRepository.deleteById(oid);
+        log.debug(LogMessage.REPOSITORY_SIMULATION_DELETE_COMPLETE, simulationId);
     }
 }

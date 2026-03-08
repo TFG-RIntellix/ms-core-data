@@ -1,5 +1,6 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.input;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ArchiveSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CalculatedSimulationDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input.SimulationPortService;
@@ -139,16 +141,25 @@ public class SimulationControllerAdapter {
     }
 
     /**
-     * We created a simulation calculated before, so we get the template and save a
-     * new simulation entity.
-     * 
-     * @return
+     * POST /api/simulations
+     * Creates and persists a new simulation with the complete data provided by
+     * the frontend after the user has finished the simulation workflow
+     * (recalculating, comparing) and decided to save.
+     *
+     * @param dto the complete simulation data including scenario name
+     * @return 201 Created with the location of the new simulation
      */
-    @PostMapping("/simulations")
-    public ResponseEntity<Void> createSimulation() {
-        // TODO: Implement by getting the template.
-        // We have to take account into the deficiencies of the template.
-        return ResponseEntity.status(501).build(); // 501 Not Implemented
+    @PostMapping
+    public ResponseEntity<Void> createSimulation(@Valid @RequestBody CreateSimulationDTO dto) {
+
+        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "POST", "/api/simulations");
+
+        String simulationId = simulationPortService.createSimulation(dto);
+
+        URI location = URI.create("/api/simulations/" + simulationId);
+
+        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS_SINGLE, 201, simulationId);
+        return ResponseEntity.created(location).build();
     }
 
     /**
@@ -156,9 +167,13 @@ public class SimulationControllerAdapter {
      * 
      */
     @DeleteMapping("/{simulationId}")
-    public ResponseEntity<Void> deleteSimulation(@PathVariable String simulationId) {
-        // TODO: Implement by checking if the simulation is archived before deleting it.
+    public ResponseEntity<String> deleteSimulation(@PathVariable String simulationId) {
 
-        return ResponseEntity.noContent().build();
+        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "DELETE", "/api/simulations/" + simulationId);
+        log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, simulationId);
+        String deletedId = simulationPortService.deleteSimulation(simulationId);
+        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS_SINGLE, 204, deletedId);
+
+        return ResponseEntity.ok().body(deletedId);
     }
 }

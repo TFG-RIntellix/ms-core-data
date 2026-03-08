@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.NotArchivedException;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -105,6 +106,30 @@ public class GlobalExceptionHandler {
         log.error(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Internal server error");
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error", request.getRequestURI());
+    }
+
+    /**
+     * Handles NotArchivedException thrown when an operation is attempted on a
+     * simulation
+     * that is not archived. This exception is used to enforce that certain
+     * operations
+     * (like retrieval of archived simulations) can only be performed on simulations
+     * that have been
+     * marked as archived. Returns a 400 Bad Request response with details about the
+     * error.
+     * 
+     * @param ex      the exception instance containing details about the not
+     *                archived error
+     * @param request the HttpServletRequest to extract request details for logging
+     *                and response
+     * @return ResponseEntity with the error details and appropriate HTTP status
+     */
+    @ExceptionHandler(NotArchivedException.class)
+    public ResponseEntity<Map<String, Object>> handleNotArchivedException(NotArchivedException ex,
+            HttpServletRequest request) {
+        log.warn(LogMessage.CONTROLLER_VALIDATION_ERROR, ex.getMessage());
+        log.warn(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getRequestURI());
     }
 
     /**

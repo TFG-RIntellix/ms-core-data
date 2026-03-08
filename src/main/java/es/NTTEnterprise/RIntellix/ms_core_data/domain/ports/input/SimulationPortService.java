@@ -4,9 +4,11 @@ import java.util.List;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ArchiveSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CalculatedSimulationDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.NotArchivedException;
 
 /**
  * Input port for simulation operations.
@@ -46,11 +48,12 @@ public interface SimulationPortService {
                         throws IllegalArgumentException, EntityNotFoundException;
 
         /**
-         * Replaces the simulation template with the given data.
+         * Replaces the data of an existing persisted simulation with new calculated
+         * data.
          * Updates form changes, simulated results, deltas, and associated
-         * scoring/party.
+         * scoring/party references.
          *
-         * @param simulationId the unique identifier of the simulation template
+         * @param simulationId the unique identifier of the simulation to update
          * @param dto          the complete replacement data
          * @throws IllegalArgumentException if the simulationId is null or empty
          * @throws EntityNotFoundException  if no simulation is found with the given ID
@@ -70,5 +73,33 @@ public interface SimulationPortService {
          */
         void archiveSimulation(String simulationId, ArchiveSimulationDTO dto)
                         throws IllegalArgumentException, EntityNotFoundException;
+
+        /**
+         * Creates and persists a new simulation with complete data.
+         * Called when the user has finished the simulation workflow (modifying
+         * parameters,
+         * recalculating via ms-scoring) and decides to save the final result.
+         *
+         * @param dto the complete simulation data including scenario name
+         * @return the ID of the newly created simulation
+         * @throws IllegalArgumentException if required fields are missing
+         */
+        String createSimulation(CreateSimulationDTO dto)
+                        throws IllegalArgumentException;
+
+        /**
+         * Performs a hard delete on a simulation, removing it permanently from the
+         * database.
+         * This operation is irreversible and should be used with caution.
+         * 
+         * @param simulationId the unique identifier of the simulation to delete
+         * @return the ID of the deleted simulation for confirmation
+         * @throws IllegalArgumentException if the simulationId is null or empty
+         * @throws EntityNotFoundException  if no simulation is found with the given ID
+         * @throws NotArchivedException     if the simulation is not archived and
+         *                                  therefore cannot be deleted
+         */
+        String deleteSimulation(String simulationId)
+                        throws IllegalArgumentException, EntityNotFoundException, NotArchivedException;
 
 }
