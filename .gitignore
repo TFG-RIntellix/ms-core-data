@@ -40,6 +40,12 @@ compose.yaml*
 *mvn*
 .gitattributes
 
-## Ignore the logs folder and spanish readme
+## Ignore the logs folder and spanish readme and doc folder. 
 logs/**
 README_ES.md
+documentation
+.github/agents/*
+.github/AGENTS.md
+.github/copilot-instructions.md
+.github/prompts/*
+.github/MICROSERVICE_GENERATION_GUIDE.md

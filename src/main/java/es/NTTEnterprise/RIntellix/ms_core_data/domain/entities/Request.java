@@ -119,6 +119,34 @@ public class Request {
         this.party = party;
     }
 
+    /**
+     * Calculates the Loan-to-Value (LTV) ratio if this request is a mortgage with
+     * collateral.
+     * LTV = Loan Amount / Property Value
+     * 
+     * Only applicable to mortgage requests with collateral. For other request types
+     * or when collateral is not available, returns null.
+     * 
+     * @return the LTV ratio as a percentage (0-1 range), or null if not applicable
+     */
+    public Double calculateLTV() {
+        if (collateral == null) {
+            return null;
+        }
+
+        Money propertyValue = collateral.getPropertyValue();
+        if (propertyValue == null || propertyValue.getAmount() == null || propertyValue.getAmount() <= 0) {
+            return null;
+        }
+
+        Money requestedAmount = requestDetails.getRequestedAmount();
+        if (requestedAmount == null || requestedAmount.getAmount() == null || requestedAmount.getAmount() <= 0) {
+            return null;
+        }
+
+        return requestedAmount.getAmount() / propertyValue.getAmount();
+    }
+
     // toString, hashCode and equals methods
 
     @Override

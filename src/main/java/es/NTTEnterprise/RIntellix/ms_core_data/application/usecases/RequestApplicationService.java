@@ -37,17 +37,20 @@ public class RequestApplicationService implements RequestPortService {
     private final ContractPortRepository contractPortRepository;
     private final RequestSummaryDTOMapper requestSummaryDTOMapper;
     private final RequestDetailsDTOMapper requestDetailsDTOMapper;
+    private final ScoringGenerationService scoringGenerationService;
 
     public RequestApplicationService(RequestPortRepository requestPortRepository,
             PartyPortRepository partyPortRepository,
             ContractPortRepository contractPortRepository,
             RequestSummaryDTOMapper requestSummaryDTOMapper,
-            RequestDetailsDTOMapper requestDetailsDTOMapper) {
+            RequestDetailsDTOMapper requestDetailsDTOMapper,
+            ScoringGenerationService scoringGenerationService) {
         this.requestPortRepository = requestPortRepository;
         this.partyPortRepository = partyPortRepository;
         this.contractPortRepository = contractPortRepository;
         this.requestSummaryDTOMapper = requestSummaryDTOMapper;
         this.requestDetailsDTOMapper = requestDetailsDTOMapper;
+        this.scoringGenerationService = scoringGenerationService;
     }
 
     @Override
@@ -104,6 +107,10 @@ public class RequestApplicationService implements RequestPortService {
         request.setParty(party);
 
         RequestDetailsDTO result = requestDetailsDTOMapper.toDTO(request);
+
+        // Trigger asynchronous scoring generation after response is prepared
+        log.debug("Triggering asynchronous scoring generation for request: {}", requestId);
+        scoringGenerationService.generateScoring(request);
 
         log.debug(LogMessage.SERVICE_GET_DETAILS_COMPLETE, requestId);
         return result;

@@ -165,6 +165,11 @@ public class SimulationControllerAdapter {
     /**
      * Delete the simulation if it is archived before (soft delete).
      * 
+     * @param simulationId the unique identifier of the simulation to delete
+     * @return 200 OK with the ID of the deleted simulation, 404 if not found, 400
+     *         if
+     *         invalid input, 400 if trying to delete a non-archived simulation.
+     * 
      */
     @DeleteMapping("/{simulationId}")
     public ResponseEntity<String> deleteSimulation(@PathVariable String simulationId) {
