@@ -42,8 +42,8 @@ public class ScoringGenerationDTO {
     private Double interestRate;
 
     // Risk/Credit history features
-    private Double ltv; // Loan-to-Value
-    private Double dti; // Debt-to-Income ratio
+    private Double ltv;
+    private Double dti;
     private Integer previousLoansCount;
     private Integer previousDefaultsCount;
 

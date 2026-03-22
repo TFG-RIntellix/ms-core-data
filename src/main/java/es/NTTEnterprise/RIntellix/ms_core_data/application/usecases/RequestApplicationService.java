@@ -1,6 +1,7 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
@@ -20,10 +21,10 @@ import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * This class implements the RequestPortService interface and provides the
- * implementation of the methods defined in the interface.
- * It is responsible for handling the business logic related to requests, such
- * as listing requests and getting request details.
+ * Application service implementing business logic for request operations.
+ * 
+ * Provides listing and detail retrieval of requests with associated party
+ * and contract information, triggering async scoring generation after details fetch.
  * 
  * @author Lucía Fernández Mancebo
  * @Date 02-28-2026
@@ -31,6 +32,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class RequestApplicationService implements RequestPortService {
+
+    private static final String INVALID_REQUEST_ID_MESSAGE = "Request ID cannot be null or empty";
 
     private final RequestPortRepository requestPortRepository;
     private final PartyPortRepository partyPortRepository;
@@ -45,12 +48,12 @@ public class RequestApplicationService implements RequestPortService {
             RequestSummaryDTOMapper requestSummaryDTOMapper,
             RequestDetailsDTOMapper requestDetailsDTOMapper,
             ScoringGenerationService scoringGenerationService) {
-        this.requestPortRepository = requestPortRepository;
-        this.partyPortRepository = partyPortRepository;
-        this.contractPortRepository = contractPortRepository;
-        this.requestSummaryDTOMapper = requestSummaryDTOMapper;
-        this.requestDetailsDTOMapper = requestDetailsDTOMapper;
-        this.scoringGenerationService = scoringGenerationService;
+        this.requestPortRepository = Objects.requireNonNull(requestPortRepository);
+        this.partyPortRepository = Objects.requireNonNull(partyPortRepository);
+        this.contractPortRepository = Objects.requireNonNull(contractPortRepository);
+        this.requestSummaryDTOMapper = Objects.requireNonNull(requestSummaryDTOMapper);
+        this.requestDetailsDTOMapper = Objects.requireNonNull(requestDetailsDTOMapper);
+        this.scoringGenerationService = Objects.requireNonNull(scoringGenerationService);
     }
 
     @Override
@@ -60,7 +63,7 @@ public class RequestApplicationService implements RequestPortService {
         List<Request> requests = requestPortRepository.findWithFilters(partyId, requestStatus);
         log.debug(LogMessage.SERVICE_LIST_REQUESTS_RESULT, requests.size());
 
-        // Obtain partyName for each request arrending to SPA principles.
+        // Resolve party name for each request at application layer to keep SRP.
         requests.forEach(request -> {
             request.setParty(partyPortRepository.findPartyName(request.getPartyId()));
         });
@@ -83,7 +86,7 @@ public class RequestApplicationService implements RequestPortService {
 
         if (requestId == null || requestId.isBlank()) {
             log.warn(LogMessage.SERVICE_GET_DETAILS_VALIDATION_ERROR);
-            throw new IllegalArgumentException("Request ID cannot be null or empty");
+            throw new IllegalArgumentException(INVALID_REQUEST_ID_MESSAGE);
         }
 
         Request request = requestPortRepository.findById(requestId);
@@ -98,9 +101,7 @@ public class RequestApplicationService implements RequestPortService {
 
         party.getPersonDetails().setActiveContracts(activeContracts);
 
-        // TODO: This is a proof to make sure that the PersonDetails are fully loaded
-        // before mapping to DTO, we should remove this in the future or move it to a
-        // more appropriate place.
+        // Touch derived metrics to ensure party financial aggregates are initialized.
         party.getPersonDetails().getGlobalDTI();
         party.getPersonDetails().getTotalDebt();
 
@@ -109,7 +110,7 @@ public class RequestApplicationService implements RequestPortService {
         RequestDetailsDTO result = requestDetailsDTOMapper.toDTO(request);
 
         // Trigger asynchronous scoring generation after response is prepared
-        log.debug("Triggering asynchronous scoring generation for request: {}", requestId);
+        log.debug(LogMessage.SERVICE_GET_DETAILS_TRIGGER_SCORING, requestId);
         scoringGenerationService.generateScoring(request);
 
         log.debug(LogMessage.SERVICE_GET_DETAILS_COMPLETE, requestId);

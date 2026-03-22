@@ -3,6 +3,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class SimulationApplicationService implements SimulationPortService {
 
+    private static final String INVALID_SIMULATION_ID_MESSAGE = "Simulation ID cannot be null or empty";
+
     private final SimulationPortRepository simulationPortRepository;
     private final PartyPortRepository partyPortRepository;
     private final ScoringPortRepository scoringPortRepository;
@@ -51,11 +54,11 @@ public class SimulationApplicationService implements SimulationPortService {
             ScoringPortRepository scoringPortRepository,
             RequestPortRepository requestPortRepository,
             SimulationDTOMapper simulationDTOMapper) {
-        this.simulationPortRepository = simulationPortRepository;
-        this.partyPortRepository = partyPortRepository;
-        this.scoringPortRepository = scoringPortRepository;
-        this.requestPortRepository = requestPortRepository;
-        this.simulationDTOMapper = simulationDTOMapper;
+        this.simulationPortRepository = Objects.requireNonNull(simulationPortRepository);
+        this.partyPortRepository = Objects.requireNonNull(partyPortRepository);
+        this.scoringPortRepository = Objects.requireNonNull(scoringPortRepository);
+        this.requestPortRepository = Objects.requireNonNull(requestPortRepository);
+        this.simulationDTOMapper = Objects.requireNonNull(simulationDTOMapper);
     }
 
     @Override
@@ -94,7 +97,7 @@ public class SimulationApplicationService implements SimulationPortService {
 
         if (simulationId == null || simulationId.isBlank()) {
             log.warn(LogMessage.SERVICE_GET_SIMULATION_DETAILS_VALIDATION_ERROR);
-            throw new IllegalArgumentException("Simulation ID cannot be null or empty");
+            throw new IllegalArgumentException(INVALID_SIMULATION_ID_MESSAGE);
         }
 
         Simulation simulation = simulationPortRepository.findById(simulationId);
@@ -126,7 +129,7 @@ public class SimulationApplicationService implements SimulationPortService {
 
         if (simulationId == null || simulationId.isBlank()) {
             log.warn(LogMessage.SERVICE_UPDATE_SIMULATION_TEMPLATE_VALIDATION_ERROR);
-            throw new IllegalArgumentException("Simulation ID cannot be null or empty");
+            throw new IllegalArgumentException(INVALID_SIMULATION_ID_MESSAGE);
         }
 
         Simulation simulation = simulationPortRepository.findById(simulationId);
@@ -147,7 +150,7 @@ public class SimulationApplicationService implements SimulationPortService {
 
         if (simulationId == null || simulationId.isBlank()) {
             log.warn(LogMessage.SERVICE_ARCHIVE_SIMULATION_VALIDATION_ERROR);
-            throw new IllegalArgumentException("Simulation ID cannot be null or empty");
+            throw new IllegalArgumentException(INVALID_SIMULATION_ID_MESSAGE);
         }
 
         Simulation simulation = simulationPortRepository.findById(simulationId);
@@ -212,9 +215,6 @@ public class SimulationApplicationService implements SimulationPortService {
      *         given partyName
      */
     private List<Simulation> filterByPartyName(List<Simulation> simulations, String partyName) {
-
-        List<Simulation> filteredSimulations = null;
-
         if (partyName == null || partyName.isBlank()) {
             return simulations;
         }
@@ -223,7 +223,7 @@ public class SimulationApplicationService implements SimulationPortService {
 
         // By contract we assume that a simulation always has a party associated with a
         // full name.
-        filteredSimulations = simulations.stream().filter(
+        List<Simulation> filteredSimulations = simulations.stream().filter(
                 simulation -> simulation.getParty().getPersonDetails().getFullName()
                         .toLowerCase().contains(partyName.toLowerCase()))
                 .toList();

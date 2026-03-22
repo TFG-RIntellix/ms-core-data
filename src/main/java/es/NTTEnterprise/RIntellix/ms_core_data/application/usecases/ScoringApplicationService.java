@@ -1,5 +1,7 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 
+import java.util.Objects;
+
 import org.springframework.stereotype.Service;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringDTO;
@@ -22,13 +24,15 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ScoringApplicationService implements ScoringPortService {
 
+    private static final String INVALID_REQUEST_ID_MESSAGE = "Request ID cannot be null or empty";
+
     private final ScoringPortRepository scoringPortRepository;
     private final ScoringDTOMapper scoringDTOMapper;
 
     public ScoringApplicationService(ScoringPortRepository scoringPortRepository,
             ScoringDTOMapper scoringDTOMapper) {
-        this.scoringPortRepository = scoringPortRepository;
-        this.scoringDTOMapper = scoringDTOMapper;
+        this.scoringPortRepository = Objects.requireNonNull(scoringPortRepository);
+        this.scoringDTOMapper = Objects.requireNonNull(scoringDTOMapper);
     }
 
     @Override
@@ -40,7 +44,7 @@ public class ScoringApplicationService implements ScoringPortService {
 
         if (requestId == null || requestId.isBlank()) {
             log.warn(LogMessage.SERVICE_GET_SCORING_VALIDATION_ERROR);
-            throw new IllegalArgumentException("Request ID cannot be null or empty");
+            throw new IllegalArgumentException(INVALID_REQUEST_ID_MESSAGE);
         }
 
         Scoring scoring = scoringPortRepository.findByRequestId(requestId);

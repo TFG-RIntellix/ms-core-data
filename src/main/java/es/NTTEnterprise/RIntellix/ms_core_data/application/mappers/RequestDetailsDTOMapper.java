@@ -6,12 +6,10 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDe
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 
 /**
- * Mapper class to convert between Request (domain) and RequestDetailsDTO
- * (application).
- * This class will be responsible for mapping the Request entity from the domain
- * layer to the RequestDetails
- * DTO in the application layer, allowing to transfer detailed information about
- * a request without exposing the internal structure of the Request entity.
+ * Mapper class to convert between Request (domain) and RequestDetailsDTO (application).
+ * 
+ * Maps detailed request information including party and financial details
+ * without exposing internal domain structure.
  * 
  * @author Lucía Fernández Mancebo
  * @Date 02-28-2026
@@ -19,6 +17,12 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 @Component
 public class RequestDetailsDTOMapper {
 
+       /**
+        * Maps a Request domain object to a RequestDetailsDTO.
+        *
+        * @param request the Request domain object to map
+        * @return the mapped RequestDetailsDTO
+        */
        public RequestDetailsDTO toDTO(Request request) {
               RequestDetailsDTO requestDetailsDTO = new RequestDetailsDTO();
               requestDetailsDTO.setRequestId(request.getId());

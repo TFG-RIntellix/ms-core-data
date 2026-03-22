@@ -44,6 +44,12 @@ public class RequestSummaryDTOMapper {
                 return requestSummaryDTO;
         }
 
+        /**
+         * Maps a list of Request domain objects to RequestSummaryDTO list.
+         * 
+         * @param requests list of Request domain objects
+         * @return list of mapped RequestSummaryDTO objects
+         */
         public List<RequestSummaryDTO> toDTOList(List<Request> requests) {
                 return requests.stream()
                                 .map(this::toDTO)
