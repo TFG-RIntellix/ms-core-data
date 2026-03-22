@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.ModelInputs;
@@ -15,6 +16,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.ScoringE
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.InputFeaturesEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.ResultsEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.TopFeatureEntity;
+import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.XaiEntity;
 
 /**
  * Mapper class to convert between ScoringEntity (infrastructure) and Scoring
@@ -54,6 +56,42 @@ public class ScoringMapper {
         scoring.setExplainability(mapTopFeatures(entity.getXai().getTopFeatures()));
 
         return scoring;
+    }
+
+    /**
+     * Converts a Scoring domain entity into a ScoringEntity (infrastructure).
+     * Transforms the clean domain model into the MongoDB document structure:
+     * - ModelInputs (HashMap) → InputFeaturesEntity
+     * - RiskMetrics → ResultsEntity
+     * - baseValue (Double) + List&lt;RiskFeature&gt; → XaiEntity
+     * 
+     * @param domain The Scoring domain entity.
+     * @return The ScoringEntity for MongoDB, or null if the input is null.
+     */
+    public ScoringEntity toEntity(Scoring domain) {
+        if (domain == null) {
+            return null;
+        }
+
+        ScoringEntity entity = new ScoringEntity();
+
+        if (domain.getRequestId() != null) {
+            entity.setRequestId(new ObjectId(domain.getRequestId()));
+        }
+
+        entity.setModelVersion(domain.getModelVersion());
+        entity.setScoringDate(domain.getExecutionDate());
+
+        // Convert ModelInputs to InputFeaturesEntity
+        entity.setInputFeatures(unmapInputFeatures(domain.getInputSnapshot()));
+
+        // Convert RiskMetrics to ResultsEntity
+        entity.setResults(unmapResults(domain.getResults()));
+
+        // Convert baseValue and explainability to XaiEntity
+        entity.setXai(unmapXai(domain.getBaseValue(), domain.getExplainability()));
+
+        return entity;
     }
 
     // --- Private mapping methods ---
@@ -110,6 +148,85 @@ public class ScoringMapper {
         return entities.stream()
                 .map(e -> new RiskFeature(e.getFeatureName(), e.getFeatureValue(), e.getShapValue(), null))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Converts ModelInputs (HashMap) to InputFeaturesEntity.
+     * Extracts known feature fields from the HashMap and sets them on the entity.
+     * Only non-null values are set.
+     */
+    private InputFeaturesEntity unmapInputFeatures(ModelInputs domain) {
+        if (domain == null || domain.getFeatures() == null) {
+            return new InputFeaturesEntity();
+        }
+
+        InputFeaturesEntity entity = new InputFeaturesEntity();
+        HashMap<String, Object> features = domain.getFeatures();
+
+        entity.setAge((Integer) features.get("age"));
+        entity.setGender((String) features.get("gender"));
+        entity.setMaritalStatus((String) features.get("marital_status"));
+        entity.setEducation((String) features.get("education"));
+        entity.setEmploymentStatus((String) features.get("employment_status"));
+        entity.setWorkSector((String) features.get("work_sector"));
+        entity.setNrDependants((Integer) features.get("nr_dependants"));
+        entity.setHomeOwnership((String) features.get("home_ownership"));
+        entity.setHasMortgage((Boolean) features.get("has_mortgage"));
+        entity.setAnnualIncome((Double) features.get("annual_income"));
+        entity.setRequestType((String) features.get("request_type"));
+        entity.setPurpose((String) features.get("purpose"));
+        entity.setRequestedAmount((Double) features.get("requested_amount"));
+        entity.setTermMonths((Integer) features.get("term_months"));
+        entity.setInterestRate((Double) features.get("interest_rate"));
+        entity.setLtv((Double) features.get("ltv"));
+        entity.setDti((Double) features.get("dti"));
+        entity.setPreviousLoansCount((Integer) features.get("previous_loans_count"));
+        entity.setPreviousDefaultsCount((Integer) features.get("previous_defaults_count"));
+
+        return entity;
+    }
+
+    /**
+     * Converts RiskMetrics domain object to ResultsEntity.
+     */
+    private ResultsEntity unmapResults(RiskMetrics domain) {
+        if (domain == null) {
+            return new ResultsEntity();
+        }
+
+        ResultsEntity entity = new ResultsEntity();
+        entity.setPd(domain.getProbabilityOfDefault());
+        entity.setLgd(domain.getLossGivenDefault());
+        entity.setEad(domain.getExposureAtDefault());
+        entity.setEcl(domain.getExpectedCalculatedLoss());
+        entity.setRiskGrade(domain.getRiskLevel());
+
+        return entity;
+    }
+
+    /**
+     * Converts baseValue and explainability list to XaiEntity.
+     */
+    private XaiEntity unmapXai(Double baseValue, List<RiskFeature> explainability) {
+        XaiEntity entity = new XaiEntity();
+        entity.setBaseValue(baseValue);
+
+        if (explainability == null || explainability.isEmpty()) {
+            entity.setTopFeatures(new ArrayList<>());
+        } else {
+            List<TopFeatureEntity> topFeatures = explainability.stream()
+                    .map(e -> {
+                        TopFeatureEntity feature = new TopFeatureEntity();
+                        feature.setFeatureName(e.getFeatureName());
+                        feature.setFeatureValue(e.getFeatureValue());
+                        feature.setShapValue(e.getShapValue());
+                        return feature;
+                    })
+                    .collect(Collectors.toList());
+            entity.setTopFeatures(topFeatures);
+        }
+
+        return entity;
     }
 
     private void putIfNotNull(HashMap<String, Object> map, String key, Object value) {

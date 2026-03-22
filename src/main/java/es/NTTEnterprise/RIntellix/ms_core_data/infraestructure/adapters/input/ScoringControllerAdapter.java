@@ -1,5 +1,7 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.input;
 
+import java.util.Objects;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +28,7 @@ public class ScoringControllerAdapter {
     private final ScoringPortService scoringPortService;
 
     public ScoringControllerAdapter(ScoringPortService scoringPortService) {
-        this.scoringPortService = scoringPortService;
+        this.scoringPortService = Objects.requireNonNull(scoringPortService);
     }
 
     /**

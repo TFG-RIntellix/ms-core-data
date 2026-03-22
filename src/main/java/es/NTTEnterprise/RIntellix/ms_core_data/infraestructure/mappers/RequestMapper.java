@@ -39,7 +39,7 @@ public class RequestMapper {
             Money propertyValue = new Money(entity.getPropertyValue(), entity.getCurrency());
             collateral = new PropertyCollateral(
                     propertyValue,
-                    entity.getIsFirstHome() != null ? entity.getIsFirstHome() : false);
+                    Boolean.TRUE.equals(entity.getIsFirstHome()));
         }
 
         // Build Money objects
@@ -61,7 +61,7 @@ public class RequestMapper {
                 entity.getRequestedTermMonths(),
                 entity.getRequestedInterestRate(),
                 creditLimit,
-                entity.getIsRevolving() != null ? entity.getIsRevolving() : false,
+                Boolean.TRUE.equals(entity.getIsRevolving()),
                 entity.getRepaymentSystem());
 
         // Convert LocalDate to Date

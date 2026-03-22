@@ -145,9 +145,10 @@ public class PartyMapper {
         return profile;
     }
 
-    // Enum mapping methods, TODO: Manage the case when the value is not recognized
-    // (e.g., log a warning or throw an exception)
-
+    /**
+     * Maps string value to PartyType enum.
+     * Returns null if value is null or invalid enum value.
+     */
     private PartyType mapPartyType(String value) {
         if (value == null) {
             return null;
@@ -159,6 +160,10 @@ public class PartyMapper {
         }
     }
 
+    /**
+     * Maps string value to Gender enum.
+     * Returns null if value is null or invalid enum value.
+     */
     private Gender mapGender(String value) {
         if (value == null) {
             return null;
@@ -170,6 +175,10 @@ public class PartyMapper {
         }
     }
 
+    /**
+     * Maps string value to MaritalStatus enum.
+     * Returns null if value is null or invalid enum value.
+     */
     private MaritalStatus mapMaritalStatus(String value) {
         if (value == null) {
             return null;
@@ -181,6 +190,10 @@ public class PartyMapper {
         }
     }
 
+    /**
+     * Maps string value to Education enum, replacing spaces with underscores.
+     * Returns null if value is null or invalid enum value.
+     */
     private Education mapEducation(String value) {
         if (value == null) {
             return null;
@@ -192,6 +205,10 @@ public class PartyMapper {
         }
     }
 
+    /**
+     * Maps string value to HomeOwnership enum.
+     * Returns null if value is null or invalid enum value.
+     */
     private HomeOwnership mapHomeOwnership(String value) {
         if (value == null) {
             return null;
@@ -203,6 +220,10 @@ public class PartyMapper {
         }
     }
 
+    /**
+     * Maps string value to EmploymentStatus enum.
+     * Returns null if value is null or invalid enum value.
+     */
     private EmploymentStatus mapEmploymentStatus(String value) {
         if (value == null) {
             return null;

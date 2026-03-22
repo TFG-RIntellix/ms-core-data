@@ -43,12 +43,20 @@ public final class LogMessage {
     public static final String SERVICE_GET_DETAILS_MAPPING = "Mapping Request to RequestDetailsDTO - requestId: [{}]";
     public static final String SERVICE_GET_DETAILS_COMPLETE = "getRequestDetails operation completed successfully - requestId: [{}]";
     public static final String SERVICE_GET_DETAILS_RETRIEVE_PARTY = "Retrieving associated Party for request - partyId: [{}]";
+    public static final String SERVICE_GET_DETAILS_TRIGGER_SCORING = "Triggering asynchronous scoring generation for request - requestId: [{}]";
 
     public static final String SERVICE_GET_SCORING_START = "Starting getScoringByRequestId operation - requestId: [{}]";
     public static final String SERVICE_GET_SCORING_VALIDATION = "Validating requestId for scoring: [{}]";
     public static final String SERVICE_GET_SCORING_VALIDATION_ERROR = "Validation failed for scoring requestId - Value is null or blank";
     public static final String SERVICE_GET_SCORING_FOUND = "Scoring found for request - requestId: [{}]";
     public static final String SERVICE_GET_SCORING_COMPLETE = "getScoringByRequestId operation completed successfully - requestId: [{}]";
+
+    // Scoring Generation Service
+    public static final String SERVICE_SCORING_GENERATION_START = "Starting scoring generation workflow - requestId: [{}]";
+    public static final String SERVICE_SCORING_GENERATION_ALREADY_EXISTS = "Scoring already exists for request - requestId: [{}], skipping generation";
+    public static final String SERVICE_SCORING_GENERATION_PUBLISHED = "Scoring generation request published for request - requestId: [{}]";
+    public static final String SERVICE_SCORING_GENERATION_ENTITY_NOT_FOUND = "Entity not found during scoring generation - requestId: [{}], error: {}";
+    public static final String SERVICE_SCORING_GENERATION_UNEXPECTED_ERROR = "Unexpected error during scoring generation - requestId: [{}], error: {}";
 
     // Simulation Service
     public static final String SERVICE_LIST_SIMULATIONS_START = "Starting listSimulations operation with filters - requestId: [{}], partyName: [{}], partyId: [{}]";
@@ -127,6 +135,10 @@ public final class LogMessage {
     public static final String REPOSITORY_SCORING_FIND_BY_ID_START = "Executing findById operation on scorings - scoringId: [{}]";
     public static final String REPOSITORY_SCORING_FIND_BY_ID_FOUND = "Scoring found in database - scoringId: [{}]";
     public static final String REPOSITORY_SCORING_FIND_BY_ID_NOT_FOUND = "Scoring not found in database - scoringId: [{}]";
+    public static final String REPOSITORY_SCORING_SAVE_START = "Executing save operation on scorings - scoringId: [{}]";
+    public static final String REPOSITORY_SCORING_SAVE_ENTITY_MAPPED = "ScoringEntity mapped for saving - entity: {}";
+    public static final String REPOSITORY_SCORING_SAVE_COMPLETE = "Save operation on scorings completed - scoringId: [{}]";
+    public static final String REPOSITORY_SCORING_SAVE_FAILED = "Save operation on scorings failed - error: {}";
 
     // Simulation Repository
     public static final String REPOSITORY_SIMULATION_FIND_ALL_START = "Executing findAll operation on simulations";
@@ -166,6 +178,46 @@ public final class LogMessage {
     public static final String DOMAIN_DTI_NO_INCOME = "DTI calculation skipped - annual income not available or zero";
     public static final String DOMAIN_LTV_RESULT = "LTV calculated - outstandingBalance: {}, propertyValue: {}, LTV: {}";
     public static final String DOMAIN_LTV_NO_DATA = "LTV calculation skipped - property value or outstanding balance not available";
+
+    // ============================================================
+    // KAFKA CONSUMER LAYER - ScoringKafkaConsumer
+    // ============================================================
+
+    public static final String KAFKA_CONSUMER_MESSAGE_RECEIVED = "[ScoringKafkaConsumer/Input] - MESSAGE_RECEIVED: from topic: {}, requestId: {}";
+    public static final String LOG_VALUE_UNKNOWN = "UNKNOWN";
+
+    public static final String KAFKA_CONSUMER_MESSAGE_PROCESSING_START = "[ScoringKafkaConsumer/Input] - PROCESSING_START: requestId: {}, messageContent: {}";
+
+    public static final String KAFKA_CONSUMER_MESSAGE_PROCESSING_SUCCESS = "[ScoringKafkaConsumer/Input] - PROCESSING_SUCCESS: requestId: {}, scoringId: {}, message manually ACKed";
+
+    public static final String KAFKA_CONSUMER_MESSAGE_VALIDATION_FAILED = "[ScoringKafkaConsumer/Input] - VALIDATION_FAILED: requestId: {}, error: {}";
+
+    public static final String KAFKA_CONSUMER_MESSAGE_PERSISTENCE_FAILED = "[ScoringKafkaConsumer/Input] - PERSISTENCE_FAILED: requestId: {}, error: {}";
+
+    public static final String KAFKA_CONSUMER_IDEMPOTENCY_CHECK = "[ScoringKafkaConsumer/Input] - IDEMPOTENCY_CHECK: requestId: {}, existingScoring: {}";
+    public static final String KAFKA_CONSUMER_VALIDATION_REJECTED = "[ScoringKafkaConsumer/Input] - VALIDATION_REJECTED: offset: {}, validationErrors: {}";
+    public static final String KAFKA_CONSUMER_VALIDATION_DETAIL = "[ScoringKafkaConsumer/Input] - VALIDATION_DETAIL: field: {}, message: {}";
+    public static final String KAFKA_CONSUMER_ERROR = "[ScoringKafkaConsumer/Input] - ERROR: offset: {}, exception: {}";
+
+    // Kafka Producer - Scoring Generation
+    public static final String KAFKA_SCORING_GENERATION_PUBLISH_START = "[ScoringKafkaProducer/Output] - PUBLISH_START: requestId: {}";
+    public static final String KAFKA_SCORING_GENERATION_PUBLISH_SUCCESS = "[ScoringKafkaProducer/Output] - PUBLISH_SUCCESS: topic: {}, requestId: {}";
+    public static final String KAFKA_SCORING_GENERATION_PUBLISH_DTO = "[ScoringKafkaProducer/Output] - PUBLISH_PAYLOAD: {}";
+    public static final String KAFKA_SCORING_GENERATION_PUBLISH_ERROR = "[ScoringKafkaProducer/Output] - PUBLISH_ERROR: requestId: {}, error: {}";
+
+    // ============================================================
+    // SERVICE LAYER - ScoringConsumerService
+    // ============================================================
+
+    public static final String SERVICE_SCORING_CONSUMER_START = "[ScoringConsumerService/Application] - PROCESS_START: requestId: {}";
+
+    public static final String SERVICE_SCORING_CONSUMER_VALIDATION = "[ScoringConsumerService/Application] - VALIDATION: requestId: {}, modelVersion: {}";
+
+    public static final String SERVICE_SCORING_CONSUMER_IDEMPOTENT = "[ScoringConsumerService/Application] - IDEMPOTENT: Scoring already exists for requestId: {}, scoringId: {}";
+
+    public static final String SERVICE_SCORING_CONSUMER_PERSIST = "[ScoringConsumerService/Application] - PERSIST: requestId: {}, riskGrade: {}, pd: {}, lgd: {}";
+
+    public static final String SERVICE_SCORING_CONSUMER_COMPLETE = "[ScoringConsumerService/Application] - COMPLETE: requestId: {}, scoringId: {}, topFeaturesCount: {}";
 
     // ============================================================
     // EXCEPTION MESSAGES

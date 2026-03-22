@@ -1,6 +1,7 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.input;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,7 @@ public class RequestControllerAdapter {
     private final RequestPortService requestPortService;
 
     public RequestControllerAdapter(RequestPortService requestPortService) {
-        this.requestPortService = requestPortService;
+        this.requestPortService = Objects.requireNonNull(requestPortService);
     }
 
     /**

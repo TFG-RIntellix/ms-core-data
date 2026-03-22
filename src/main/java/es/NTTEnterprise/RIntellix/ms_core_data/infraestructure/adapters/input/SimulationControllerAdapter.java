@@ -2,6 +2,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.input;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,7 +42,7 @@ public class SimulationControllerAdapter {
     private final SimulationPortService simulationPortService;
 
     public SimulationControllerAdapter(SimulationPortService simulationPortService) {
-        this.simulationPortService = simulationPortService;
+        this.simulationPortService = Objects.requireNonNull(simulationPortService);
     }
 
     /**

@@ -88,6 +88,13 @@ public class ContractMapper {
     // Private mapping methods for each contract type
     // ============================================================
 
+    /**
+     * Maps ContractEntity to LoanContract domain object.
+     * 
+     * @param entity the ContractEntity to map
+     * @return the mapped LoanContract domain object
+     * @throws IllegalArgumentException if required loan fields are missing
+     */
     private static LoanContract mapToLoanContract(ContractEntity entity) {
         LoanContract loan = new LoanContract();
         mapCommonFields(loan, entity);
@@ -99,6 +106,14 @@ public class ContractMapper {
         return loan;
     }
 
+    /**
+     * Maps ContractEntity to MortgageContract domain object.
+     * 
+     * @param entity the ContractEntity to map
+     * @return the mapped MortgageContract domain object
+     * @throws IllegalArgumentException if required mortgage fields are missing
+     * 
+     */
     private static MortgageContract mapToMortgageContract(ContractEntity entity) {
         MortgageContract mortgage = new MortgageContract();
         mapCommonFields(mortgage, entity);
@@ -112,6 +127,12 @@ public class ContractMapper {
         return mortgage;
     }
 
+    /**
+     * Maps ContractEntity to CreditCardContract domain object.
+     * 
+     * @param entity the ContractEntity to map
+     * @return the mapped CreditCardContract domain object
+     */
     private static CreditCardContract mapToCreditCardContract(ContractEntity entity) {
         CreditCardContract card = new CreditCardContract();
         mapCommonFields(card, entity);
@@ -121,23 +142,25 @@ public class ContractMapper {
         return card;
     }
 
-    // ============================================================
-    // Common field mapping
-    // ============================================================
-
+    /**
+     * Maps fields common to all contract types from ContractEntity to Contract
+     * domain object.
+     * 
+     * @param contract the domain contract object to populate
+     * @param entity   the infrastructure entity containing the data
+     */
     private static void mapCommonFields(Contract contract, ContractEntity entity) {
         contract.setId(entity.getId().toHexString());
         contract.setContractType(mapContractType(entity.getContractType()));
-        ;
         contract.setStatus(mapContractStatus(entity.getStatus()));
         contract.setOpenDate(mapDate(entity.getOpenDate()));
         contract.setInterestRate(entity.getInterestRate());
     }
 
-    // ============================================================
-    // Enum and type conversion helpers
-    // ============================================================
-
+    /**
+     * Maps string value to ContractType enum.
+     * Returns null if value is null or invalid enum value.
+     */
     private static ContractType mapContractType(String value) {
         if (value == null) {
             return null;
@@ -149,6 +172,10 @@ public class ContractMapper {
         }
     }
 
+    /**
+     * Maps string value to ContractStatus enum.
+     * Returns null if value is null or invalid enum value.
+     */
     private static ContractStatus mapContractStatus(String value) {
         if (value == null) {
             return null;
@@ -160,6 +187,10 @@ public class ContractMapper {
         }
     }
 
+    /**
+     * Maps string value to Purpose enum.
+     * Returns null if value is null or invalid enum value.
+     */
     private static Purpose mapPurpose(String value) {
         if (value == null) {
             return null;
@@ -171,6 +202,10 @@ public class ContractMapper {
         }
     }
 
+    /**
+     * Converts java.util.Date to LocalDate.
+     * Returns null if date is null.
+     */
     private static LocalDate mapDate(java.util.Date date) {
         if (date == null) {
             return null;
