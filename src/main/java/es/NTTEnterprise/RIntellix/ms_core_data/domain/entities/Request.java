@@ -27,7 +27,7 @@ public class Request {
     /**
      * Constructor of the Request class.
      */
-    private Request() {
+    public Request() {
 
     }
 
@@ -190,9 +190,7 @@ public class Request {
                 return false;
         } else if (!requestDetails.equals(other.requestDetails))
             return false;
-        if (requestStatus != other.requestStatus)
-            return false;
-        return true;
+        return requestStatus == other.requestStatus;
     }
 
 }

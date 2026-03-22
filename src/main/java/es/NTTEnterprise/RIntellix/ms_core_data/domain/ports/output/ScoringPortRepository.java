@@ -30,4 +30,11 @@ public interface ScoringPortRepository {
      */
     Scoring findById(String scoringId) throws EntityNotFoundException;
 
+    /**
+     * Persists a scoring entity to the database.
+     * 
+     * @param scoring The scoring entity to persist.
+     * @return The persisted scoring entity with ID assigned.
+     */
+    Scoring save(Scoring scoring);
 }
