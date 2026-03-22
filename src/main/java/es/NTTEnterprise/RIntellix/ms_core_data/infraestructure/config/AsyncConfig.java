@@ -26,18 +26,24 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableAsync
 public class AsyncConfig {
 
+    private static final String SCORING_EXECUTOR_BEAN = "scoringExecutor";
+    private static final int CORE_POOL_SIZE = 2;
+    private static final int MAX_POOL_SIZE = 5;
+    private static final int QUEUE_CAPACITY = 100;
+    private static final String THREAD_NAME_PREFIX = "scoring-";
+
     /**
      * Configures the thread pool executor used for async scoring generation tasks.
      * 
      * @return the configured ThreadPoolTaskExecutor bean for async execution
      */
-    @Bean(name = "scoringExecutor")
+    @Bean(name = SCORING_EXECUTOR_BEAN)
     public Executor scoringExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);
-        executor.setMaxPoolSize(5);
-        executor.setQueueCapacity(100);
-        executor.setThreadNamePrefix("scoring-");
+        executor.setCorePoolSize(CORE_POOL_SIZE);
+        executor.setMaxPoolSize(MAX_POOL_SIZE);
+        executor.setQueueCapacity(QUEUE_CAPACITY);
+        executor.setThreadNamePrefix(THREAD_NAME_PREFIX);
         executor.initialize();
         return executor;
     }

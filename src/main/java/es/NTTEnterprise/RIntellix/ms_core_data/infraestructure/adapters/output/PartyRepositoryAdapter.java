@@ -1,5 +1,6 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.output;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
@@ -36,8 +37,8 @@ public class PartyRepositoryAdapter implements PartyPortRepository {
     private final PartyMapper partyMapper;
 
     public PartyRepositoryAdapter(PartyRepository partyRepository, PartyMapper partyMapper) {
-        this.partyRepository = partyRepository;
-        this.partyMapper = partyMapper;
+        this.partyRepository = Objects.requireNonNull(partyRepository);
+        this.partyMapper = Objects.requireNonNull(partyMapper);
     }
 
     @Override

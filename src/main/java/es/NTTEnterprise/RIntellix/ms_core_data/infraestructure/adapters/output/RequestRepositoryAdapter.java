@@ -1,6 +1,7 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.output;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
@@ -31,8 +32,8 @@ public class RequestRepositoryAdapter implements RequestPortRepository {
     private final RequestMapper requestMapper;
 
     public RequestRepositoryAdapter(RequestRepository requestRepository, RequestMapper requestMapper) {
-        this.requestRepository = requestRepository;
-        this.requestMapper = requestMapper;
+        this.requestRepository = Objects.requireNonNull(requestRepository);
+        this.requestMapper = Objects.requireNonNull(requestMapper);
     }
 
     @Override

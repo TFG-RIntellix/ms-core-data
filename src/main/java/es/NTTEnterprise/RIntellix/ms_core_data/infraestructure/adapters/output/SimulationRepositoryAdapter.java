@@ -1,6 +1,7 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.output;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
@@ -34,8 +35,8 @@ public class SimulationRepositoryAdapter implements SimulationPortRepository {
     private final SimulationMapper simulationMapper;
 
     public SimulationRepositoryAdapter(SimulationRepository simulationRepository, SimulationMapper simulationMapper) {
-        this.simulationRepository = simulationRepository;
-        this.simulationMapper = simulationMapper;
+        this.simulationRepository = Objects.requireNonNull(simulationRepository);
+        this.simulationMapper = Objects.requireNonNull(simulationMapper);
     }
 
     @Override

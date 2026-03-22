@@ -1,5 +1,6 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.output;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
@@ -26,12 +27,17 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 public class ScoringRepositoryAdapter implements ScoringPortRepository {
 
+    private static final String SCORING_NOT_FOUND_FOR_REQUEST_TEMPLATE = "Scoring not found for request ID ";
+    private static final String SCORING_NOT_FOUND_BY_ID_TEMPLATE = "Scoring with ID ";
+    private static final String SCORING_NOT_FOUND_BY_ID_SUFFIX = " not found";
+    private static final String SAVE_SCORING_FAILED_TEMPLATE = "Failed to save scoring: ";
+
     private final ScoringRepository scoringRepository;
     private final ScoringMapper scoringMapper;
 
     public ScoringRepositoryAdapter(ScoringRepository scoringRepository, ScoringMapper scoringMapper) {
-        this.scoringRepository = scoringRepository;
-        this.scoringMapper = scoringMapper;
+        this.scoringRepository = Objects.requireNonNull(scoringRepository);
+        this.scoringMapper = Objects.requireNonNull(scoringMapper);
     }
 
     @Override
@@ -41,7 +47,7 @@ public class ScoringRepositoryAdapter implements ScoringPortRepository {
 
         if (entityOpt.isEmpty()) {
             log.warn(LogMessage.REPOSITORY_SCORING_FIND_BY_REQUEST_NOT_FOUND, requestId);
-            throw new EntityNotFoundException("Scoring not found for request ID " + requestId);
+            throw new EntityNotFoundException(SCORING_NOT_FOUND_FOR_REQUEST_TEMPLATE + requestId);
         }
 
         log.debug(LogMessage.REPOSITORY_SCORING_FIND_BY_REQUEST_FOUND, requestId);
@@ -55,10 +61,26 @@ public class ScoringRepositoryAdapter implements ScoringPortRepository {
 
         if (entityOpt.isEmpty()) {
             log.warn(LogMessage.REPOSITORY_SCORING_FIND_BY_ID_NOT_FOUND, scoringId);
-            throw new EntityNotFoundException("Scoring with ID " + scoringId + " not found");
+            throw new EntityNotFoundException(
+                    SCORING_NOT_FOUND_BY_ID_TEMPLATE + scoringId + SCORING_NOT_FOUND_BY_ID_SUFFIX);
         }
 
         log.debug(LogMessage.REPOSITORY_SCORING_FIND_BY_ID_FOUND, scoringId);
         return scoringMapper.toDomain(entityOpt.get());
+    }
+
+    @Override
+    public Scoring save(Scoring scoring) {
+        try {
+            log.debug(LogMessage.REPOSITORY_SCORING_SAVE_START, scoring.getId());
+            ScoringEntity entity = scoringMapper.toEntity(scoring);
+            log.debug(LogMessage.REPOSITORY_SCORING_SAVE_ENTITY_MAPPED, entity);
+            ScoringEntity savedEntity = scoringRepository.save(entity);
+            log.debug(LogMessage.REPOSITORY_SCORING_SAVE_COMPLETE, savedEntity.getId());
+            return scoringMapper.toDomain(savedEntity);
+        } catch (Exception e) {
+            log.error(LogMessage.REPOSITORY_SCORING_SAVE_FAILED, e.getMessage(), e);
+            throw new RuntimeException(SAVE_SCORING_FAILED_TEMPLATE + e.getMessage(), e);
+        }
     }
 }

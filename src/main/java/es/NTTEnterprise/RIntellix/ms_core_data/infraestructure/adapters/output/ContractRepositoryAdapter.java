@@ -1,6 +1,7 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.output;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Repository;
@@ -12,7 +13,6 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.Contract
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.mappers.ContractMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.repository.ContractRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -39,8 +39,8 @@ public class ContractRepositoryAdapter implements ContractPortRepository {
      *                           Contract domain objects
      */
     public ContractRepositoryAdapter(ContractRepository contractRepository, ContractMapper contractMapper) {
-        this.contractRepository = contractRepository;
-        this.contractMapper = contractMapper;
+        this.contractRepository = Objects.requireNonNull(contractRepository);
+        this.contractMapper = Objects.requireNonNull(contractMapper);
     }
 
     @Override
