@@ -1,6 +1,6 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input;
 
-import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringConsumerMessageDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringResultMessageDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.ScoringValidationException;
 
@@ -23,5 +23,5 @@ public interface ScoringConsumerPortService {
      * @return the persisted scoring domain entity
      * @throws ScoringValidationException if the message fails validation
      */
-    Scoring processScoringMessage(ScoringConsumerMessageDTO dto) throws ScoringValidationException;
+    Scoring processScoringMessage(ScoringResultMessageDTO dto) throws ScoringValidationException;
 }

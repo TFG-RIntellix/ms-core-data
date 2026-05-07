@@ -1,15 +1,17 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import es.NTTEnterprise.RIntellix.ms_core_data.application.constraints.NonNegativeAmount;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.constraints.ValidPercentage;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.constraints.ValidRiskGrade;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * DTO representing the risk results section of a Kafka scoring message.
  * Contains the calculated risk metrics: PD, LGD, EAD, ECL, and risk grade.
- * Validation constraints are applied directly on fields to ensure data integrity.
+ * Validation constraints are applied directly on fields to ensure data
+ * integrity.
  * Part of the ScoringConsumerMessageDTO nested structure.
  * 
  * @author Lucía Fernández Mancebo
@@ -17,23 +19,21 @@ import jakarta.validation.constraints.NotNull;
  */
 public class RiskResultsDTO {
 
-    @NotNull(message = "Probability of Default is required")
-    @ValidPercentage(message = "Probability of Default must be between 0 and 1")
-    private Double pd;
+    @JsonProperty("probabilityOfDefault")
+    private String pd; // Accept as String since Kafka message sends string values
 
-    @NotNull(message = "Loss Given Default is required")
+    @JsonProperty("lossGivenDefault")
     @ValidPercentage(message = "Loss Given Default must be between 0 and 1")
     private Double lgd;
 
-    @NotNull(message = "Exposure at Default is required")
+    @JsonProperty("exposureAtDefault")
     @NonNegativeAmount(message = "Exposure at Default cannot be negative")
     private Double ead;
 
-    @NotNull(message = "Expected Credit Loss is required")
-    @NonNegativeAmount(message = "Expected Credit Loss cannot be negative")
-    private Double ecl;
+    @JsonProperty("expectedCalculatedLoss")
+    private String ecl; // Accept as String since Kafka message sends string values
 
-    @NotNull(message = "Risk grade is required")
+    @JsonProperty("riskLevel")
     @NotBlank(message = "Risk grade cannot be blank")
     @ValidRiskGrade(message = "Risk grade must be one of the valid values (A, B, C, D, E, F)")
     private String riskGrade;
@@ -47,13 +47,14 @@ public class RiskResultsDTO {
     /**
      * Parameterized constructor for RiskResultsDTO.
      * 
-     * @param pd        Probability of Default (0-1)
+     * @param pd        Probability of Default as String (will be converted to
+     *                  Double)
      * @param lgd       Loss Given Default (0-1)
      * @param ead       Exposure at Default
-     * @param ecl       Expected Credit Loss
+     * @param ecl       Expected Credit Loss as String (will be converted to Double)
      * @param riskGrade Risk grade classification (A-F)
      */
-    public RiskResultsDTO(Double pd, Double lgd, Double ead, Double ecl, String riskGrade) {
+    public RiskResultsDTO(String pd, Double lgd, Double ead, String ecl, String riskGrade) {
         this.pd = pd;
         this.lgd = lgd;
         this.ead = ead;
@@ -63,11 +64,11 @@ public class RiskResultsDTO {
 
     // Getters and Setters
 
-    public Double getPd() {
+    public String getPd() {
         return pd;
     }
 
-    public void setPd(Double pd) {
+    public void setPd(String pd) {
         this.pd = pd;
     }
 
@@ -87,11 +88,11 @@ public class RiskResultsDTO {
         this.ead = ead;
     }
 
-    public Double getEcl() {
+    public String getEcl() {
         return ecl;
     }
 
-    public void setEcl(Double ecl) {
+    public void setEcl(String ecl) {
         this.ecl = ecl;
     }
 

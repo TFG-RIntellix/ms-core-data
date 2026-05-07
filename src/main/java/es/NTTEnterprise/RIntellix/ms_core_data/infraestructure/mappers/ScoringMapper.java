@@ -206,19 +206,24 @@ public class ScoringMapper {
 
     /**
      * Converts baseValue and explainability list to XaiEntity.
+     * Filters out features with null/empty required fields.
+     * Ensures baseValue is not null (defaults to 0.0 if needed).
      */
     private XaiEntity unmapXai(Double baseValue, List<RiskFeature> explainability) {
         XaiEntity entity = new XaiEntity();
-        entity.setBaseValue(baseValue);
+        // MongoDB schema requires base_value: use 0.0 as default if null
+        entity.setBaseValue(baseValue != null ? baseValue : 0.0);
 
         if (explainability == null || explainability.isEmpty()) {
             entity.setTopFeatures(new ArrayList<>());
         } else {
             List<TopFeatureEntity> topFeatures = explainability.stream()
+                    .filter(e -> e != null && e.getFeatureName() != null && !e.getFeatureName().isEmpty()
+                            && e.getShapValue() != null) // Only include features with required fields
                     .map(e -> {
                         TopFeatureEntity feature = new TopFeatureEntity();
                         feature.setFeatureName(e.getFeatureName());
-                        feature.setFeatureValue(e.getFeatureValue());
+                        feature.setFeatureValue(e.getFeatureValue() != null ? e.getFeatureValue() : "");
                         feature.setShapValue(e.getShapValue());
                         return feature;
                     })

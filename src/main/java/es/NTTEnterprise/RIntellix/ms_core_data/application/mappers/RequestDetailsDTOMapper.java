@@ -6,7 +6,8 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDe
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 
 /**
- * Mapper class to convert between Request (domain) and RequestDetailsDTO (application).
+ * Mapper class to convert between Request (domain) and RequestDetailsDTO
+ * (application).
  * 
  * Maps detailed request information including party and financial details
  * without exposing internal domain structure.
@@ -35,6 +36,7 @@ public class RequestDetailsDTOMapper {
               requestDetailsDTO.setRequestTermMonths(request.getRequestDetails().getTermMonths());
               requestDetailsDTO.setInterestRate(request.getRequestDetails().getInterestRate());
               requestDetailsDTO.setPurpose(request.getRequestDetails().getPurpose().toString());
+
               // Map party fields
               requestDetailsDTO.setPartyName(request.getParty().getPersonDetails().getFullName());
               requestDetailsDTO.setPartyNIF(request.getParty().getPersonDetails().getNif());
@@ -46,6 +48,15 @@ public class RequestDetailsDTOMapper {
                             request.getParty().getPersonDetails().getFinancials().getEmploymentStatus().toString());
               requestDetailsDTO.setPartyIncome(
                             request.getParty().getPersonDetails().getFinancials().getAnnualIncome().toString());
+
+              // Map common fields (aligned with MongoDB schema)
+              requestDetailsDTO.setCurrency(request.getRequestDetails().getRequestedAmount() != null
+                            ? request.getRequestDetails().getRequestedAmount().getCurrency()
+                            : null);
+              requestDetailsDTO.setLastReviewDate(request.getLastReviewDate() != null
+                            ? request.getLastReviewDate().toString()
+                            : null);
+
               return requestDetailsDTO;
        }
 

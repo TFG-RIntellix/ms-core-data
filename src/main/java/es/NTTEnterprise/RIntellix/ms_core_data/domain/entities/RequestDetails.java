@@ -23,6 +23,7 @@ public class RequestDetails {
     private Money creditLimit;
     private boolean isRevolving;
     private String repaymentSystem;
+    private String loanType;
 
     /**
      * Constructor of the RequestDetails class.
@@ -52,9 +53,11 @@ public class RequestDetails {
      * @param repaymentSystem the repayment system of the request, which can be
      *                        fixed, variable or other types of repayment systems
      *                        and can affect the monthly payment of the request.
+     * @param loanType        the type of the loan in case the request is a loan or
+     *                        mortgage
      */
     public RequestDetails(RequestType requestType, Purpose purpose, Money requestedAmount, Integer termMonths,
-            Double interestRate, Money creditLimit, boolean isRevolving, String repaymentSystem) {
+            Double interestRate, Money creditLimit, boolean isRevolving, String repaymentSystem, String loanType) {
         this.requestType = requestType;
         this.purpose = purpose;
         this.requestedAmount = requestedAmount;
@@ -63,6 +66,7 @@ public class RequestDetails {
         this.creditLimit = creditLimit;
         this.isRevolving = isRevolving;
         this.repaymentSystem = repaymentSystem;
+        this.loanType = loanType;
     }
 
     // Getters and setters
@@ -131,12 +135,21 @@ public class RequestDetails {
         this.repaymentSystem = repaymentSystem;
     }
 
+    public String getLoanType() {
+        return loanType;
+    }
+
+    public void setLoanType(String loanType) {
+        this.loanType = loanType;
+    }
+
     // toString, hashCode and equals
     @Override
     public String toString() {
         return "RequestDetails [requestType=" + requestType + ", purpose=" + purpose + ", requestedAmount="
                 + requestedAmount + ", termMonths=" + termMonths + ", interestRate=" + interestRate + ", creditLimit="
-                + creditLimit + ", isRevolving=" + isRevolving + ", repaymentSystem=" + repaymentSystem + "]";
+                + creditLimit + ", isRevolving=" + isRevolving + ", repaymentSystem=" + repaymentSystem + ", loanType="
+                + loanType + "]";
     }
 
     @Override
@@ -151,9 +164,11 @@ public class RequestDetails {
         result = prime * result + ((creditLimit == null) ? 0 : creditLimit.hashCode());
         result = prime * result + (isRevolving ? 1231 : 1237);
         result = prime * result + ((repaymentSystem == null) ? 0 : repaymentSystem.hashCode());
+        result = prime * result + ((loanType == null) ? 0 : loanType.hashCode());
         return result;
     }
 
+    // TODO: Equals con loanType
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

@@ -13,7 +13,7 @@ public class FinancialProfile {
 
     private Money annualIncome;
     private EmploymentStatus employmentStatus;
-    private String occupation;
+    private String occupationSector;
     private Double seniorityYears;
 
     // Credit History
@@ -34,7 +34,7 @@ public class FinancialProfile {
      * 
      * @param annualIncome             the annual income of the person
      * @param employmentStatus         the employment status of the person
-     * @param occupation               the occupation of the person
+     * @param occupationSector         the occupation sector of the person
      * @param seniorityYears           the number of years of seniority
      * @param previousDefaultsCount    the count of previous defaults
      * @param previousRepaymentsAmount the amount of previous repayments
@@ -43,12 +43,12 @@ public class FinancialProfile {
      * @param isNewCustomer            indicates if the person is a new customer (no
      *                                 credit history)
      */
-    public FinancialProfile(Money annualIncome, EmploymentStatus employmentStatus, String occupation,
+    public FinancialProfile(Money annualIncome, EmploymentStatus employmentStatus, String occupationSector,
             Double seniorityYears, Integer previousDefaultsCount, Money previousRepaymentsAmount,
             Integer previousLoansCount, Money previousLoansAmount, Boolean isNewCustomer) {
         this.annualIncome = annualIncome;
         this.employmentStatus = employmentStatus;
-        this.occupation = occupation;
+        this.occupationSector = occupationSector;
         this.seniorityYears = seniorityYears;
         this.previousDefaultsCount = previousDefaultsCount;
         this.previousRepaymentsAmount = previousRepaymentsAmount;
@@ -75,12 +75,12 @@ public class FinancialProfile {
         this.employmentStatus = employmentStatus;
     }
 
-    public String getOccupation() {
-        return occupation;
+    public String getOccupationSector() {
+        return occupationSector;
     }
 
-    public void setOccupation(String occupation) {
-        this.occupation = occupation;
+    public void setOccupationSector(String occupationSector) {
+        this.occupationSector = occupationSector;
     }
 
     public Double getSeniorityYears() {
@@ -138,7 +138,7 @@ public class FinancialProfile {
         sb.append("FinancialProfile{");
         sb.append("annualIncome=").append(annualIncome);
         sb.append(", employmentStatus=").append(employmentStatus);
-        sb.append(", occupation=").append(occupation);
+        sb.append(", occupationSector=").append(occupationSector);
         sb.append(", seniorityYears=").append(seniorityYears);
         sb.append(", previousDefaultsCount=").append(previousDefaultsCount);
         sb.append(", previousRepaymentsAmount=").append(previousRepaymentsAmount);
@@ -155,7 +155,7 @@ public class FinancialProfile {
         int result = 1;
         result = prime * result + ((annualIncome == null) ? 0 : annualIncome.hashCode());
         result = prime * result + ((employmentStatus == null) ? 0 : employmentStatus.hashCode());
-        result = prime * result + ((occupation == null) ? 0 : occupation.hashCode());
+        result = prime * result + ((occupationSector == null) ? 0 : occupationSector.hashCode());
         result = prime * result + ((seniorityYears == null) ? 0 : seniorityYears.hashCode());
         result = prime * result + ((previousDefaultsCount == null) ? 0 : previousDefaultsCount.hashCode());
         result = prime * result + ((previousRepaymentsAmount == null) ? 0 : previousRepaymentsAmount.hashCode());
@@ -181,10 +181,10 @@ public class FinancialProfile {
             return false;
         if (employmentStatus != other.employmentStatus)
             return false;
-        if (occupation == null) {
-            if (other.occupation != null)
+        if (occupationSector == null) {
+            if (other.occupationSector != null)
                 return false;
-        } else if (!occupation.equals(other.occupation))
+        } else if (!occupationSector.equals(other.occupationSector))
             return false;
         if (seniorityYears == null) {
             if (other.seniorityYears != null)

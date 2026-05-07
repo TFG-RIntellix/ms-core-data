@@ -12,9 +12,11 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output;
  */
 public class RequestDetailsDTO {
 
-    // Amount and income are represented as String to preserve formatting at API boundary.
+    // Amount and income are represented as String to preserve formatting at API
+    // boundary.
     public String requestId;
     public String requestDate;
+    public String lastReviewDate;
     public String partyName;
     public String partyNIF;
     public String requestDescription;
@@ -25,10 +27,19 @@ public class RequestDetailsDTO {
     public String partyIncome;
     public String requestType;
     public String status;
+    public String currency;
     public String requestedAmount;
     public Integer requestTermMonths;
     public Double interestRate;
     public String purpose;
+
+    // Credit card specific fields
+    public Double requestedCreditLimit;
+    public Boolean isRevolving;
+
+    // Mortgage specific fields
+    public Double propertyValue;
+    public Boolean isFirstHome;
 
     public RequestDetailsDTO() {
     }
@@ -49,6 +60,14 @@ public class RequestDetailsDTO {
 
     public void setRequestDate(String requestDate) {
         this.requestDate = requestDate;
+    }
+
+    public String getLastReviewDate() {
+        return lastReviewDate;
+    }
+
+    public void setLastReviewDate(String lastReviewDate) {
+        this.lastReviewDate = lastReviewDate;
     }
 
     public String getPartyName() {
@@ -131,6 +150,14 @@ public class RequestDetailsDTO {
         this.status = status;
     }
 
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
     public String getRequestedAmount() {
         return requestedAmount;
     }
@@ -161,6 +188,42 @@ public class RequestDetailsDTO {
 
     public void setPurpose(String purpose) {
         this.purpose = purpose;
+    }
+
+    // Credit card specific getters and setters
+
+    public Double getRequestedCreditLimit() {
+        return requestedCreditLimit;
+    }
+
+    public void setRequestedCreditLimit(Double requestedCreditLimit) {
+        this.requestedCreditLimit = requestedCreditLimit;
+    }
+
+    public Boolean getIsRevolving() {
+        return isRevolving;
+    }
+
+    public void setIsRevolving(Boolean isRevolving) {
+        this.isRevolving = isRevolving;
+    }
+
+    // Mortgage specific getters and setters
+
+    public Double getPropertyValue() {
+        return propertyValue;
+    }
+
+    public void setPropertyValue(Double propertyValue) {
+        this.propertyValue = propertyValue;
+    }
+
+    public Boolean getIsFirstHome() {
+        return isFirstHome;
+    }
+
+    public void setIsFirstHome(Boolean isFirstHome) {
+        this.isFirstHome = isFirstHome;
     }
 
 }

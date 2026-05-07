@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * It contains the type of request as a string.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 02-28-2026
+ * @Date 04-25-2026
  */
 public enum RequestType {
     PRESTAMO("PRESTAMO"),

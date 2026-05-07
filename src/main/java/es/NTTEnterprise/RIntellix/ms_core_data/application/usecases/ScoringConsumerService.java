@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringConsumerMessageDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringResultMessageDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringConsumerMessageMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input.ScoringConsumerPortService;
@@ -42,8 +42,8 @@ public class ScoringConsumerService implements ScoringConsumerPortService {
     }
 
     @Override
-    public Scoring processScoringMessage(final ScoringConsumerMessageDTO dto) {
-        final ScoringConsumerMessageDTO safeDto = Objects.requireNonNull(dto, MESSAGE_DTO_REQUIRED);
+    public Scoring processScoringMessage(final ScoringResultMessageDTO dto) {
+        final ScoringResultMessageDTO safeDto = Objects.requireNonNull(dto, MESSAGE_DTO_REQUIRED);
         String requestId = safeDto.getRequestId();
         log.info(LogMessage.SERVICE_SCORING_CONSUMER_START, requestId);
         log.info(LogMessage.SERVICE_SCORING_CONSUMER_VALIDATION, requestId,

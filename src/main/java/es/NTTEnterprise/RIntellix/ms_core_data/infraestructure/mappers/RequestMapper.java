@@ -62,7 +62,8 @@ public class RequestMapper {
                 entity.getRequestedInterestRate(),
                 creditLimit,
                 Boolean.TRUE.equals(entity.getIsRevolving()),
-                entity.getRepaymentSystem());
+                entity.getRepaymentSystem(),
+                entity.getLoanType());
 
         // Convert LocalDate to Date
         Date creationDate = localDateToDate(entity.getRequestDate());

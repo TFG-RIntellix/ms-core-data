@@ -22,10 +22,15 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Application service implementing business logic for request operations.
- * 
+ *
  * Provides listing and detail retrieval of requests with associated party
- * and contract information, triggering async scoring generation after details fetch.
- * 
+ * and contract information, triggering async scoring generation after details
+ * fetch.
+ *
+ * Uses strategy pattern for request type-specific detail processing:
+ * - Loans/Mortgages: Full business logic with DTI and debt calculations
+ * - Credit Cards: Credit card-specific processing
+ *
  * @author Lucía Fernández Mancebo
  * @Date 02-28-2026
  */
@@ -101,10 +106,6 @@ public class RequestApplicationService implements RequestPortService {
 
         party.getPersonDetails().setActiveContracts(activeContracts);
 
-        // Touch derived metrics to ensure party financial aggregates are initialized.
-        party.getPersonDetails().getGlobalDTI();
-        party.getPersonDetails().getTotalDebt();
-
         request.setParty(party);
 
         RequestDetailsDTO result = requestDetailsDTOMapper.toDTO(request);
@@ -119,10 +120,9 @@ public class RequestApplicationService implements RequestPortService {
 
     /**
      * Helper method to filter requests by party name. This is used when
-     * the repository
-     * does not support filtering by party name directly,
+     * the repository does not support filtering by party name directly,
      * so we retrieve all requests and then filter in memory.
-     * 
+     *
      * @param requests  the list of requests to filter
      * @param partyName the party name to filter by
      * @return the filtered list of requests that match the party name

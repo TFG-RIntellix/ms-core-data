@@ -5,13 +5,13 @@ import java.util.Objects;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringGenerationRequest;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringGenerationDTOMapper;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.output.ScoringGenerationPort;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.ScoringGenerationRequest;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.PartyPortRepository;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ScoringGenerationPort;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ScoringPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +58,8 @@ public class ScoringGenerationService {
      *
      * Runs in a separate thread to avoid blocking the main request flow.
      * Checks for existing scoring to prevent duplicates, loads full party data,
-     * maps to ScoringGenerationRequest, and publishes via ScoringGenerationPort.
+     * maps to ScoringGenerationRequest with all scoring features, and publishes
+     * via ScoringGenerationPort using type-specific strategies.
      * Errors are logged but do not affect the calling request flow.
      *
      * @param request the request entity for which scoring should be generated
@@ -77,10 +78,10 @@ public class ScoringGenerationService {
             // Load full party data
             Party party = partyPortRepository.findById(request.getPartyId());
 
-            // Extract features and create domain payload
-            ScoringGenerationRequest scoringGenerationRequest = scoringGenerationMapper.toDomain(request, party);
+            // Extract features and create output payload
+            ScoringGenerationRequest scoringGenerationRequest = scoringGenerationMapper.toOutputDTO(request, party);
 
-            // Publish to scoring engine
+            // Publish to scoring engine using type-specific strategy
             scoringGenerationPort.publishScoringGenerationRequest(scoringGenerationRequest);
 
             log.info(LogMessage.SERVICE_SCORING_GENERATION_PUBLISHED, request.getId());

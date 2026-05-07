@@ -26,7 +26,7 @@ import org.springframework.util.backoff.FixedBackOff;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
-import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringConsumerMessageDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringResultMessageDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import lombok.extern.slf4j.Slf4j;
 
@@ -87,13 +87,14 @@ public class KafkaConsumerConfig {
      * @return ConsumerFactory configured with manual acknowledgment settings
      */
     @Bean
-    public ConsumerFactory<String, ScoringConsumerMessageDTO> consumerFactory() {
+    public ConsumerFactory<String, ScoringResultMessageDTO> consumerFactory() {
         Map<String, Object> configProps = new HashMap<>();
 
         configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JacksonJsonDeserializer.class);
-        configProps.put(JacksonJsonDeserializer.VALUE_DEFAULT_TYPE, ScoringConsumerMessageDTO.class.getName());
+        configProps.put(JacksonJsonDeserializer.VALUE_DEFAULT_TYPE, ScoringResultMessageDTO.class.getName());
+        configProps.put(JacksonJsonDeserializer.USE_TYPE_INFO_HEADERS, false);
         configProps.put(JacksonJsonDeserializer.TRUSTED_PACKAGES, TRUSTED_PACKAGES_ALL);
         configProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, AUTO_OFFSET_RESET_EARLIEST);
         configProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
@@ -118,10 +119,10 @@ public class KafkaConsumerConfig {
      * @return ConcurrentKafkaListenerContainerFactory configured for the consumer
      */
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ScoringConsumerMessageDTO> kafkaListenerContainerFactory(
-            ConsumerFactory<String, ScoringConsumerMessageDTO> consumerFactory) {
+    public ConcurrentKafkaListenerContainerFactory<String, ScoringResultMessageDTO> kafkaListenerContainerFactory(
+            ConsumerFactory<String, ScoringResultMessageDTO> consumerFactory) {
 
-        ConcurrentKafkaListenerContainerFactory<String, ScoringConsumerMessageDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        ConcurrentKafkaListenerContainerFactory<String, ScoringResultMessageDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
 
         factory.setCommonErrorHandler(kafkaErrorHandler());
         factory.setConcurrency(SINGLE_CONSUMER_CONCURRENCY);

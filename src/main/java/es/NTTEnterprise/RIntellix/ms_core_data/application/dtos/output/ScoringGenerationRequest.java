@@ -1,10 +1,11 @@
-package es.NTTEnterprise.RIntellix.ms_core_data.domain.entities;
+package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output;
 
 /**
- * Domain payload for scoring generation requests.
+ * Output DTO for scoring generation publication.
  *
- * This class represents the domain-level data required to generate a scoring
- * asynchronously, decoupled from transport-specific DTOs.
+ * This class represents the transport payload prepared by the application
+ * layer and sent through the scoring publication port to infrastructure
+ * adapters (e.g., Kafka).
  *
  * @author Lucia Fernandez Mancebo
  * @Date 03-22-2026
@@ -31,11 +32,16 @@ public class ScoringGenerationRequest {
     private Double annualIncome;
 
     // Loan/Request features
-    private String loanType;
+    private String requestType;
     private String purpose;
     private Double loanAmount;
     private Integer termMonths;
     private Double interestRate;
+    private String loanType;
+
+    // Credit card specific features
+    private Double creditLimit;
+    private Boolean isRevolving;
 
     // Risk/Credit history features
     private Double ltv;
@@ -44,7 +50,7 @@ public class ScoringGenerationRequest {
     private Integer previousDefaultsCount;
 
     /**
-     * Creates an empty scoring generation request.
+     * Creates an empty scoring generation request payload.
      */
     public ScoringGenerationRequest() {
     }
@@ -145,12 +151,12 @@ public class ScoringGenerationRequest {
         this.annualIncome = annualIncome;
     }
 
-    public String getLoanType() {
-        return loanType;
+    public String getRequestType() {
+        return requestType;
     }
 
-    public void setLoanType(final String loanType) {
-        this.loanType = loanType;
+    public void setRequestType(final String requestType) {
+        this.requestType = requestType;
     }
 
     public String getPurpose() {
@@ -183,6 +189,30 @@ public class ScoringGenerationRequest {
 
     public void setInterestRate(final Double interestRate) {
         this.interestRate = interestRate;
+    }
+
+    public String getLoanType() {
+        return loanType;
+    }
+
+    public void setLoanType(String loanType) {
+        this.loanType = loanType;
+    }
+
+    public Double getCreditLimit() {
+        return creditLimit;
+    }
+
+    public void setCreditLimit(final Double creditLimit) {
+        this.creditLimit = creditLimit;
+    }
+
+    public Boolean getIsRevolving() {
+        return isRevolving;
+    }
+
+    public void setIsRevolving(final Boolean isRevolving) {
+        this.isRevolving = isRevolving;
     }
 
     public Double getLtv() {
@@ -232,11 +262,13 @@ public class ScoringGenerationRequest {
                 ", employmentStatus='" + employmentStatus + '\'' +
                 ", occupationSector='" + occupationSector + '\'' +
                 ", annualIncome=" + annualIncome +
-                ", loanType='" + loanType + '\'' +
+                ", requestType='" + requestType + '\'' +
                 ", purpose='" + purpose + '\'' +
                 ", loanAmount=" + loanAmount +
                 ", termMonths=" + termMonths +
                 ", interestRate=" + interestRate +
+                ", creditLimit=" + creditLimit +
+                ", isRevolving=" + isRevolving +
                 ", ltv=" + ltv +
                 ", dti=" + dti +
                 ", previousLoansCount=" + previousLoansCount +

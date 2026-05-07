@@ -15,23 +15,26 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JacksonJsonSerializer;
 
-import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringGenerationDTO;
-
 /**
  * Kafka producer configuration for scoring generation messages.
- * 
- * Configures the KafkaTemplate bean for publishing ScoringGenerationDTO
+ *
+ * Configures the KafkaTemplate bean for publishing polymorphic scoring
  * messages to Kafka topics. This template is used by ScoringKafkaProducer
- * to send scoring generation requests.
- * 
+ * to send both standard scoring generation requests and credit card specific
+ * scoring requests using the strategy pattern.
+ *
+ * Supported message types:
+ * - ScoringGenerationDTO (for loans and mortgages)
+ * - CreditCardScoringGenerationDTO (for credit cards)
+ *
  * Producer settings:
  * - Bootstrap servers: configured in application.properties
  * - Key serializer: StringSerializer (for request IDs)
- * - Value serializer: JsonSerializer (for ScoringGenerationDTO)
+ * - Value serializer: JsonSerializer (polymorphic Object serialization)
  * - Acks: all (wait for all replicas acknowledgment)
  * - Retries: 3 (automatic retry on failure)
  * - Linger: 10ms (batch messages for efficiency)
- * 
+ *
  * @author Lucía Fernández Mancebo
  * @Date 03-15-2026
  */
@@ -57,17 +60,22 @@ public class KafkaProducerConfig {
 
     /**
      * Configures the ProducerFactory for KafkaTemplate.
-     * 
+     *
+     * Uses Object as the value type to support polymorphic message sending.
+     * This allows the same KafkaTemplate to send both ScoringGenerationDTO
+     * and CreditCardScoringGenerationDTO objects.
+     *
      * @return ProducerFactory configured with StringSerializer for keys
-     *         and JacksonJsonSerializer for ScoringGenerationDTO values
+     *         and JacksonJsonSerializer for polymorphic Object values
      */
     @Bean
-    public ProducerFactory<String, ScoringGenerationDTO> producerFactory() {
+    public ProducerFactory<String, Object> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
 
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JacksonJsonSerializer.class);
+        configProps.put(JacksonJsonSerializer.ADD_TYPE_INFO_HEADERS, false);
         configProps.put(ProducerConfig.ACKS_CONFIG, acks);
         configProps.put(ProducerConfig.RETRIES_CONFIG, retries);
         configProps.put(ProducerConfig.LINGER_MS_CONFIG, lingerMs);
@@ -77,14 +85,16 @@ public class KafkaProducerConfig {
 
     /**
      * Configures the KafkaTemplate for sending messages to Kafka.
-     * 
+     *
+     * Supports polymorphic message types (Object) for strategy-based
+     * message publishing.
+     *
      * @param producerFactory the producer factory bean
-     * @return KafkaTemplate<String, ScoringGenerationDTO> configured and ready for
-     *         use
+     * @return KafkaTemplate<String, Object> configured for polymorphic messages
      */
     @Bean
-    public KafkaTemplate<String, ScoringGenerationDTO> kafkaTemplate(
-            ProducerFactory<String, ScoringGenerationDTO> producerFactory) {
+    public KafkaTemplate<String, Object> kafkaTemplate(
+            ProducerFactory<String, Object> producerFactory) {
         return new KafkaTemplate<>(producerFactory);
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
-import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringConsumerMessageDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringResultMessageDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input.ScoringConsumerPortService;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
@@ -56,7 +56,7 @@ public class ScoringKafkaConsumer {
      */
     @KafkaListener(topics = "${scoring.kafka.topic.persist}", containerFactory = "kafkaListenerContainerFactory")
     public void consumeScoring(
-            @Payload @Valid ScoringConsumerMessageDTO message,
+            @Payload @Valid ScoringResultMessageDTO message,
             Acknowledgment acknowledgment) {
 
         String requestId = message != null && message.getRequestId() != null

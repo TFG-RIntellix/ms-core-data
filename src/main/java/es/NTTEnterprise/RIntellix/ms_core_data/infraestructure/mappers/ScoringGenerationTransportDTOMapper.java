@@ -1,7 +1,7 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.mappers;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringGenerationDTO;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.ScoringGenerationRequest;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringGenerationRequest;
 
 /**
  * Infrastructure mapper for transforming domain scoring generation request
@@ -50,8 +50,9 @@ public class ScoringGenerationTransportDTOMapper {
         scoringGenerationDTO.setEmploymentStatus(scoringGenerationRequest.getEmploymentStatus());
         scoringGenerationDTO.setOccupationSector(scoringGenerationRequest.getOccupationSector());
         scoringGenerationDTO.setAnnualIncome(scoringGenerationRequest.getAnnualIncome());
-        scoringGenerationDTO.setLoanType(scoringGenerationRequest.getLoanType());
+        scoringGenerationDTO.setRequestType(scoringGenerationRequest.getRequestType());
         scoringGenerationDTO.setPurpose(scoringGenerationRequest.getPurpose());
+        scoringGenerationDTO.setLoanType(scoringGenerationRequest.getLoanType());
         scoringGenerationDTO.setLoanAmount(scoringGenerationRequest.getLoanAmount());
         scoringGenerationDTO.setTermMonths(scoringGenerationRequest.getTermMonths());
         scoringGenerationDTO.setInterestRate(scoringGenerationRequest.getInterestRate());

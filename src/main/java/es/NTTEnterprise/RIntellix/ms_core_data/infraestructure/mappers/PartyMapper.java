@@ -121,7 +121,7 @@ public class PartyMapper {
         // Map from EmploymentEntity
         EmploymentEntity employment = entity.getEmployment();
         profile.setEmploymentStatus(mapEmploymentStatus(employment.getStatus()));
-        profile.setOccupation(employment.getOccupation());
+        profile.setOccupationSector(employment.getSector());
         if (employment.getEmployerSeniorityYears() != null) {
             profile.setSeniorityYears(employment.getEmployerSeniorityYears().doubleValue());
         }

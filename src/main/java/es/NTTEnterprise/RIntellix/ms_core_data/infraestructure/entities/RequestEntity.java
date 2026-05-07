@@ -69,6 +69,9 @@ public class RequestEntity {
     @Field("repayment_system")
     private String repaymentSystem;
 
+    @Field("loan_type")
+    private String loanType;
+
     public RequestEntity() {
     }
 
@@ -200,5 +203,13 @@ public class RequestEntity {
 
     public void setRepaymentSystem(String repaymentSystem) {
         this.repaymentSystem = repaymentSystem;
+    }
+
+    public String getLoanType() {
+        return loanType;
+    }
+
+    public void setLoanType(String loanType) {
+        this.loanType = loanType;
     }
 }

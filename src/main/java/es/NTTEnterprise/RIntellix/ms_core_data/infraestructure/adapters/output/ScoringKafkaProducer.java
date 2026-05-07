@@ -5,15 +5,13 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
-import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringGenerationDTO;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.ScoringGenerationRequest;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ScoringGenerationPort;
-import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.mappers.ScoringGenerationTransportDTOMapper;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringGenerationRequest;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.output.ScoringGenerationPort;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.output.ScoringTransportStrategy;
+import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.output.strategies.ScoringTransportStrategyFactory;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,7 +22,8 @@ import lombok.extern.slf4j.Slf4j;
  * for asynchronous processing by downstream scoring engine services.
  *
  * Features:
- * - JSON serialization of ScoringGenerationDTO
+ * - Strategy-based message transformation based on request type
+ * - JSON serialization of type-specific DTOs
  * - Message headers with request ID and timestamp
  * - Retry logic configured at producer level
  * - Error handling and logging
@@ -40,52 +39,57 @@ public class ScoringKafkaProducer implements ScoringGenerationPort {
     private static final String HEADER_REQUEST_ID = "X-Request-ID";
     private static final String HEADER_TIMESTAMP = "X-Timestamp";
 
-    private final KafkaTemplate<String, ScoringGenerationDTO> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
     private final String generationTopic;
 
     public ScoringKafkaProducer(
-            KafkaTemplate<String, ScoringGenerationDTO> kafkaTemplate,
+            KafkaTemplate<String, Object> kafkaTemplate,
             @Value("${scoring.kafka.topic.generation}") String generationTopic) {
         this.kafkaTemplate = Objects.requireNonNull(kafkaTemplate);
         this.generationTopic = Objects.requireNonNull(generationTopic);
     }
 
     /**
-     * Publishes a scoring generation request to Kafka.
+     * Publishes a scoring generation request to Kafka with strategy-based routing.
      *
-     * The message is sent to the configured topic with the request ID as key
-     * and the DTO as value. Additional headers include timestamp for tracking
-     * and request ID for correlation.
+     * Uses the strategy pattern to determine the appropriate message format
+     * based on the request type from ScoringGenerationRequest. Different request
+     * types send different payloads:
+     * - Loans/Mortgages: Complete ScoringGenerationDTO with all features
+     * - Credit Cards: CreditCardScoringGenerationDTO with focused fields
      *
-     * @param scoringGenerationRequest the scoring generation domain payload
+     * All credit card-specific fields (creditLimit, isRevolving) are already
+     * populated in ScoringGenerationRequest during the mapping phase, so the
+     * strategy can work purely with ScoringGenerationRequest.
+     *
+     * @param scoringGenerationRequest the scoring generation domain payload with
+     *                                 all features including request type
      */
     @Override
     public void publishScoringGenerationRequest(ScoringGenerationRequest scoringGenerationRequest) {
-        ScoringGenerationDTO scoringGenerationDTO = ScoringGenerationTransportDTOMapper
-                .toTransportDTO(scoringGenerationRequest);
         try {
-            log.debug(LogMessage.KAFKA_SCORING_GENERATION_PUBLISH_START, scoringGenerationDTO.getRequestId());
+            log.debug(LogMessage.KAFKA_SCORING_GENERATION_PUBLISH_START, scoringGenerationRequest.getRequestId());
 
-            // Build message with key (requestId) and value (DTO)
-            Message<ScoringGenerationDTO> message = MessageBuilder
-                    .withPayload(scoringGenerationDTO)
-                    .setHeader(KafkaHeaders.TOPIC, generationTopic)
-                    .setHeader(KafkaHeaders.KEY, scoringGenerationDTO.getRequestId())
-                    .setHeader(HEADER_REQUEST_ID, scoringGenerationDTO.getRequestId())
-                    .setHeader(HEADER_TIMESTAMP, System.currentTimeMillis())
-                    .build();
+            // Select strategy based on request type from ScoringGenerationRequest
+            ScoringTransportStrategy strategy = ScoringTransportStrategyFactory
+                    .createStrategy(scoringGenerationRequest);
+
+            // Build message using the strategy
+            Message<?> message = strategy.buildScoreGenerationMessage(scoringGenerationRequest, generationTopic);
 
             // Publish to Kafka
             kafkaTemplate.send(message);
 
             log.info(LogMessage.KAFKA_SCORING_GENERATION_PUBLISH_SUCCESS,
-                    generationTopic, scoringGenerationDTO.getRequestId());
-            log.debug(LogMessage.KAFKA_SCORING_GENERATION_PUBLISH_DTO, scoringGenerationDTO);
+                    generationTopic, scoringGenerationRequest.getRequestId());
+            log.debug("Strategy-based message sent: type={}, requestId={}", scoringGenerationRequest.getRequestType(),
+                    scoringGenerationRequest.getRequestId());
 
         } catch (Exception e) {
             log.error(LogMessage.KAFKA_SCORING_GENERATION_PUBLISH_ERROR,
-                    scoringGenerationDTO.getRequestId(), e.getMessage(), e);
+                    scoringGenerationRequest.getRequestId(), e.getMessage(), e);
             throw e;
         }
     }
+
 }

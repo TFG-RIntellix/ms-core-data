@@ -6,14 +6,12 @@ import java.util.List;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.InputFeaturesDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.RiskResultsDTO;
-import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringConsumerMessageDTO;
-import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.XAIExplanationDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringResultMessageDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.XAIFeatureDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.ModelInputs;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskFeature;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskMetrics;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestType;
 
 /**
  * Static mapper for converting Kafka scoring consumer message DTOs to domain
@@ -38,7 +36,7 @@ public class ScoringConsumerMessageMapper {
      * @param dto the scoring consumer message DTO from Kafka deserialization
      * @return Scoring domain entity, or null if dto is null
      */
-    public static Scoring toDomain(ScoringConsumerMessageDTO dto) {
+    public static Scoring toDomain(ScoringResultMessageDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -49,8 +47,8 @@ public class ScoringConsumerMessageMapper {
         scoring.setExecutionDate(dto.getScoringDate());
         scoring.setInputSnapshot(toModelInputs(dto.getInputFeatures()));
         scoring.setResults(toRiskMetrics(dto.getResults()));
-        scoring.setBaseValue(toBaseValue(dto.getXai()));
-        scoring.setExplainability(toRiskFeatures(dto.getXai()));
+        scoring.setBaseValue(dto.getBaseValue());
+        scoring.setExplainability(toRiskFeatures(dto.getExplainability()));
 
         return scoring;
     }
@@ -58,6 +56,7 @@ public class ScoringConsumerMessageMapper {
     /**
      * Converts InputFeaturesDTO to ModelInputs value object.
      * Creates a HashMap from DTO fields for flexible feature storage.
+     * Normalizes enum values to uppercase format expected by MongoDB schema.
      * 
      * @param dto the input features DTO
      * @return ModelInputs containing feature map, or empty ModelInputs if dto is
@@ -70,27 +69,21 @@ public class ScoringConsumerMessageMapper {
 
         HashMap<String, Object> features = new HashMap<>();
         features.put("age", dto.getAge());
-        features.put("gender", dto.getGender());
-        features.put("marital_status", dto.getMaritalStatus());
-        features.put("education", dto.getEducation());
-        features.put("employment_status", dto.getEmploymentStatus());
+        features.put("gender", normalizeGender(dto.getGender()));
+        features.put("marital_status", normalizeMaritalStatus(dto.getMaritalStatus()));
+        features.put("education", normalizeEducation(dto.getEducation()));
+        features.put("employment_status", normalizeEmploymentStatus(dto.getEmploymentStatus()));
         features.put("work_sector", dto.getWorkSector());
         features.put("nr_dependants", dto.getNrDependants());
-        features.put("home_ownership", dto.getHomeOwnership());
-        features.put("has_mortgage", dto.getHasMortgage());
+        features.put("home_ownership", normalizeHomeOwnership(dto.getHomeOwnership()));
+        // Convert "Si"/"No" string to boolean
+        if (dto.getHasMortgage() != null) {
+            features.put("has_mortgage", "Si".equalsIgnoreCase(dto.getHasMortgage()));
+        }
         features.put("annual_income", dto.getAnnualIncome());
 
-        // Convert requestType string to RequestType enum and use its JSON serialized
-        // value
-        if (dto.getRequestType() != null) {
-            try {
-                RequestType requestType = RequestType.fromValue(dto.getRequestType());
-                features.put("request_type", requestType.getValue());
-            } catch (IllegalArgumentException e) {
-                // Fallback to original value if parsing fails
-                features.put("request_type", dto.getRequestType());
-            }
-        }
+        // Normalize request type to uppercase format expected by MongoDB schema
+        features.put("request_type", normalizeRequestType(dto.getRequestType()));
 
         features.put("purpose", dto.getPurpose());
         features.put("requested_amount", dto.getRequestedAmount());
@@ -107,6 +100,7 @@ public class ScoringConsumerMessageMapper {
     /**
      * Converts RiskResultsDTO to RiskMetrics value object.
      * Maps PD, LGD, EAD, ECL, and risk grade from DTO to domain entity.
+     * Converts string values (PD and ECL) to Double for validation and storage.
      * 
      * @param dto the risk results DTO
      * @return RiskMetrics domain entity, or null if dto is null
@@ -116,53 +110,162 @@ public class ScoringConsumerMessageMapper {
             return null;
         }
 
+        // Convert PD from String to Double
+        Double pdValue = null;
+        if (dto.getPd() != null && !dto.getPd().isEmpty()) {
+            try {
+                pdValue = Double.parseDouble(dto.getPd());
+            } catch (NumberFormatException e) {
+                pdValue = null;
+            }
+        }
+
+        // Convert ECL from String to Double
+        Double eclValue = null;
+        if (dto.getEcl() != null && !dto.getEcl().isEmpty()) {
+            try {
+                eclValue = Double.parseDouble(dto.getEcl());
+            } catch (NumberFormatException e) {
+                eclValue = null;
+            }
+        }
+
         return new RiskMetrics(
-                dto.getPd(),
+                pdValue,
                 dto.getLgd(),
                 dto.getEad(),
-                dto.getEcl(),
+                eclValue,
                 dto.getRiskGrade());
-    }
-
-    /**
-     * Extracts the SHAP base value from XAI explanation DTO.
-     * 
-     * @param dto the XAI explanation DTO
-     * @return the base value, or null if dto is null
-     */
-    private static Double toBaseValue(XAIExplanationDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-        return dto.getBaseValue();
     }
 
     /**
      * Converts XAI explanation DTOs to a list of RiskFeature domain entities.
      * Each XAIFeatureDTO is converted to a RiskFeature with SHAP value information.
+     * Filters out items that have all null/empty values.
      * 
-     * @param dto the XAI explanation DTO
-     * @return List of RiskFeature entities, or empty list if dto is null
+     * @param explainability the list of XAI feature DTOs
+     * @return List of RiskFeature entities, or empty list if explainability is null
      */
-    private static List<RiskFeature> toRiskFeatures(XAIExplanationDTO dto) {
+    private static List<RiskFeature> toRiskFeatures(List<XAIFeatureDTO> explainability) {
         List<RiskFeature> features = new ArrayList<>();
 
-        if (dto == null || dto.getTopFeatures() == null) {
+        if (explainability == null) {
             return features;
         }
 
-        for (XAIFeatureDTO xaiFeature : dto.getTopFeatures()) {
-            if (xaiFeature != null) {
+        for (XAIFeatureDTO xaiFeature : explainability) {
+            if (xaiFeature != null && !isEmptyFeature(xaiFeature)) {
                 RiskFeature riskFeature = new RiskFeature(
                         xaiFeature.getFeatureName(),
                         xaiFeature.getFeatureValue(),
                         xaiFeature.getShapValue(),
-                        null // description is not provided in the DTO
-                );
+                        xaiFeature.getDescription());
                 features.add(riskFeature);
             }
         }
 
         return features;
+    }
+
+    /**
+     * Checks if a XAIFeatureDTO is empty (all fields are null or empty).
+     * 
+     * @param feature the XAI feature DTO
+     * @return true if the feature is empty, false otherwise
+     */
+    private static boolean isEmptyFeature(XAIFeatureDTO feature) {
+        return (feature.getFeatureName() == null || feature.getFeatureName().isEmpty())
+                && (feature.getFeatureValue() == null || feature.getFeatureValue().isEmpty())
+                && feature.getShapValue() == null
+                && (feature.getDescription() == null || feature.getDescription().isEmpty());
+    }
+
+    /**
+     * Normalizes gender value to uppercase format expected by MongoDB schema.
+     * "Mujer" → "MUJER", "Hombre" → "HOMBRE"
+     * 
+     * @param value the raw gender value from Kafka message
+     * @return normalized uppercase gender value, or original if null
+     */
+    private static String normalizeGender(String value) {
+        if (value == null) {
+            return null;
+        }
+        return value.toUpperCase();
+    }
+
+    /**
+     * Normalizes marital status value to uppercase format expected by MongoDB
+     * schema.
+     * "Soltero" → "SOLTERO", "Casado" → "CASADO", etc.
+     * 
+     * @param value the raw marital status from Kafka message
+     * @return normalized uppercase marital status value, or original if null
+     */
+    private static String normalizeMaritalStatus(String value) {
+        if (value == null) {
+            return null;
+        }
+        return value.toUpperCase();
+    }
+
+    /**
+     * Normalizes education level value to uppercase format expected by MongoDB
+     * schema.
+     * "Bachillerato" → "BACHILLERATO", "Primaria" → "PRIMARIA", etc.
+     * 
+     * @param value the raw education level from Kafka message
+     * @return normalized uppercase education value, or original if null
+     */
+    private static String normalizeEducation(String value) {
+        if (value == null) {
+            return null;
+        }
+        return value.toUpperCase();
+    }
+
+    /**
+     * Normalizes employment status value to uppercase format expected by MongoDB
+     * schema.
+     * "Temporal" → "TEMPORAL", "Indefinido" → "INDEFINIDO", etc.
+     * 
+     * @param value the raw employment status from Kafka message
+     * @return normalized uppercase employment status value, or original if null
+     */
+    private static String normalizeEmploymentStatus(String value) {
+        if (value == null) {
+            return null;
+        }
+        return value.toUpperCase();
+    }
+
+    /**
+     * Normalizes home ownership value to uppercase format expected by MongoDB
+     * schema.
+     * "Alquiler" → "ALQUILER", "Propia" → "PROPIA_PAGADA", etc.
+     * 
+     * @param value the raw home ownership from Kafka message
+     * @return normalized uppercase home ownership value, or original if null
+     */
+    private static String normalizeHomeOwnership(String value) {
+        if (value == null) {
+            return null;
+        }
+        return value.toUpperCase();
+    }
+
+    /**
+     * Normalizes request type value to uppercase format expected by MongoDB schema.
+     * Maps incoming request type values to MongoDB schema enum values.
+     * "Personal" → "PERSONAL", "Hipotecario" → "HIPOTECA", etc.
+     * 
+     * @param value the raw request type from Kafka message
+     * @return normalized uppercase request type value, or null if value is null
+     */
+    private static String normalizeRequestType(String value) {
+        if (value == null) {
+            return null;
+        }
+        return value.toUpperCase().replace(" ", "_");
     }
 }

@@ -35,8 +35,9 @@ public class ScoringGenerationDTO {
     private Double annualIncome;
 
     // Loan/Request features
-    private String loanType;
+    private String requestType;
     private String purpose;
+    private String loanType;
     private Double loanAmount;
     private Integer termMonths;
     private Double interestRate;
@@ -146,12 +147,12 @@ public class ScoringGenerationDTO {
         this.annualIncome = annualIncome;
     }
 
-    public String getLoanType() {
-        return loanType;
+    public String getRequestType() {
+        return requestType;
     }
 
-    public void setLoanType(String loanType) {
-        this.loanType = loanType;
+    public void setRequestType(String requestType) {
+        this.requestType = requestType;
     }
 
     public String getPurpose() {
@@ -160,6 +161,14 @@ public class ScoringGenerationDTO {
 
     public void setPurpose(String purpose) {
         this.purpose = purpose;
+    }
+
+    public String getLoanType() {
+        return loanType;
+    }
+
+    public void setLoanType(String loanType) {
+        this.loanType = loanType;
     }
 
     public Double getLoanAmount() {
@@ -233,7 +242,7 @@ public class ScoringGenerationDTO {
                 ", employmentStatus='" + employmentStatus + '\'' +
                 ", occupationSector='" + occupationSector + '\'' +
                 ", annualIncome=" + annualIncome +
-                ", loanType='" + loanType + '\'' +
+                ", requestType='" + requestType + '\'' +
                 ", purpose='" + purpose + '\'' +
                 ", loanAmount=" + loanAmount +
                 ", termMonths=" + termMonths +

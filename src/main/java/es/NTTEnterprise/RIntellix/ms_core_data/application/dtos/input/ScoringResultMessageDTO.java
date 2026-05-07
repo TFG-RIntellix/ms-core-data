@@ -1,6 +1,9 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input;
 
 import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -10,13 +13,14 @@ import jakarta.validation.constraints.NotNull;
  * DTO representing the complete Kafka scoring consumer message.
  * Mirrors the incoming JSON schema from the scoring engine microservice.
  * Used for deserialization of Kafka messages on the PersistScoring topic.
- * Validation constraints are applied directly on fields to ensure data integrity
+ * Validation constraints are applied directly on fields to ensure data
+ * integrity
  * at deserialization time.
  * 
  * @author Lucía Fernández Mancebo
  * @Date 03-21-2026
  */
-public class ScoringConsumerMessageDTO {
+public class ScoringResultMessageDTO {
 
     @NotNull(message = "Request ID is required")
     @NotBlank(message = "Request ID cannot be blank")
@@ -26,9 +30,11 @@ public class ScoringConsumerMessageDTO {
     @NotBlank(message = "Model version cannot be blank")
     private String modelVersion;
 
+    @JsonProperty("executionDate")
     @NotNull(message = "Scoring date is required")
     private Date scoringDate;
 
+    @JsonProperty("inputSnapshot")
     @NotNull(message = "Input features are required")
     @Valid
     private InputFeaturesDTO inputFeatures;
@@ -37,34 +43,17 @@ public class ScoringConsumerMessageDTO {
     @Valid
     private RiskResultsDTO results;
 
-    @NotNull(message = "XAI explanation is required")
+    @JsonProperty("explainability")
     @Valid
-    private XAIExplanationDTO xai;
+    private List<XAIFeatureDTO> explainability;
+
+    @JsonProperty("baseValue")
+    private Double baseValue;
 
     /**
-     * Default constructor for ScoringConsumerMessageDTO.
+     * Default constructor for ScoringResultMessageDTO.
      */
-    public ScoringConsumerMessageDTO() {
-    }
-
-    /**
-     * Parameterized constructor for ScoringConsumerMessageDTO.
-     * 
-     * @param requestId     reference to the evaluated request
-     * @param modelVersion  version of the model used
-     * @param scoringDate   date and time of scoring calculation
-     * @param inputFeatures snapshot of input features used by the model
-     * @param results       risk metrics computed by the model
-     * @param xai           explainability information with SHAP values
-     */
-    public ScoringConsumerMessageDTO(String requestId, String modelVersion, Date scoringDate,
-            InputFeaturesDTO inputFeatures, RiskResultsDTO results, XAIExplanationDTO xai) {
-        this.requestId = requestId;
-        this.modelVersion = modelVersion;
-        this.scoringDate = scoringDate;
-        this.inputFeatures = inputFeatures;
-        this.results = results;
-        this.xai = xai;
+    public ScoringResultMessageDTO() {
     }
 
     // Getters and Setters
@@ -109,11 +98,19 @@ public class ScoringConsumerMessageDTO {
         this.results = results;
     }
 
-    public XAIExplanationDTO getXai() {
-        return xai;
+    public List<XAIFeatureDTO> getExplainability() {
+        return explainability;
     }
 
-    public void setXai(XAIExplanationDTO xai) {
-        this.xai = xai;
+    public void setExplainability(List<XAIFeatureDTO> explainability) {
+        this.explainability = explainability;
+    }
+
+    public Double getBaseValue() {
+        return baseValue;
+    }
+
+    public void setBaseValue(Double baseValue) {
+        this.baseValue = baseValue;
     }
 }

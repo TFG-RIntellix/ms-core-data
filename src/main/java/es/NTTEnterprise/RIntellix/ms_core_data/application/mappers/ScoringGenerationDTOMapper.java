@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringGenerationRequest;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Contract;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.FinancialProfile;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Money;
@@ -11,11 +12,10 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.MortgageContract;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Person;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.ScoringGenerationRequest;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.SocioDemographicProfile;
 
 /**
- * Mapper class to convert Request + Party entities into a domain scoring
+ * Mapper class to convert Request + Party entities into a scoring generation
  * payload.
  *
  * Extracts and transforms domain entities into a ScoringGenerationRequest with
@@ -39,9 +39,9 @@ public class ScoringGenerationDTOMapper {
      *
      * @param request the request entity with loan details
      * @param party   the party entity with customer information
-     * @return the scoring generation domain payload with extracted features
+     * @return the scoring generation output payload with extracted features
      */
-    public ScoringGenerationRequest toDomain(Request request, Party party) {
+    public ScoringGenerationRequest toOutputDTO(Request request, Party party) {
         ScoringGenerationRequest scoringGenerationRequest = new ScoringGenerationRequest();
 
         // Identifiers
@@ -77,7 +77,7 @@ public class ScoringGenerationDTOMapper {
         FinancialProfile financials = person.getFinancials();
 
         scoringGenerationRequest.setEmploymentStatus(financials.getEmploymentStatus().toString());
-        scoringGenerationRequest.setOccupationSector(financials.getOccupation());
+        scoringGenerationRequest.setOccupationSector(financials.getOccupationSector());
 
         Money annualIncome = financials.getAnnualIncome();
         if (annualIncome != null) {
@@ -94,8 +94,9 @@ public class ScoringGenerationDTOMapper {
     private void mapRequestFeatures(Request request, ScoringGenerationRequest scoringGenerationRequest) {
         var details = request.getRequestDetails();
 
-        scoringGenerationRequest.setLoanType(details.getRequestType().toString());
+        scoringGenerationRequest.setRequestType(details.getRequestType().toString());
         scoringGenerationRequest.setPurpose(details.getPurpose().toString());
+        scoringGenerationRequest.setLoanType(details.getLoanType());
 
         Money requestedAmount = details.getRequestedAmount();
         if (requestedAmount != null) {
@@ -104,6 +105,13 @@ public class ScoringGenerationDTOMapper {
 
         scoringGenerationRequest.setTermMonths(details.getTermMonths());
         scoringGenerationRequest.setInterestRate(details.getInterestRate());
+
+        // Credit card specific features
+        Money creditLimit = details.getCreditLimit();
+        if (creditLimit != null) {
+            scoringGenerationRequest.setCreditLimit(creditLimit.getAmount());
+        }
+        scoringGenerationRequest.setIsRevolving(details.isRevolving());
 
         // LTV calculated by domain logic (applicable for mortgages)
         Double ltv = request.calculateLTV();
