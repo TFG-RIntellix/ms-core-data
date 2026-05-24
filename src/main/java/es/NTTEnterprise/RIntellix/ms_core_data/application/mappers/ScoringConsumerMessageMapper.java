@@ -56,7 +56,7 @@ public class ScoringConsumerMessageMapper {
     /**
      * Converts InputFeaturesDTO to ModelInputs value object.
      * Creates a HashMap from DTO fields for flexible feature storage.
-     * Normalizes enum values to uppercase format expected by MongoDB schema.
+     * Normalizes values to the format expected by the MongoDB schema.
      * 
      * @param dto the input features DTO
      * @return ModelInputs containing feature map, or empty ModelInputs if dto is
@@ -76,14 +76,11 @@ public class ScoringConsumerMessageMapper {
         features.put("work_sector", dto.getWorkSector());
         features.put("nr_dependants", dto.getNrDependants());
         features.put("home_ownership", normalizeHomeOwnership(dto.getHomeOwnership()));
-        // Convert "Si"/"No" string to boolean
-        if (dto.getHasMortgage() != null) {
-            features.put("has_mortgage", "Si".equalsIgnoreCase(dto.getHasMortgage()));
-        }
+        features.put("has_mortgage", normalizeMortgage(dto.getHasMortgage()));
         features.put("annual_income", dto.getAnnualIncome());
 
-        // Normalize request type to uppercase format expected by MongoDB schema
-        features.put("request_type", normalizeRequestType(dto.getRequestType()));
+        // Use the loan type from the PersistScoring message as the Mongo request type.
+        features.put("request_type", normalizeRequestType(dto.getLoanType()));
 
         features.put("purpose", dto.getPurpose());
         features.put("requested_amount", dto.getRequestedAmount());
@@ -182,7 +179,6 @@ public class ScoringConsumerMessageMapper {
 
     /**
      * Normalizes gender value to uppercase format expected by MongoDB schema.
-     * "Mujer" → "MUJER", "Hombre" → "HOMBRE"
      * 
      * @param value the raw gender value from Kafka message
      * @return normalized uppercase gender value, or original if null
@@ -197,7 +193,6 @@ public class ScoringConsumerMessageMapper {
     /**
      * Normalizes marital status value to uppercase format expected by MongoDB
      * schema.
-     * "Soltero" → "SOLTERO", "Casado" → "CASADO", etc.
      * 
      * @param value the raw marital status from Kafka message
      * @return normalized uppercase marital status value, or original if null
@@ -212,7 +207,6 @@ public class ScoringConsumerMessageMapper {
     /**
      * Normalizes education level value to uppercase format expected by MongoDB
      * schema.
-     * "Bachillerato" → "BACHILLERATO", "Primaria" → "PRIMARIA", etc.
      * 
      * @param value the raw education level from Kafka message
      * @return normalized uppercase education value, or original if null
@@ -227,7 +221,6 @@ public class ScoringConsumerMessageMapper {
     /**
      * Normalizes employment status value to uppercase format expected by MongoDB
      * schema.
-     * "Temporal" → "TEMPORAL", "Indefinido" → "INDEFINIDO", etc.
      * 
      * @param value the raw employment status from Kafka message
      * @return normalized uppercase employment status value, or original if null
@@ -242,7 +235,6 @@ public class ScoringConsumerMessageMapper {
     /**
      * Normalizes home ownership value to uppercase format expected by MongoDB
      * schema.
-     * "Alquiler" → "ALQUILER", "Propia" → "PROPIA_PAGADA", etc.
      * 
      * @param value the raw home ownership from Kafka message
      * @return normalized uppercase home ownership value, or original if null
@@ -252,6 +244,32 @@ public class ScoringConsumerMessageMapper {
             return null;
         }
         return value.toUpperCase();
+    }
+
+    /**
+     * Normalizes the mortgage flag to a boolean value.
+     * Accepts the current boolean wire format and common string values such as
+     * "true" and "false".
+     *
+     * @param value the raw mortgage flag from Kafka message
+     * @return normalized boolean value, or null if the source value is null
+     */
+    private static Boolean normalizeMortgage(String value) {
+        if (value == null) {
+            return null;
+        }
+
+        String normalizedValue = value.trim().toLowerCase();
+        if ("yes".equals(normalizedValue) || "true".equals(normalizedValue)
+                || "1".equals(normalizedValue)) {
+            return Boolean.TRUE;
+        }
+
+        if ("no".equals(normalizedValue) || "false".equals(normalizedValue) || "0".equals(normalizedValue)) {
+            return Boolean.FALSE;
+        }
+
+        return Boolean.valueOf(normalizedValue);
     }
 
     /**

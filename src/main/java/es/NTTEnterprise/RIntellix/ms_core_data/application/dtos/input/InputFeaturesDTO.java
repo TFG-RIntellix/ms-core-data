@@ -18,52 +18,52 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.constraints.ValidPerc
  */
 public class InputFeaturesDTO {
 
-    @JsonProperty("edad")
+    @JsonProperty("age")
     @ValidAge(minAge = 18, message = "Age must be at least 18")
     private Integer age;
 
-    @JsonProperty("genero")
+    @JsonProperty("gender")
     private String gender;
 
-    @JsonProperty("estado_civil")
+    @JsonProperty("maritalStatus")
     private String maritalStatus;
 
-    @JsonProperty("educacion")
+    @JsonProperty("education")
     private String education;
 
-    @JsonProperty("situacion_laboral")
+    @JsonProperty("employmentStatus")
     private String employmentStatus;
 
-    @JsonProperty("sector_trabajo")
+    @JsonProperty("occupationSector")
     private String workSector;
 
-    @JsonProperty("dependientes")
+    @JsonProperty("dependents")
     private Integer nrDependants;
 
-    @JsonProperty("vivienda")
+    @JsonProperty("homeOwnership")
     private String homeOwnership;
 
-    @JsonProperty("tiene_hipoteca")
+    @JsonProperty("hasMortgage")
     private String hasMortgage;
 
-    @JsonProperty("ingresos_anuales")
+    @JsonProperty("annualIncome")
     @NonNegativeAmount(message = "Annual income cannot be negative")
     private Double annualIncome;
 
-    @JsonProperty("tipo_prestamo")
-    private String requestType;
+    @JsonProperty("loanType")
+    private String loanType;
 
-    @JsonProperty("proposito")
+    @JsonProperty("purpose")
     private String purpose;
 
-    @JsonProperty("monto_prestamo")
+    @JsonProperty("loanAmount")
     @NonNegativeAmount(message = "Requested amount cannot be negative")
     private Double requestedAmount;
 
-    @JsonProperty("plazo_meses")
+    @JsonProperty("termMonths")
     private Integer termMonths;
 
-    @JsonProperty("tasa_interes")
+    @JsonProperty("interestRate")
     @NonNegativeAmount(message = "Interest rate cannot be negative")
     private Double interestRate;
 
@@ -75,10 +75,10 @@ public class InputFeaturesDTO {
     @ValidPercentage(message = "DTI must be between 0 and 1")
     private Double dti;
 
-    @JsonProperty("num_prestamos_previos")
+    @JsonProperty("previousLoansCount")
     private Integer previousLoansCount;
 
-    @JsonProperty("num_moras_previas")
+    @JsonProperty("previousDefaultsCount")
     private Integer previousDefaultsCount;
 
     /**
@@ -169,12 +169,12 @@ public class InputFeaturesDTO {
         this.annualIncome = annualIncome;
     }
 
-    public String getRequestType() {
-        return requestType;
+    public String getLoanType() {
+        return loanType;
     }
 
-    public void setRequestType(String requestType) {
-        this.requestType = requestType;
+    public void setLoanType(String loanType) {
+        this.loanType = loanType;
     }
 
     public String getPurpose() {
