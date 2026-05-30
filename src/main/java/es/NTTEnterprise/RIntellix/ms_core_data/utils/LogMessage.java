@@ -204,6 +204,7 @@ public final class LogMessage {
     public static final String KAFKA_SCORING_GENERATION_PUBLISH_SUCCESS = "[ScoringKafkaProducer/Output] - PUBLISH_SUCCESS: topic: {}, requestId: {}";
     public static final String KAFKA_SCORING_GENERATION_PUBLISH_DTO = "[ScoringKafkaProducer/Output] - PUBLISH_PAYLOAD: {}";
     public static final String KAFKA_SCORING_GENERATION_PUBLISH_ERROR = "[ScoringKafkaProducer/Output] - PUBLISH_ERROR: requestId: {}, error: {}";
+    public static final String KAFKA_SCORING_GENERATION_PUBLISH_STRATEGY = "[ScoringKafkaProducer/Output] - PUBLISH_STRATEGY: type: {}, requestId: {}";
 
     // ============================================================
     // SERVICE LAYER - ScoringConsumerService

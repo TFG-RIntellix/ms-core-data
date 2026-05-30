@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.FinancialMetricsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.InputFeaturesDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.RiskResultsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringResultMessageDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.XAIFeatureDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.FinancialMetrics;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.ModelInputs;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskFeature;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskMetrics;
@@ -80,7 +82,7 @@ public class ScoringConsumerMessageMapper {
         features.put("annual_income", dto.getAnnualIncome());
 
         // Use the loan type from the PersistScoring message as the Mongo request type.
-        features.put("request_type", normalizeRequestType(dto.getLoanType()));
+        features.put("loan_type", normalizeRequestType(dto.getLoanType()));
 
         features.put("purpose", dto.getPurpose());
         features.put("requested_amount", dto.getRequestedAmount());
@@ -97,6 +99,7 @@ public class ScoringConsumerMessageMapper {
     /**
      * Converts RiskResultsDTO to RiskMetrics value object.
      * Maps PD, LGD, EAD, ECL, and risk grade from DTO to domain entity.
+     * Also maps financial metrics if present.
      * Converts string values (PD and ECL) to Double for validation and storage.
      * 
      * @param dto the risk results DTO
@@ -127,12 +130,16 @@ public class ScoringConsumerMessageMapper {
             }
         }
 
+        // Map financial metrics if present
+        FinancialMetrics financialMetrics = toFinancialMetrics(dto.getFinancialMetrics());
+
         return new RiskMetrics(
                 pdValue,
                 dto.getLgd(),
                 dto.getEad(),
                 eclValue,
-                dto.getRiskGrade());
+                dto.getRiskGrade(),
+                financialMetrics);
     }
 
     /**
@@ -162,6 +169,26 @@ public class ScoringConsumerMessageMapper {
         }
 
         return features;
+    }
+
+    /**
+     * Converts FinancialMetricsDTO to FinancialMetrics domain entity.
+     * Maps all financial metrics fields from DTO to domain.
+     *
+     * @param dto the financial metrics DTO
+     * @return FinancialMetrics domain entity, or null if dto is null
+     */
+    private static FinancialMetrics toFinancialMetrics(FinancialMetricsDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        return new FinancialMetrics(
+                dto.getMonthlyPayment(),
+                dto.getDebtToIncomeRatio(),
+                dto.getTotalPayment(),
+                dto.getTotalInterest(),
+                dto.getMonthlyDisposableIncome());
     }
 
     /**

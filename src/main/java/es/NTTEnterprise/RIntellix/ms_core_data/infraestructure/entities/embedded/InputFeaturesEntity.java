@@ -44,8 +44,8 @@ public class InputFeaturesEntity {
     @Field("annual_income")
     private Double annualIncome;
 
-    @Field("request_type")
-    private String requestType;
+    @Field("loan_type")
+    private String loanType;
 
     @Field("purpose")
     private String purpose;
@@ -156,12 +156,12 @@ public class InputFeaturesEntity {
         this.annualIncome = annualIncome;
     }
 
-    public String getRequestType() {
-        return requestType;
+    public String getLoanType() {
+        return loanType;
     }
 
-    public void setRequestType(String requestType) {
-        this.requestType = requestType;
+    public void setLoanType(String loanType) {
+        this.loanType = loanType;
     }
 
     public String getPurpose() {

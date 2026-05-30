@@ -8,11 +8,13 @@ import java.util.stream.Collectors;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.FinancialMetrics;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.ModelInputs;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskFeature;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskMetrics;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.ScoringEntity;
+import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.FinancialMetricsEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.InputFeaturesEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.ResultsEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.TopFeatureEntity;
@@ -113,7 +115,7 @@ public class ScoringMapper {
         putIfNotNull(features, "home_ownership", entity.getHomeOwnership());
         putIfNotNull(features, "has_mortgage", entity.getHasMortgage());
         putIfNotNull(features, "annual_income", entity.getAnnualIncome());
-        putIfNotNull(features, "request_type", entity.getRequestType());
+        putIfNotNull(features, "loan_type", entity.getLoanType());
         putIfNotNull(features, "purpose", entity.getPurpose());
         putIfNotNull(features, "requested_amount", entity.getRequestedAmount());
         putIfNotNull(features, "term_months", entity.getTermMonths());
@@ -130,12 +132,19 @@ public class ScoringMapper {
      * Maps ResultsEntity to RiskMetrics domain object.
      */
     private RiskMetrics mapResults(ResultsEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        FinancialMetrics financialMetrics = mapFinancialMetrics(entity.getFinancialMetrics());
+
         return new RiskMetrics(
                 entity.getPd(),
                 entity.getLgd(),
                 entity.getEad(),
                 entity.getEcl(),
-                entity.getRiskGrade());
+                entity.getRiskGrade(),
+                financialMetrics);
     }
 
     /**
@@ -173,7 +182,7 @@ public class ScoringMapper {
         entity.setHomeOwnership((String) features.get("home_ownership"));
         entity.setHasMortgage((Boolean) features.get("has_mortgage"));
         entity.setAnnualIncome((Double) features.get("annual_income"));
-        entity.setRequestType((String) features.get("request_type"));
+        entity.setLoanType((String) features.get("loan_type"));
         entity.setPurpose((String) features.get("purpose"));
         entity.setRequestedAmount((Double) features.get("requested_amount"));
         entity.setTermMonths((Integer) features.get("term_months"));
@@ -200,6 +209,7 @@ public class ScoringMapper {
         entity.setEad(domain.getExposureAtDefault());
         entity.setEcl(domain.getExpectedCalculatedLoss());
         entity.setRiskGrade(domain.getRiskLevel());
+        entity.setFinancialMetrics(unmapFinancialMetrics(domain.getFinancialMetrics()));
 
         return entity;
     }
@@ -232,6 +242,38 @@ public class ScoringMapper {
         }
 
         return entity;
+    }
+
+    /**
+     * Maps FinancialMetricsEntity to FinancialMetrics domain object.
+     */
+    private FinancialMetrics mapFinancialMetrics(FinancialMetricsEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        return new FinancialMetrics(
+                entity.getMonthlyPayment(),
+                entity.getDebtToIncomeRatio(),
+                entity.getTotalPayment(),
+                entity.getTotalInterest(),
+                entity.getMonthlyDisposableIncome());
+    }
+
+    /**
+     * Converts FinancialMetrics domain object to FinancialMetricsEntity.
+     */
+    private FinancialMetricsEntity unmapFinancialMetrics(FinancialMetrics domain) {
+        if (domain == null) {
+            return null;
+        }
+
+        return new FinancialMetricsEntity(
+                domain.getMonthlyPayment(),
+                domain.getDebtToIncomeRatio(),
+                domain.getTotalPayment(),
+                domain.getTotalInterest(),
+                domain.getMonthlyDisposableIncome());
     }
 
     private void putIfNotNull(HashMap<String, Object> map, String key, Object value) {

@@ -5,17 +5,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.constraints.NonNegativeAmount;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.constraints.ValidPercentage;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.constraints.ValidRiskGrade;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 
 /**
  * DTO representing the risk results section of a Kafka scoring message.
- * Contains the calculated risk metrics: PD, LGD, EAD, ECL, and risk grade.
+ * Contains the calculated risk metrics: PD, LGD, EAD, ECL, and risk grade,
+ * as well as financial affordability metrics (new as of 05-26-2026).
  * Validation constraints are applied directly on fields to ensure data
  * integrity.
  * Part of the ScoringConsumerMessageDTO nested structure.
  * 
  * @author Lucía Fernández Mancebo
  * @Date 03-21-2026
+ * @Updated 05-26-2026 - Added financialMetrics field
  */
 public class RiskResultsDTO {
 
@@ -37,6 +40,10 @@ public class RiskResultsDTO {
     @NotBlank(message = "Risk grade cannot be blank")
     @ValidRiskGrade(message = "Risk grade must be one of the valid values (A, B, C, D, E, F)")
     private String riskGrade;
+
+    @JsonProperty("financialMetrics")
+    @Valid
+    private FinancialMetricsDTO financialMetrics;
 
     /**
      * Default constructor for RiskResultsDTO.
@@ -102,5 +109,13 @@ public class RiskResultsDTO {
 
     public void setRiskGrade(String riskGrade) {
         this.riskGrade = riskGrade;
+    }
+
+    public FinancialMetricsDTO getFinancialMetrics() {
+        return financialMetrics;
+    }
+
+    public void setFinancialMetrics(FinancialMetricsDTO financialMetrics) {
+        this.financialMetrics = financialMetrics;
     }
 }

@@ -13,6 +13,9 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundE
  * request-related business logic and operations within the application.
  * Implementations of this interface should handle the processing,
  * validation, and coordination of incoming requests.
+ *
+ * @author Lucía Fernández Mancebo
+ * @Date 02-28-2026
  */
 public interface RequestPortService {
 

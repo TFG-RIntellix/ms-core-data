@@ -13,7 +13,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output;
 public class RequestSummaryDTO {
 
     private String requestId;
-    String partyName;
+    private String partyName;
     private String status;
     private String requestType;
     private Double amount;

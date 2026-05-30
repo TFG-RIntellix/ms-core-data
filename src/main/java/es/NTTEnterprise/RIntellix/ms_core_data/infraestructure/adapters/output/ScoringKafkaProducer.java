@@ -82,7 +82,8 @@ public class ScoringKafkaProducer implements ScoringGenerationPort {
 
             log.info(LogMessage.KAFKA_SCORING_GENERATION_PUBLISH_SUCCESS,
                     generationTopic, scoringGenerationRequest.getRequestId());
-            log.debug("Strategy-based message sent: type={}, requestId={}", scoringGenerationRequest.getRequestType(),
+            log.debug(LogMessage.KAFKA_SCORING_GENERATION_PUBLISH_STRATEGY,
+                    scoringGenerationRequest.getRequestType(),
                     scoringGenerationRequest.getRequestId());
 
         } catch (Exception e) {

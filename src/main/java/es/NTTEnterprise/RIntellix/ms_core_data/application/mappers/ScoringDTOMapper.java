@@ -50,6 +50,11 @@ public class ScoringDTOMapper {
         dto.setEad(scoring.getResults().getExposureAtDefault());
         dto.setEcl(scoring.getResults().getExpectedCalculatedLoss());
         dto.setRiskGrade(scoring.getResults().getRiskLevel());
+        dto.setMonthlyPayment(scoring.getResults().getFinancialMetrics().getMonthlyPayment());
+        dto.setDti(scoring.getResults().getFinancialMetrics().getDebtToIncomeRatio());
+        dto.setTotalPayment(scoring.getResults().getFinancialMetrics().getTotalPayment());
+        dto.setTotalInterest(scoring.getResults().getFinancialMetrics().getTotalInterest());
+        dto.setMonthlyDisposableIncome(scoring.getResults().getFinancialMetrics().getMonthlyDisposableIncome());
 
         // Explainability
         dto.setBaseValue(scoring.getBaseValue());

@@ -6,10 +6,11 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * Embedded entity mapping the "results" sub-document from the "scorings"
  * MongoDB collection.
  * Contains the standard Basel II/III risk metrics: PD, LGD, EAD, ECL and a risk
- * grade.
+ * grade, as well as financial affordability metrics (as of 05-26-2026).
  *
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026
+ * @Updated 05-26-2026 - Added FinancialMetricsEntity
  */
 public class ResultsEntity {
 
@@ -27,6 +28,9 @@ public class ResultsEntity {
 
     @Field("risk_grade")
     private String riskGrade;
+
+    @Field("financial_metrics")
+    private FinancialMetricsEntity financialMetrics;
 
     public ResultsEntity() {
     }
@@ -71,5 +75,13 @@ public class ResultsEntity {
 
     public void setRiskGrade(String riskGrade) {
         this.riskGrade = riskGrade;
+    }
+
+    public FinancialMetricsEntity getFinancialMetrics() {
+        return financialMetrics;
+    }
+
+    public void setFinancialMetrics(FinancialMetricsEntity financialMetrics) {
+        this.financialMetrics = financialMetrics;
     }
 }
