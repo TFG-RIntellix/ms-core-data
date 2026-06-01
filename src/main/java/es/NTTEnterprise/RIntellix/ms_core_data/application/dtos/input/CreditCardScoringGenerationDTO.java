@@ -27,14 +27,21 @@ public class CreditCardScoringGenerationDTO {
     private String gender;
     private String maritalStatus;
     private String employmentStatus;
-
+    private Double employmentSeniorityYears;
+    private Integer dependents;
     // Financial features
     private Double annualIncome;
+    private String incomeType;
+    private String homeOwnership;
 
     // Credit card specific features
     private String requestType;
     private Double creditLimit;
     private Boolean isRevolving;
+    private Double interestRate;
+    private Double lti;
+    private Double dti;
+    private Integer previousDefaultsCount;
 
     /**
      * Creates an empty credit card scoring generation DTO.
@@ -92,12 +99,44 @@ public class CreditCardScoringGenerationDTO {
         this.employmentStatus = employmentStatus;
     }
 
+    public Double getEmploymentSeniorityYears() {
+        return employmentSeniorityYears;
+    }
+
+    public void setEmploymentSeniorityYears(Double employmentSeniorityYears) {
+        this.employmentSeniorityYears = employmentSeniorityYears;
+    }
+
+    public Integer getDependents() {
+        return dependents;
+    }
+
+    public void setDependents(Integer dependents) {
+        this.dependents = dependents;
+    }
+
     public Double getAnnualIncome() {
         return annualIncome;
     }
 
     public void setAnnualIncome(Double annualIncome) {
         this.annualIncome = annualIncome;
+    }
+
+    public String getIncomeType() {
+        return incomeType;
+    }
+
+    public void setIncomeType(String incomeType) {
+        this.incomeType = incomeType;
+    }
+
+    public String getHomeOwnership() {
+        return homeOwnership;
+    }
+
+    public void setHomeOwnership(String homeOwnership) {
+        this.homeOwnership = homeOwnership;
     }
 
     public String getRequestType() {
@@ -122,6 +161,38 @@ public class CreditCardScoringGenerationDTO {
 
     public void setIsRevolving(Boolean isRevolving) {
         this.isRevolving = isRevolving;
+    }
+
+    public Double getInterestRate() {
+        return interestRate;
+    }
+
+    public void setInterestRate(Double interestRate) {
+        this.interestRate = interestRate;
+    }
+
+    public Double getLti() {
+        return lti;
+    }
+
+    public void setLti(Double lti) {
+        this.lti = lti;
+    }
+
+    public Double getDti() {
+        return dti;
+    }
+
+    public void setDti(Double dti) {
+        this.dti = dti;
+    }
+
+    public Integer getPreviousDefaultsCount() {
+        return previousDefaultsCount;
+    }
+
+    public void setPreviousDefaultsCount(Integer previousDefaultsCount) {
+        this.previousDefaultsCount = previousDefaultsCount;
     }
 
     @Override

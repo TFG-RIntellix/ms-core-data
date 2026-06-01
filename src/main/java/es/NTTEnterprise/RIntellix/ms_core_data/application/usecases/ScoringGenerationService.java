@@ -76,7 +76,7 @@ public class ScoringGenerationService {
             }
 
             // Load full party data
-            Party party = partyPortRepository.findById(request.getPartyId());
+            Party party = request.getParty();
 
             // Extract features and create output payload
             ScoringGenerationRequest scoringGenerationRequest = scoringGenerationMapper.toOutputDTO(request, party);

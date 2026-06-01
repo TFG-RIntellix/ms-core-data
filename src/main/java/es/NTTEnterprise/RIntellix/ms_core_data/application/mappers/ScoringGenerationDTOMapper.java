@@ -1,6 +1,8 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.mappers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -32,6 +34,16 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.SocioDemographicP
  */
 @Component
 public class ScoringGenerationDTOMapper {
+
+    private static final Map<String, String> INCOME_TYPE_MAPPING = new HashMap<>();
+    static {
+        INCOME_TYPE_MAPPING.put("INDEFINIDO", "Salario");
+        INCOME_TYPE_MAPPING.put("TEMPORAL", "Salario");
+        INCOME_TYPE_MAPPING.put("FUNCIONARIO", "Salario");
+        INCOME_TYPE_MAPPING.put("AUTONOMO", "Autonomo");
+        INCOME_TYPE_MAPPING.put("DESEMPLEADO", "Ayudas");
+        INCOME_TYPE_MAPPING.put("INACTIVO", "Pension");
+    }
 
     /**
      * Maps a Request and Party to a ScoringGenerationRequest with all scoring
@@ -78,6 +90,8 @@ public class ScoringGenerationDTOMapper {
 
         scoringGenerationRequest.setEmploymentStatus(financials.getEmploymentStatus().toString());
         scoringGenerationRequest.setOccupationSector(financials.getOccupationSector());
+        scoringGenerationRequest.setEmploymentSeniorityYears(financials.getSeniorityYears());
+        scoringGenerationRequest.setIncomeType(calculateIncomeType(financials.getEmploymentStatus().toString()));
 
         Money annualIncome = financials.getAnnualIncome();
         if (annualIncome != null) {
@@ -118,6 +132,13 @@ public class ScoringGenerationDTOMapper {
         if (ltv != null) {
             scoringGenerationRequest.setLtv(ltv);
         }
+
+        // LTI calculated by domain logic
+        Double lti = request.calculateLTI();
+        if (lti != null) {
+            scoringGenerationRequest.setLti(lti);
+        }
+
     }
 
     private boolean hasMortgageInContracts(List<Contract> contracts) {
@@ -125,5 +146,10 @@ public class ScoringGenerationDTOMapper {
             return false;
         }
         return contracts.stream().anyMatch(contract -> contract instanceof MortgageContract);
+    }
+
+    public String calculateIncomeType(String employmentStatus) {
+
+        return INCOME_TYPE_MAPPING.getOrDefault(employmentStatus, "Otro");
     }
 }

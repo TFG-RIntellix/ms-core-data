@@ -56,14 +56,22 @@ public class CreditCardScoringGenerationTransportDTOMapper {
 
         dto.setRequestId(scoringGenerationRequest.getRequestId());
         dto.setPartyId(scoringGenerationRequest.getPartyId());
+        dto.setRequestType(scoringGenerationRequest.getRequestType());
         dto.setAge(scoringGenerationRequest.getAge());
         dto.setGender(scoringGenerationRequest.getGender());
         dto.setMaritalStatus(scoringGenerationRequest.getMaritalStatus());
         dto.setEmploymentStatus(scoringGenerationRequest.getEmploymentStatus());
+        dto.setEmploymentSeniorityYears(scoringGenerationRequest.getEmploymentSeniorityYears());
         dto.setAnnualIncome(scoringGenerationRequest.getAnnualIncome());
-        dto.setRequestType(scoringGenerationRequest.getRequestType());
+        dto.setIncomeType(scoringGenerationRequest.getIncomeType());
+        dto.setHomeOwnership(scoringGenerationRequest.getHomeOwnership());
         dto.setCreditLimit(scoringGenerationRequest.getCreditLimit());
         dto.setIsRevolving(scoringGenerationRequest.getIsRevolving());
+        dto.setInterestRate(scoringGenerationRequest.getInterestRate());
+        dto.setDependents(scoringGenerationRequest.getDependents());
+        dto.setLti(scoringGenerationRequest.getLti());
+        dto.setDti(scoringGenerationRequest.getDti()); // TODO: Tocheck DTI calculation
+        dto.setPreviousDefaultsCount(scoringGenerationRequest.getPreviousDefaultsCount());
 
         return dto;
     }

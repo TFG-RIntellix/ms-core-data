@@ -147,6 +147,32 @@ public class Request {
         return requestedAmount.getAmount() / propertyValue.getAmount();
     }
 
+    /**
+     * Calculates the Limit to Income (LTI) ratio for this request.
+     * LTI = Credit limit requested / Annual Income
+     * 
+     * Only applicable to credit card requests. For other request types or when
+     * credit limit or income is not available, returns null.
+     * 
+     * @return the LTI ratio as a percentage (0-1 range), or null if not applicable
+     */
+    public Double calculateLTI() {
+        if (requestDetails == null) {
+            return null;
+        }
+
+        Money creditLimit = requestDetails.getCreditLimit();
+        if (creditLimit == null || creditLimit.getAmount() == null || creditLimit.getAmount() <= 0) {
+            return null;
+        }
+
+        if (party == null || party.getPersonDetails() == null || party.getPersonDetails().getFinancials() == null) {
+            return null;
+        }
+
+        return creditLimit.getAmount() / party.getPersonDetails().getFinancials().getAnnualIncome().getAmount();
+    }
+
     // toString, hashCode and equals methods
 
     @Override

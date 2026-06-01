@@ -21,15 +21,18 @@ public class ScoringGenerationRequest {
     private String maritalStatus;
     private String education;
     private Integer dependents;
+
     private String homeOwnership;
     private Boolean hasMortgage;
 
     // Employment features
     private String employmentStatus;
     private String occupationSector;
+    private Double employmentSeniorityYears;
 
     // Financial features
     private Double annualIncome;
+    private String incomeType;
 
     // Loan/Request features
     private String requestType;
@@ -44,6 +47,7 @@ public class ScoringGenerationRequest {
     private Boolean isRevolving;
 
     // Risk/Credit history features
+    private Double lti;
     private Double ltv;
     private Double dti;
     private Integer previousLoansCount;
@@ -135,6 +139,14 @@ public class ScoringGenerationRequest {
         this.employmentStatus = employmentStatus;
     }
 
+    public Double getEmploymentSeniorityYears() {
+        return employmentSeniorityYears;
+    }
+
+    public void setEmploymentSeniorityYears(final Double employmentSeniorityYears) {
+        this.employmentSeniorityYears = employmentSeniorityYears;
+    }
+
     public String getOccupationSector() {
         return occupationSector;
     }
@@ -149,6 +161,14 @@ public class ScoringGenerationRequest {
 
     public void setAnnualIncome(final Double annualIncome) {
         this.annualIncome = annualIncome;
+    }
+
+    public String getIncomeType() {
+        return incomeType;
+    }
+
+    public void setIncomeType(final String incomeType) {
+        this.incomeType = incomeType;
     }
 
     public String getRequestType() {
@@ -231,6 +251,14 @@ public class ScoringGenerationRequest {
         this.dti = dti;
     }
 
+    public Double getLti() {
+        return lti;
+    }
+
+    public void setLti(final Double lti) {
+        this.lti = lti;
+    }
+
     public Integer getPreviousLoansCount() {
         return previousLoansCount;
     }
@@ -261,7 +289,9 @@ public class ScoringGenerationRequest {
                 ", hasMortgage=" + hasMortgage +
                 ", employmentStatus='" + employmentStatus + '\'' +
                 ", occupationSector='" + occupationSector + '\'' +
+                ", employmentSeniorityYears=" + employmentSeniorityYears +
                 ", annualIncome=" + annualIncome +
+                ", incomeType='" + incomeType + '\'' +
                 ", requestType='" + requestType + '\'' +
                 ", purpose='" + purpose + '\'' +
                 ", loanAmount=" + loanAmount +
@@ -271,6 +301,7 @@ public class ScoringGenerationRequest {
                 ", isRevolving=" + isRevolving +
                 ", ltv=" + ltv +
                 ", dti=" + dti +
+                ", lti=" + lti +
                 ", previousLoansCount=" + previousLoansCount +
                 ", previousDefaultsCount=" + previousDefaultsCount +
                 '}';

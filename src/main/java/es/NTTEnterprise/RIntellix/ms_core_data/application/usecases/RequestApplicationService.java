@@ -11,6 +11,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestDetail
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestSummaryDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Contract;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Person;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input.RequestPortService;
@@ -104,7 +105,9 @@ public class RequestApplicationService implements RequestPortService {
         List<Contract> activeContracts = contractPortRepository.findActiveByPartyId(request.getPartyId());
         log.debug(LogMessage.REPOSITORY_PARTY_CONTRACTS_LOADED, request.getPartyId(), activeContracts.size());
 
-        party.getPersonDetails().setActiveContracts(activeContracts);
+        Person personDetails = party.getPersonDetails();
+        personDetails.setActiveContracts(activeContracts);
+        party.setPersonDetails(personDetails);
 
         request.setParty(party);
 
