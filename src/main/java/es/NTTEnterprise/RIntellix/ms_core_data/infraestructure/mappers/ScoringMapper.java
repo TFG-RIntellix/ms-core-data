@@ -14,8 +14,10 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskFeature;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskMetrics;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.ScoringEntity;
+import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.CreditCardFieldsEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.FinancialMetricsEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.InputFeaturesEntity;
+import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.LoanFieldsEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.ResultsEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.TopFeatureEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.XaiEntity;
@@ -26,7 +28,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded
  * Transforms the flat MongoDB document structure into the clean domain model:
  * - InputFeaturesEntity → ModelInputs (HashMap-based feature map)
  * - ResultsEntity → RiskMetrics
- * - XaiEntity → baseValue (Double) + List&lt;RiskFeature&gt;
+ * - XaiEntity → baseValue (Double) + List<RiskFeature>
  *
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026
@@ -65,7 +67,7 @@ public class ScoringMapper {
      * Transforms the clean domain model into the MongoDB document structure:
      * - ModelInputs (HashMap) → InputFeaturesEntity
      * - RiskMetrics → ResultsEntity
-     * - baseValue (Double) + List&lt;RiskFeature&gt; → XaiEntity
+     * - baseValue (Double) + List<RiskFeature> → XaiEntity
      * 
      * @param domain The Scoring domain entity.
      * @return The ScoringEntity for MongoDB, or null if the input is null.
@@ -110,6 +112,8 @@ public class ScoringMapper {
         putIfNotNull(features, "marital_status", entity.getMaritalStatus());
         putIfNotNull(features, "education", entity.getEducation());
         putIfNotNull(features, "employment_status", entity.getEmploymentStatus());
+        putIfNotNull(features, "employment_seniority_years", entity.getEmploymentSeniorityYears());
+        putIfNotNull(features, "income_type", entity.getIncomeType());
         putIfNotNull(features, "work_sector", entity.getWorkSector());
         putIfNotNull(features, "nr_dependants", entity.getNrDependants());
         putIfNotNull(features, "home_ownership", entity.getHomeOwnership());
@@ -117,13 +121,26 @@ public class ScoringMapper {
         putIfNotNull(features, "annual_income", entity.getAnnualIncome());
         putIfNotNull(features, "loan_type", entity.getLoanType());
         putIfNotNull(features, "purpose", entity.getPurpose());
-        putIfNotNull(features, "requested_amount", entity.getRequestedAmount());
-        putIfNotNull(features, "term_months", entity.getTermMonths());
         putIfNotNull(features, "interest_rate", entity.getInterestRate());
-        putIfNotNull(features, "ltv", entity.getLtv());
         putIfNotNull(features, "dti", entity.getDti());
-        putIfNotNull(features, "previous_loans_count", entity.getPreviousLoansCount());
+        putIfNotNull(features, "lti", entity.getLti());
         putIfNotNull(features, "previous_defaults_count", entity.getPreviousDefaultsCount());
+        putIfNotNull(features, "product_type", entity.getProductType());
+
+        if (entity.getLoanFields() != null) {
+            putIfNotNull(features, "requested_amount", entity.getLoanFields().getRequestedAmount());
+            putIfNotNull(features, "term_months", entity.getLoanFields().getTermMonths());
+            putIfNotNull(features, "previous_loans_count", entity.getLoanFields().getPreviousLoansCount());
+            putIfNotNull(features, "ltv", entity.getLoanFields().getLtv());
+        }
+
+        if (entity.getCreditCardFields() != null) {
+            putIfNotNull(features, "requested_limit", entity.getCreditCardFields().getRequestedLimit());
+            putIfNotNull(features, "is_revolving", entity.getCreditCardFields().getIsRevolving());
+            putIfNotNull(features, "previous_cards_count", entity.getCreditCardFields().getPreviousCardsCount());
+            putIfNotNull(features, "revolving_utilization_rate",
+                    entity.getCreditCardFields().getRevolvingUtilizationRate());
+        }
 
         return new ModelInputs(features);
     }
@@ -144,6 +161,7 @@ public class ScoringMapper {
                 entity.getEad(),
                 entity.getEcl(),
                 entity.getRiskGrade(),
+                entity.getCreditLimitAssigned(),
                 financialMetrics);
     }
 
@@ -155,7 +173,8 @@ public class ScoringMapper {
             return new ArrayList<>();
         }
         return entities.stream()
-                .map(e -> new RiskFeature(e.getFeatureName(), e.getFeatureValue(), e.getShapValue(), null))
+                .map(e -> new RiskFeature(e.getFeatureName(), e.getFeatureValue(), e.getShapValue(),
+                        e.getDescription()))
                 .collect(Collectors.toList());
     }
 
@@ -172,25 +191,56 @@ public class ScoringMapper {
         InputFeaturesEntity entity = new InputFeaturesEntity();
         HashMap<String, Object> features = domain.getFeatures();
 
-        entity.setAge((Integer) features.get("age"));
+        entity.setAge(getIntegerFeature(features, "age"));
         entity.setGender((String) features.get("gender"));
         entity.setMaritalStatus((String) features.get("marital_status"));
         entity.setEducation((String) features.get("education"));
         entity.setEmploymentStatus((String) features.get("employment_status"));
+        entity.setEmploymentSeniorityYears(getIntegerFeature(features, "employment_seniority_years"));
+        entity.setIncomeType((String) features.get("income_type"));
         entity.setWorkSector((String) features.get("work_sector"));
-        entity.setNrDependants((Integer) features.get("nr_dependants"));
+        entity.setNrDependants(getIntegerFeature(features, "nr_dependants"));
         entity.setHomeOwnership((String) features.get("home_ownership"));
-        entity.setHasMortgage((Boolean) features.get("has_mortgage"));
-        entity.setAnnualIncome((Double) features.get("annual_income"));
+        entity.setHasMortgage(getBooleanFeature(features, "has_mortgage"));
+        entity.setAnnualIncome(getDoubleFeature(features, "annual_income"));
         entity.setLoanType((String) features.get("loan_type"));
         entity.setPurpose((String) features.get("purpose"));
-        entity.setRequestedAmount((Double) features.get("requested_amount"));
-        entity.setTermMonths((Integer) features.get("term_months"));
-        entity.setInterestRate((Double) features.get("interest_rate"));
-        entity.setLtv((Double) features.get("ltv"));
-        entity.setDti((Double) features.get("dti"));
-        entity.setPreviousLoansCount((Integer) features.get("previous_loans_count"));
-        entity.setPreviousDefaultsCount((Integer) features.get("previous_defaults_count"));
+        entity.setInterestRate(getDoubleFeature(features, "interest_rate"));
+        entity.setDti(getDoubleFeature(features, "dti"));
+        entity.setLti(getDoubleFeature(features, "lti"));
+        entity.setPreviousDefaultsCount(getIntegerFeature(features, "previous_defaults_count"));
+        entity.setProductType((String) features.get("product_type"));
+
+        // Loan fields mapping
+        Double requestedAmount = getDoubleFeature(features, "requested_amount");
+        Integer termMonths = getIntegerFeature(features, "term_months");
+        Integer previousLoansCount = getIntegerFeature(features, "previous_loans_count");
+        Double ltv = getDoubleFeature(features, "ltv");
+
+        if (requestedAmount != null || termMonths != null || previousLoansCount != null || ltv != null) {
+            LoanFieldsEntity loanFields = new LoanFieldsEntity();
+            loanFields.setRequestedAmount(requestedAmount);
+            loanFields.setTermMonths(termMonths);
+            loanFields.setPreviousLoansCount(previousLoansCount);
+            loanFields.setLtv(ltv);
+            entity.setLoanFields(loanFields);
+        }
+
+        // Credit Card fields mapping
+        Double requestedLimit = getDoubleFeature(features, "requested_limit");
+        Boolean isRevolving = getBooleanFeature(features, "is_revolving");
+        Integer previousCardsCount = getIntegerFeature(features, "previous_cards_count");
+        Double revolvingUtilizationRate = getDoubleFeature(features, "revolving_utilization_rate");
+
+        if (requestedLimit != null || isRevolving != null || previousCardsCount != null
+                || revolvingUtilizationRate != null) {
+            CreditCardFieldsEntity creditCardFields = new CreditCardFieldsEntity();
+            creditCardFields.setRequestedLimit(requestedLimit);
+            creditCardFields.setIsRevolving(isRevolving);
+            creditCardFields.setPreviousCardsCount(previousCardsCount);
+            creditCardFields.setRevolvingUtilizationRate(revolvingUtilizationRate);
+            entity.setCreditCardFields(creditCardFields);
+        }
 
         return entity;
     }
@@ -209,6 +259,7 @@ public class ScoringMapper {
         entity.setEad(domain.getExposureAtDefault());
         entity.setEcl(domain.getExpectedCalculatedLoss());
         entity.setRiskGrade(domain.getRiskLevel());
+        entity.setCreditLimitAssigned(domain.getCreditLimitAssigned());
         entity.setFinancialMetrics(unmapFinancialMetrics(domain.getFinancialMetrics()));
 
         return entity;
@@ -235,6 +286,7 @@ public class ScoringMapper {
                         feature.setFeatureName(e.getFeatureName());
                         feature.setFeatureValue(e.getFeatureValue() != null ? e.getFeatureValue() : "");
                         feature.setShapValue(e.getShapValue());
+                        feature.setDescription(e.getDescription());
                         return feature;
                     })
                     .collect(Collectors.toList());
@@ -280,5 +332,33 @@ public class ScoringMapper {
         if (value != null) {
             map.put(key, value);
         }
+    }
+
+    // --- Helper methods for safe casting ---
+
+    private Double getDoubleFeature(HashMap<String, Object> map, String key) {
+        Object val = map.get(key);
+        if (val instanceof Number) {
+            return ((Number) val).doubleValue();
+        }
+        return null;
+    }
+
+    private Integer getIntegerFeature(HashMap<String, Object> map, String key) {
+        Object val = map.get(key);
+        if (val instanceof Number) {
+            return ((Number) val).intValue();
+        }
+        return null;
+    }
+
+    private Boolean getBooleanFeature(HashMap<String, Object> map, String key) {
+        Object val = map.get(key);
+        if (val instanceof Boolean) {
+            return (Boolean) val;
+        } else if (val instanceof String) {
+            return Boolean.parseBoolean((String) val);
+        }
+        return null;
     }
 }

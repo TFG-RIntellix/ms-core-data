@@ -3,6 +3,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.mappers;
 import org.springframework.stereotype.Component;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDetailsDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Money;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 
 /**
@@ -30,6 +31,7 @@ public class RequestDetailsDTOMapper {
               requestDetailsDTO.setRequestDate(request.getCreationDate().toString());
               requestDetailsDTO.setRequestType(request.getRequestDetails().getRequestType().toString());
               requestDetailsDTO.setStatus(request.getRequestStatus().toString());
+
               requestDetailsDTO.setRequestedAmount(request.getRequestDetails().getRequestedAmount() != null
                             ? request.getRequestDetails().getRequestedAmount().toString()
                             : null);
@@ -49,10 +51,17 @@ public class RequestDetailsDTOMapper {
               requestDetailsDTO.setPartyIncome(
                             request.getParty().getPersonDetails().getFinancials().getAnnualIncome().toString());
 
-              // Map common fields (aligned with MongoDB schema)
-              requestDetailsDTO.setCurrency(request.getRequestDetails().getRequestedAmount() != null
-                            ? request.getRequestDetails().getRequestedAmount().getCurrency()
+              // Map creditCard fields
+              requestDetailsDTO.setRequestedCreditLimit(request.getRequestDetails().getCreditLimit() != null
+                            ? request.getRequestDetails().getCreditLimit().getAmount()
                             : null);
+              requestDetailsDTO.setIsRevolving(request.getRequestDetails().isRevolving());
+
+              // Map common fields
+              Money money = request.getRequestDetails().getRequestedAmount() != null
+                            ? request.getRequestDetails().getRequestedAmount()
+                            : request.getRequestDetails().getCreditLimit();
+              requestDetailsDTO.setCurrency(money != null ? money.getCurrency() : null);
               requestDetailsDTO.setLastReviewDate(request.getLastReviewDate() != null
                             ? request.getLastReviewDate().toString()
                             : null);

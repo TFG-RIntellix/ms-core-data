@@ -29,6 +29,9 @@ public class ResultsEntity {
     @Field("risk_grade")
     private String riskGrade;
 
+    @Field("credit_limit_assigned")
+    private Double creditLimitAssigned;
+
     @Field("financial_metrics")
     private FinancialMetricsEntity financialMetrics;
 
@@ -75,6 +78,14 @@ public class ResultsEntity {
 
     public void setRiskGrade(String riskGrade) {
         this.riskGrade = riskGrade;
+    }
+
+    public Double getCreditLimitAssigned() {
+        return creditLimitAssigned;
+    }
+
+    public void setCreditLimitAssigned(Double creditLimitAssigned) {
+        this.creditLimitAssigned = creditLimitAssigned;
     }
 
     public FinancialMetricsEntity getFinancialMetrics() {

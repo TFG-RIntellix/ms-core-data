@@ -21,6 +21,9 @@ public class TopFeatureEntity {
     @Field("shap_value")
     private Double shapValue;
 
+    @Field("description")
+    private String description;
+
     public TopFeatureEntity() {
     }
 
@@ -48,5 +51,13 @@ public class TopFeatureEntity {
 
     public void setShapValue(Double shapValue) {
         this.shapValue = shapValue;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

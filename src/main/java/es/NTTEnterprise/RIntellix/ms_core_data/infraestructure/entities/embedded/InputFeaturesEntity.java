@@ -29,6 +29,12 @@ public class InputFeaturesEntity {
     @Field("employment_status")
     private String employmentStatus;
 
+    @Field("employment_seniority_years")
+    private Integer employmentSeniorityYears;
+
+    @Field("income_type")
+    private String incomeType;
+
     @Field("work_sector")
     private String workSector;
 
@@ -50,26 +56,26 @@ public class InputFeaturesEntity {
     @Field("purpose")
     private String purpose;
 
-    @Field("requested_amount")
-    private Double requestedAmount;
-
-    @Field("term_months")
-    private Integer termMonths;
-
     @Field("interest_rate")
     private Double interestRate;
-
-    @Field("ltv")
-    private Double ltv;
 
     @Field("dti")
     private Double dti;
 
-    @Field("previous_loans_count")
-    private Integer previousLoansCount;
+    @Field("lti")
+    private Double lti;
 
     @Field("previous_defaults_count")
     private Integer previousDefaultsCount;
+
+    @Field("product_type")
+    private String productType;
+
+    @Field("credit_card_fields")
+    private CreditCardFieldsEntity creditCardFields;
+
+    @Field("loan_fields")
+    private LoanFieldsEntity loanFields;
 
     public InputFeaturesEntity() {
     }
@@ -114,6 +120,22 @@ public class InputFeaturesEntity {
 
     public void setEmploymentStatus(String employmentStatus) {
         this.employmentStatus = employmentStatus;
+    }
+
+    public Integer getEmploymentSeniorityYears() {
+        return employmentSeniorityYears;
+    }
+
+    public void setEmploymentSeniorityYears(Integer employmentSeniorityYears) {
+        this.employmentSeniorityYears = employmentSeniorityYears;
+    }
+
+    public String getIncomeType() {
+        return incomeType;
+    }
+
+    public void setIncomeType(String incomeType) {
+        this.incomeType = incomeType;
     }
 
     public String getWorkSector() {
@@ -172,36 +194,12 @@ public class InputFeaturesEntity {
         this.purpose = purpose;
     }
 
-    public Double getRequestedAmount() {
-        return requestedAmount;
-    }
-
-    public void setRequestedAmount(Double requestedAmount) {
-        this.requestedAmount = requestedAmount;
-    }
-
-    public Integer getTermMonths() {
-        return termMonths;
-    }
-
-    public void setTermMonths(Integer termMonths) {
-        this.termMonths = termMonths;
-    }
-
     public Double getInterestRate() {
         return interestRate;
     }
 
     public void setInterestRate(Double interestRate) {
         this.interestRate = interestRate;
-    }
-
-    public Double getLtv() {
-        return ltv;
-    }
-
-    public void setLtv(Double ltv) {
-        this.ltv = ltv;
     }
 
     public Double getDti() {
@@ -212,12 +210,12 @@ public class InputFeaturesEntity {
         this.dti = dti;
     }
 
-    public Integer getPreviousLoansCount() {
-        return previousLoansCount;
+    public Double getLti() {
+        return lti;
     }
 
-    public void setPreviousLoansCount(Integer previousLoansCount) {
-        this.previousLoansCount = previousLoansCount;
+    public void setLti(Double lti) {
+        this.lti = lti;
     }
 
     public Integer getPreviousDefaultsCount() {
@@ -226,5 +224,29 @@ public class InputFeaturesEntity {
 
     public void setPreviousDefaultsCount(Integer previousDefaultsCount) {
         this.previousDefaultsCount = previousDefaultsCount;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public void setProductType(String productType) {
+        this.productType = productType;
+    }
+
+    public CreditCardFieldsEntity getCreditCardFields() {
+        return creditCardFields;
+    }
+
+    public void setCreditCardFields(CreditCardFieldsEntity creditCardFields) {
+        this.creditCardFields = creditCardFields;
+    }
+
+    public LoanFieldsEntity getLoanFields() {
+        return loanFields;
+    }
+
+    public void setLoanFields(LoanFieldsEntity loanFields) {
+        this.loanFields = loanFields;
     }
 }

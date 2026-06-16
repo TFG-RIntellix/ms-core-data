@@ -59,6 +59,8 @@ public class ScoringConsumerService implements ScoringConsumerPortService {
                 scoring.getResults().getProbabilityOfDefault(),
                 scoring.getResults().getLossGivenDefault());
 
+        log.info(scoring.toString());
+
         Scoring persistedScoring = scoringPortRepository.save(scoring);
 
         log.info(LogMessage.SERVICE_SCORING_CONSUMER_COMPLETE, requestId,
