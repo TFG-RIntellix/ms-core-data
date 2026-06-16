@@ -38,7 +38,7 @@ public class RiskResultsDTO {
 
     @JsonProperty("riskLevel")
     @NotBlank(message = "Risk grade cannot be blank")
-    @ValidRiskGrade(message = "Risk grade must be one of the valid values (A, B, C, D, E, F)")
+    @ValidRiskGrade(message = "Risk grade must be one of the valid values (A, B, C, D, E, F, G, H)")
     private String riskGrade;
 
     @JsonProperty("financialMetrics")
@@ -59,7 +59,7 @@ public class RiskResultsDTO {
      * @param lgd       Loss Given Default (0-1)
      * @param ead       Exposure at Default
      * @param ecl       Expected Credit Loss as String (will be converted to Double)
-     * @param riskGrade Risk grade classification (A-F)
+     * @param riskGrade Risk grade classification (A-H)
      */
     public RiskResultsDTO(String pd, Double lgd, Double ead, String ecl, String riskGrade) {
         this.pd = pd;

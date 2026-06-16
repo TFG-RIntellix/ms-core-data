@@ -70,29 +70,35 @@ public class ScoringConsumerMessageMapper {
         }
 
         HashMap<String, Object> features = new HashMap<>();
+        // Common features across loans and credit cards.
         features.put("age", dto.getAge());
-        features.put("gender", normalizeGender(dto.getGender()));
-        features.put("marital_status", normalizeMaritalStatus(dto.getMaritalStatus()));
-        features.put("education", normalizeEducation(dto.getEducation()));
-        features.put("employment_status", normalizeEmploymentStatus(dto.getEmploymentStatus()));
-        features.put("work_sector", dto.getWorkSector());
+        features.put("gender", normalizeValue(dto.getGender()));
+        features.put("marital_status", normalizeValue(dto.getMaritalStatus()));
+        features.put("employment_status", normalizeValue(dto.getEmploymentStatus()));
         features.put("nr_dependants", dto.getNrDependants());
-        features.put("home_ownership", normalizeHomeOwnership(dto.getHomeOwnership()));
+        features.put("home_ownership", normalizeValue(dto.getHomeOwnership()));
         features.put("has_mortgage", normalizeMortgage(dto.getHasMortgage()));
         features.put("annual_income", dto.getAnnualIncome());
+        features.put("interest_rate", dto.getInterestRate());
+        features.put("dti", dto.getDti());
+        features.put("previous_defaults_count", dto.getPreviousDefaultsCount());
+        features.put("income_type", normalizeValue(dto.getIncomeType()));
 
         // Use the loan type from the PersistScoring message as the Mongo request type.
         features.put("loan_type", normalizeRequestType(dto.getLoanType()));
-
+        features.put("education", normalizeValue(dto.getEducation()));
+        features.put("work_sector", dto.getWorkSector());
         features.put("purpose", dto.getPurpose());
         features.put("requested_amount", dto.getRequestedAmount());
         features.put("term_months", dto.getTermMonths());
-        features.put("interest_rate", dto.getInterestRate());
         features.put("ltv", dto.getLtv());
-        features.put("dti", dto.getDti());
         features.put("previous_loans_count", dto.getPreviousLoansCount());
-        features.put("previous_defaults_count", dto.getPreviousDefaultsCount());
 
+        // Credit card specific features
+        features.put("employment_seniority_years", dto.getEmploymentSeniorityYears());
+        features.put("lti", dto.getLti());
+        features.put("requested_limit", dto.getCreditLimit());
+        features.put("is_revolving", mapIsRevolving(dto.getIsRevolving()));
         return new ModelInputs(features);
     }
 
@@ -205,68 +211,12 @@ public class ScoringConsumerMessageMapper {
     }
 
     /**
-     * Normalizes gender value to uppercase format expected by MongoDB schema.
+     * Normalizes input values to uppercase format expected by MongoDB schema.
      * 
-     * @param value the raw gender value from Kafka message
-     * @return normalized uppercase gender value, or original if null
+     * @param value the raw input value from Kafka message
+     * @return normalized uppercase input value, or original if null
      */
-    private static String normalizeGender(String value) {
-        if (value == null) {
-            return null;
-        }
-        return value.toUpperCase();
-    }
-
-    /**
-     * Normalizes marital status value to uppercase format expected by MongoDB
-     * schema.
-     * 
-     * @param value the raw marital status from Kafka message
-     * @return normalized uppercase marital status value, or original if null
-     */
-    private static String normalizeMaritalStatus(String value) {
-        if (value == null) {
-            return null;
-        }
-        return value.toUpperCase();
-    }
-
-    /**
-     * Normalizes education level value to uppercase format expected by MongoDB
-     * schema.
-     * 
-     * @param value the raw education level from Kafka message
-     * @return normalized uppercase education value, or original if null
-     */
-    private static String normalizeEducation(String value) {
-        if (value == null) {
-            return null;
-        }
-        return value.toUpperCase();
-    }
-
-    /**
-     * Normalizes employment status value to uppercase format expected by MongoDB
-     * schema.
-     * 
-     * @param value the raw employment status from Kafka message
-     * @return normalized uppercase employment status value, or original if null
-     */
-    private static String normalizeEmploymentStatus(String value) {
-        if (value == null) {
-            return null;
-        }
-        return value.toUpperCase();
-    }
-
-    /**
-     * Normalizes home ownership value to uppercase format expected by MongoDB
-     * schema.
-     * 
-     * @param value the raw home ownership from Kafka message
-     * @return normalized uppercase home ownership value, or original if null
-     */
-    private static String normalizeHomeOwnership(String value) {
+    private static String normalizeValue(String value) {
         if (value == null) {
             return null;
         }
@@ -312,5 +262,16 @@ public class ScoringConsumerMessageMapper {
             return null;
         }
         return value.toUpperCase().replace(" ", "_");
+    }
+
+    private static Boolean mapIsRevolving(String value) {
+        if (value == null) {
+            return null;
+        }
+        if (value.equals("Si")) {
+            return Boolean.TRUE;
+        } else {
+            return Boolean.FALSE;
+        }
     }
 }

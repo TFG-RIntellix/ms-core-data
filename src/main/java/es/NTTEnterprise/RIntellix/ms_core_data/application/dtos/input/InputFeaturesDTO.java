@@ -81,6 +81,23 @@ public class InputFeaturesDTO {
     @JsonProperty("previousDefaultsCount")
     private Integer previousDefaultsCount;
 
+    @JsonProperty("incomeType")
+    private String incomeType;
+
+    @JsonProperty("employmentSeniorityYears")
+    private Integer employmentSeniorityYears;
+
+    @JsonProperty("lti")
+    @ValidPercentage(message = "LTI must be between 0 and 1")
+    private Double lti;
+
+    @JsonProperty("creditLimit")
+    @NonNegativeAmount(message = "Credit limit cannot be negative")
+    private Double creditLimit;
+
+    @JsonProperty("isRevolving")
+    private String isRevolving;
+
     /**
      * Default constructor for InputFeaturesDTO.
      */
@@ -239,5 +256,45 @@ public class InputFeaturesDTO {
 
     public void setPreviousDefaultsCount(Integer previousDefaultsCount) {
         this.previousDefaultsCount = previousDefaultsCount;
+    }
+
+    public String getIncomeType() {
+        return incomeType;
+    }
+
+    public void setIncomeType(String incomeType) {
+        this.incomeType = incomeType;
+    }
+
+    public Integer getEmploymentSeniorityYears() {
+        return employmentSeniorityYears;
+    }
+
+    public void setEmploymentSeniorityYears(Integer employmentSeniorityYears) {
+        this.employmentSeniorityYears = employmentSeniorityYears;
+    }
+
+    public Double getLti() {
+        return lti;
+    }
+
+    public void setLti(Double lti) {
+        this.lti = lti;
+    }
+
+    public Double getCreditLimit() {
+        return creditLimit;
+    }
+
+    public void setCreditLimit(Double creditLimit) {
+        this.creditLimit = creditLimit;
+    }
+
+    public String getIsRevolving() {
+        return isRevolving;
+    }
+
+    public void setIsRevolving(String isRevolving) {
+        this.isRevolving = isRevolving;
     }
 }

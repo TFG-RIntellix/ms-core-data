@@ -22,7 +22,7 @@ import jakarta.validation.Payload;
 @Constraint(validatedBy = ValidRiskGradeValidator.class)
 public @interface ValidRiskGrade {
 
-    String message() default "Risk grade must be one of the valid values (A, B, C, D, E, F)";
+    String message() default "Risk grade must be one of the valid values (A, B, C, D, E, F, G, H)";
 
     Class<?>[] groups() default {};
 

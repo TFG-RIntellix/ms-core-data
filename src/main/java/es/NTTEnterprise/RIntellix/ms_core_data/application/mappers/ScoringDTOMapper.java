@@ -3,6 +3,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.mappers;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -41,8 +42,11 @@ public class ScoringDTOMapper {
         dto.setModelVersion(scoring.getModelVersion());
         dto.setScoringDate(DATE_FORMAT.format(scoring.getExecutionDate()));
 
-        // Input features (already a HashMap in domain)
-        dto.setInputFeatures(scoring.getInputSnapshot().getFeatures());
+        // Input features (already a HashMap in domain) and remapping of isRevolving
+        // field to "Si"/"No"
+        Map<String, Object> inputFeatures = scoring.getInputSnapshot().getFeatures();
+        inputFeatures.put("is_revolving", inputFeatures.get("is_revolving").equals(true) ? "Si" : "No");
+        dto.setInputFeatures(inputFeatures);
 
         // Risk metrics
         dto.setPd(scoring.getResults().getProbabilityOfDefault());

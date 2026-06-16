@@ -39,5 +39,15 @@ public enum RiskGrade {
     /**
      * Grade F - Highest risk, very poor or unacceptable creditworthiness.
      */
-    F
+    F,
+
+    /**
+     * Grade G - Very high risk, extremely poor creditworthiness.
+     */
+    G,
+
+    /**
+     * Grade H - Extremely high risk, extremely poor creditworthiness.
+     */
+    H
 }

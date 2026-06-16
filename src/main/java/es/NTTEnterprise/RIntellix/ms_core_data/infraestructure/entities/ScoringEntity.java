@@ -7,6 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.InputFeaturesEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.ResultsEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.XaiEntity;
@@ -20,6 +22,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded
  * @Date 03-03-2026
  */
 @Document(collection = "scorings")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ScoringEntity {
 
     @Id

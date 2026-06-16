@@ -21,6 +21,7 @@ public class RiskMetrics {
     private Double exposureAtDefault;
     private Double expectedCalculatedLoss;
     private String riskLevel;
+    private Double creditLimitAssigned;
     private FinancialMetrics financialMetrics;
 
     /**
@@ -57,6 +58,16 @@ public class RiskMetrics {
         this.riskLevel = riskLevel;
     }
 
+    public RiskMetrics(Double probabilityOfDefault, Double lossGivenDefault, Double exposureAtDefault,
+            Double expectedCalculatedLoss, String riskLevel, Double creditLimitAssigned) {
+        this.probabilityOfDefault = probabilityOfDefault;
+        this.lossGivenDefault = lossGivenDefault;
+        this.exposureAtDefault = exposureAtDefault;
+        this.expectedCalculatedLoss = expectedCalculatedLoss;
+        this.riskLevel = riskLevel;
+        this.creditLimitAssigned = creditLimitAssigned;
+    }
+
     /**
      * Parameterized constructor for RiskMetrics with financial metrics.
      * Allows setting all fields including financial metrics.
@@ -86,6 +97,17 @@ public class RiskMetrics {
         this.exposureAtDefault = exposureAtDefault;
         this.expectedCalculatedLoss = expectedCalculatedLoss;
         this.riskLevel = riskLevel;
+        this.financialMetrics = financialMetrics;
+    }
+
+    public RiskMetrics(Double probabilityOfDefault, Double lossGivenDefault, Double exposureAtDefault,
+            Double expectedCalculatedLoss, String riskLevel, Double creditLimitAssigned, FinancialMetrics financialMetrics) {
+        this.probabilityOfDefault = probabilityOfDefault;
+        this.lossGivenDefault = lossGivenDefault;
+        this.exposureAtDefault = exposureAtDefault;
+        this.expectedCalculatedLoss = expectedCalculatedLoss;
+        this.riskLevel = riskLevel;
+        this.creditLimitAssigned = creditLimitAssigned;
         this.financialMetrics = financialMetrics;
     }
 
@@ -131,6 +153,14 @@ public class RiskMetrics {
         this.riskLevel = riskLevel;
     }
 
+    public Double getCreditLimitAssigned() {
+        return creditLimitAssigned;
+    }
+
+    public void setCreditLimitAssigned(Double creditLimitAssigned) {
+        this.creditLimitAssigned = creditLimitAssigned;
+    }
+
     public FinancialMetrics getFinancialMetrics() {
         return financialMetrics;
     }
@@ -144,7 +174,7 @@ public class RiskMetrics {
     public String toString() {
         return "RiskMetrics [probabilityOfDefault=" + probabilityOfDefault + ", lossGivenDefault=" + lossGivenDefault
                 + ", exposureAtDefault=" + exposureAtDefault + ", expectedCalculatedLoss=" + expectedCalculatedLoss
-                + ", riskLevel=" + riskLevel + ", financialMetrics=" + financialMetrics + "]";
+                + ", riskLevel=" + riskLevel + ", creditLimitAssigned=" + creditLimitAssigned + ", financialMetrics=" + financialMetrics + "]";
     }
 
     @Override
@@ -156,6 +186,7 @@ public class RiskMetrics {
         result = prime * result + ((exposureAtDefault == null) ? 0 : exposureAtDefault.hashCode());
         result = prime * result + ((expectedCalculatedLoss == null) ? 0 : expectedCalculatedLoss.hashCode());
         result = prime * result + ((riskLevel == null) ? 0 : riskLevel.hashCode());
+        result = prime * result + ((creditLimitAssigned == null) ? 0 : creditLimitAssigned.hashCode());
         result = prime * result + ((financialMetrics == null) ? 0 : financialMetrics.hashCode());
         return result;
     }
@@ -193,6 +224,11 @@ public class RiskMetrics {
             if (other.riskLevel != null)
                 return false;
         } else if (!riskLevel.equals(other.riskLevel))
+            return false;
+        if (creditLimitAssigned == null) {
+            if (other.creditLimitAssigned != null)
+                return false;
+        } else if (!creditLimitAssigned.equals(other.creditLimitAssigned))
             return false;
         if (financialMetrics == null) {
             if (other.financialMetrics != null)
