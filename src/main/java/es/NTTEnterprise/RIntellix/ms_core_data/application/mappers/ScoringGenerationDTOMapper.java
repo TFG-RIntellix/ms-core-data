@@ -3,7 +3,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.mappers;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.stereotype.Component;
+
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringGenerationRequest;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.FinancialProfile;
@@ -29,7 +29,6 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.SocioDemographicP
  * @author Lucia Fernandez Mancebo
  * @Date 03-22-2026
  */
-@Component
 public class ScoringGenerationDTOMapper {
 
     private static final Map<String, String> INCOME_TYPE_MAPPING = new HashMap<>();

@@ -123,6 +123,7 @@ public class ScoringMapper {
         putIfNotNull(features, "purpose", entity.getPurpose());
         putIfNotNull(features, "interest_rate", entity.getInterestRate());
         putIfNotNull(features, "dti", entity.getDti());
+        putIfNotNull(features, "existing_obligations", entity.getExistingObligations());
         putIfNotNull(features, "lti", entity.getLti());
         putIfNotNull(features, "previous_defaults_count", entity.getPreviousDefaultsCount());
         putIfNotNull(features, "product_type", entity.getProductType());
@@ -207,6 +208,7 @@ public class ScoringMapper {
         entity.setPurpose((String) features.get("purpose"));
         entity.setInterestRate(getDoubleFeature(features, "interest_rate"));
         entity.setDti(getDoubleFeature(features, "dti"));
+        entity.setExistingObligations(getDoubleFeature(features, "existing_obligations"));
         entity.setLti(getDoubleFeature(features, "lti"));
         entity.setPreviousDefaultsCount(getIntegerFeature(features, "previous_defaults_count"));
         entity.setProductType((String) features.get("product_type"));

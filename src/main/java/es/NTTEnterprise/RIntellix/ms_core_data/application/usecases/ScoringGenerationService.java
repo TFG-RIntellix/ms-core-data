@@ -4,8 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
+
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringGenerationRequest;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringGenerationDTOMapper;
@@ -43,7 +42,6 @@ import lombok.extern.slf4j.Slf4j;
  * @Date 03-22-2026
  */
 @Slf4j
-@Service
 public class ScoringGenerationService {
 
     private static final String HARD_CUTOFF_MODEL_VERSION = "RULE_ENGINE_v1";
@@ -87,7 +85,7 @@ public class ScoringGenerationService {
      *
      * @param request the request entity for which scoring should be generated
      */
-    @Async
+
     public void generateScoring(Request request) {
         try {
             log.debug(LogMessage.SERVICE_SCORING_GENERATION_START, request.getId());

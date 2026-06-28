@@ -5,6 +5,7 @@ import java.util.Objects;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringGenerationRequest;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.output.ScoringTransportStrategy;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestType;
+import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 
 /**
  * Factory for creating appropriate scoring transport strategies based on
@@ -25,7 +26,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestType;
 public abstract class ScoringTransportStrategyFactory {
 
     private ScoringTransportStrategyFactory() {
-        throw new UnsupportedOperationException("Never instantiate");
+        throw new UnsupportedOperationException(LogMessage.EXCEPTION_MAPPER_NEVER_INSTANTIATE);
     }
 
     /**

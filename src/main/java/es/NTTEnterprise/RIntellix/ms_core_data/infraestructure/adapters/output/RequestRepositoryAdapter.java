@@ -56,7 +56,7 @@ public class RequestRepositoryAdapter implements RequestPortRepository {
 
         if (requestEntityOpt.isEmpty()) {
             log.warn(LogMessage.REPOSITORY_FIND_BY_ID_NOT_FOUND, requestId);
-            throw new EntityNotFoundException("Request with ID " + requestId + " not found");
+            throw new EntityNotFoundException(String.format(LogMessage.EXCEPTION_REQUEST_NOT_FOUND, requestId));
         }
 
         log.debug(LogMessage.REPOSITORY_FIND_BY_ID_FOUND, requestId);

@@ -47,7 +47,7 @@ public class SimulationRepositoryAdapter implements SimulationPortRepository {
 
         if (entityOpt.isEmpty()) {
             log.warn(LogMessage.REPOSITORY_SIMULATION_FIND_BY_ID_NOT_FOUND, simulationId);
-            throw new EntityNotFoundException("Simulation with ID " + simulationId + " not found");
+            throw new EntityNotFoundException(String.format(LogMessage.EXCEPTION_SIMULATION_NOT_FOUND, simulationId));
         }
 
         log.debug(LogMessage.REPOSITORY_SIMULATION_FIND_BY_ID_FOUND, simulationId);
@@ -91,7 +91,7 @@ public class SimulationRepositoryAdapter implements SimulationPortRepository {
 
         if (entityOpt.isEmpty()) {
             log.warn(LogMessage.REPOSITORY_SIMULATION_DELETE_NOT_FOUND, simulationId);
-            throw new EntityNotFoundException("Simulation with ID " + simulationId + " not found");
+            throw new EntityNotFoundException(String.format(LogMessage.EXCEPTION_SIMULATION_NOT_FOUND, simulationId));
         }
 
         SimulationEntity entity = entityOpt.get();

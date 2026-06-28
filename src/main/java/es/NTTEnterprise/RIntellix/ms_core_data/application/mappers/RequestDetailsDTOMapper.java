@@ -1,6 +1,6 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.mappers;
 
-import org.springframework.stereotype.Component;
+
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Money;
@@ -16,7 +16,6 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
  * @author Lucía Fernández Mancebo
  * @Date 02-28-2026
  */
-@Component
 public class RequestDetailsDTOMapper {
 
        /**

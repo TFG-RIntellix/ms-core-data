@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.stereotype.Service;
+
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ArchiveSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CalculatedSimulationDTO;
@@ -38,7 +38,6 @@ import lombok.extern.slf4j.Slf4j;
  * @Date 03-03-2026
  */
 @Slf4j
-@Service
 public class SimulationApplicationService implements SimulationPortService {
 
     private static final String INVALID_SIMULATION_ID_MESSAGE = "Simulation ID cannot be null or empty";

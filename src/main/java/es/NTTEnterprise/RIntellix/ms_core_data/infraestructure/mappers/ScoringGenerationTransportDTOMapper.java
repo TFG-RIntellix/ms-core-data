@@ -2,6 +2,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.mappers;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringGenerationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringGenerationRequest;
+import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 
 /**
  * Infrastructure mapper for transforming domain scoring generation request
@@ -17,7 +18,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringGe
 public class ScoringGenerationTransportDTOMapper {
 
     private ScoringGenerationTransportDTOMapper() {
-        throw new UnsupportedOperationException("Never instantiate");
+        throw new UnsupportedOperationException(LogMessage.EXCEPTION_MAPPER_NEVER_INSTANTIATE);
     }
 
     /**

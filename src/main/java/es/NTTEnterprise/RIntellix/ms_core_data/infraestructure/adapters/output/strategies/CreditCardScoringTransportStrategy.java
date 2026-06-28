@@ -1,8 +1,5 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.output.strategies;
 
-import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreditCardScoringGenerationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringGenerationRequest;
@@ -30,8 +27,6 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.mappers.CreditCar
  */
 public class CreditCardScoringTransportStrategy implements ScoringTransportStrategy {
 
-        private static final String HEADER_REQUEST_ID = "X-Request-ID";
-        private static final String HEADER_TIMESTAMP = "X-Timestamp";
 
         /**
          * Constructs the strategy (stateless).
@@ -39,23 +34,12 @@ public class CreditCardScoringTransportStrategy implements ScoringTransportStrat
         public CreditCardScoringTransportStrategy() {
         }
 
-        @Override
-        public Message<?> buildScoreGenerationMessage(ScoringGenerationRequest scoringGenerationRequest,
-                        String kafkaTopic) {
+        public Object buildScoreGenerationPayload(ScoringGenerationRequest scoringGenerationRequest) {
                 // Map domain entity to credit card transport DTO with focused fields
                 CreditCardScoringGenerationDTO creditCardDTO = CreditCardScoringGenerationTransportDTOMapper
                                 .toTransportDTO(scoringGenerationRequest);
 
-                // Build Kafka message with headers for tracking and routing
-                Message<CreditCardScoringGenerationDTO> message = MessageBuilder
-                                .withPayload(creditCardDTO)
-                                .setHeader(KafkaHeaders.TOPIC, kafkaTopic)
-                                .setHeader(KafkaHeaders.KEY, creditCardDTO.getRequestId())
-                                .setHeader(HEADER_REQUEST_ID, creditCardDTO.getRequestId())
-                                .setHeader(HEADER_TIMESTAMP, System.currentTimeMillis())
-                                .build();
-
-                return message;
+                return creditCardDTO;
         }
 
 }

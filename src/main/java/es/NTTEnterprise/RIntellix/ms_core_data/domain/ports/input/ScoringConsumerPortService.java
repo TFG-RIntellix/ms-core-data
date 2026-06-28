@@ -2,7 +2,6 @@ package es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringResultMessageDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.ScoringValidationException;
 
 /**
  * Input port for Kafka scoring consumer processing operations.
@@ -21,7 +20,6 @@ public interface ScoringConsumerPortService {
      * 
      * @param dto the scoring consumer message DTO from Kafka
      * @return the persisted scoring domain entity
-     * @throws ScoringValidationException if the message fails validation
      */
-    Scoring processScoringMessage(ScoringResultMessageDTO dto) throws ScoringValidationException;
+    Scoring processScoringMessage(ScoringResultMessageDTO dto);
 }

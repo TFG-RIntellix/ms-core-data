@@ -62,6 +62,9 @@ public class InputFeaturesEntity {
     @Field("dti")
     private Double dti;
 
+    @Field("existing_obligations")
+    private Double existingObligations;
+
     @Field("lti")
     private Double lti;
 
@@ -208,6 +211,14 @@ public class InputFeaturesEntity {
 
     public void setDti(Double dti) {
         this.dti = dti;
+    }
+
+    public Double getExistingObligations() {
+        return existingObligations;
+    }
+
+    public void setExistingObligations(Double existingObligations) {
+        this.existingObligations = existingObligations;
     }
 
     public Double getLti() {

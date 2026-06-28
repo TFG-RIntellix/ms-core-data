@@ -49,7 +49,7 @@ public class PartyRepositoryAdapter implements PartyPortRepository {
 
         if (partyEntityOpt.isEmpty()) {
             log.warn(LogMessage.REPOSITORY_PARTY_FIND_BY_ID_NOT_FOUND, partyId);
-            throw new EntityNotFoundException("Party with ID " + partyId + " not found");
+            throw new EntityNotFoundException(String.format(LogMessage.EXCEPTION_PARTY_NOT_FOUND, partyId));
         }
 
         log.debug(LogMessage.REPOSITORY_PARTY_FIND_BY_ID_FOUND, partyId);

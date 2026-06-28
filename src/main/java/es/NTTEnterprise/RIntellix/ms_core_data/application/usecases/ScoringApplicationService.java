@@ -2,7 +2,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 
 import java.util.Objects;
 
-import org.springframework.stereotype.Service;
+
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringDTOMapper;
@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
  * @Date 03-03-2026
  */
 @Slf4j
-@Service
 public class ScoringApplicationService implements ScoringPortService {
 
     private static final String INVALID_REQUEST_ID_MESSAGE = "Request ID cannot be null or empty";

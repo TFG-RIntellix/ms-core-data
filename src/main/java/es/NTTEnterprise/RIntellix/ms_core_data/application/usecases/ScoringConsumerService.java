@@ -2,8 +2,6 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 
 import java.util.Objects;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringResultMessageDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringConsumerMessageMapper;
@@ -22,8 +20,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author Lucía Fernández Mancebo
  * @Date 03-21-2026
  */
-@Service
-@Transactional
 @Slf4j
 public class ScoringConsumerService implements ScoringConsumerPortService {
 

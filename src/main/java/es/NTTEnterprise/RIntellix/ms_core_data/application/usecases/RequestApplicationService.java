@@ -3,14 +3,11 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.stereotype.Service;
-
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestDetailsDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestSummaryDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Person;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input.RequestPortService;
@@ -34,10 +31,7 @@ import lombok.extern.slf4j.Slf4j;
  * @Date 02-28-2026
  */
 @Slf4j
-@Service
 public class RequestApplicationService implements RequestPortService {
-
-    private static final String INVALID_REQUEST_ID_MESSAGE = "Request ID cannot be null or empty";
 
     private final RequestPortRepository requestPortRepository;
     private final PartyPortRepository partyPortRepository;
@@ -87,7 +81,7 @@ public class RequestApplicationService implements RequestPortService {
 
         if (requestId == null || requestId.isBlank()) {
             log.warn(LogMessage.SERVICE_GET_DETAILS_VALIDATION_ERROR);
-            throw new IllegalArgumentException(INVALID_REQUEST_ID_MESSAGE);
+            throw new IllegalArgumentException(LogMessage.EXCEPTION_INVALID_REQUEST_ID);
         }
 
         Request request = requestPortRepository.findById(requestId);

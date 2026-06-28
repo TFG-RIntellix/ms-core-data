@@ -12,6 +12,8 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringGe
 import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.output.ScoringGenerationPort;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.output.ScoringTransportStrategy;
 import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.output.strategies.ScoringTransportStrategyFactory;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.support.MessageBuilder;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import lombok.extern.slf4j.Slf4j;
 
@@ -74,8 +76,17 @@ public class ScoringKafkaProducer implements ScoringGenerationPort {
             ScoringTransportStrategy strategy = ScoringTransportStrategyFactory
                     .createStrategy(scoringGenerationRequest);
 
-            // Build message using the strategy
-            Message<?> message = strategy.buildScoreGenerationMessage(scoringGenerationRequest, generationTopic);
+            // Build payload using the strategy
+            Object payload = strategy.buildScoreGenerationPayload(scoringGenerationRequest);
+
+            // Build message with payload and headers
+            Message<?> message = MessageBuilder
+                    .withPayload(payload)
+                    .setHeader(KafkaHeaders.TOPIC, generationTopic)
+                    .setHeader(KafkaHeaders.KEY, scoringGenerationRequest.getRequestId())
+                    .setHeader(HEADER_REQUEST_ID, scoringGenerationRequest.getRequestId())
+                    .setHeader(HEADER_TIMESTAMP, System.currentTimeMillis())
+                    .build();
 
             // Publish to Kafka
             kafkaTemplate.send(message);

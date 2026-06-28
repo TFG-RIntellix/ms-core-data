@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Component;
+
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.TopFeatureDTO;
@@ -20,7 +20,6 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026
  */
-@Component
 public class ScoringDTOMapper {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -45,7 +44,7 @@ public class ScoringDTOMapper {
         // Input features (already a HashMap in domain) and remapping of isRevolving
         // field to "Si"/"No"
         Map<String, Object> inputFeatures = scoring.getInputSnapshot().getFeatures();
-        inputFeatures.put("is_revolving", inputFeatures.get("is_revolving").equals(true) ? "Si" : "No");
+        inputFeatures.put("is_revolving", Boolean.TRUE.equals(inputFeatures.get("is_revolving")) ? "Si" : "No");
         dto.setInputFeatures(inputFeatures);
 
         // Risk metrics

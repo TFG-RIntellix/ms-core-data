@@ -2,7 +2,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.mappers;
 
 import java.text.SimpleDateFormat;
 
-import org.springframework.stereotype.Component;
+
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationSummaryDTO;
@@ -17,7 +17,6 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Simulation;
  * @author Lucía Fernández Mancebo
  * @Date 03-03-2026
  */
-@Component
 public class SimulationDTOMapper {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");

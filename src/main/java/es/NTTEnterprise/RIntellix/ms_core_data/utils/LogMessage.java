@@ -231,6 +231,15 @@ public final class LogMessage {
     public static final String EXCEPTION_ENTITY_NOT_FOUND = "Entity not found - Type: {} - ID: [{}]";
     public static final String EXCEPTION_ILLEGAL_ARGUMENT = "Illegal argument: {}";
     public static final String EXCEPTION_UNEXPECTED = "Unexpected exception occurred: {}";
+    
+    public static final String EXCEPTION_SIMULATION_NOT_FOUND = "Simulation with ID %s not found";
+    public static final String EXCEPTION_REQUEST_NOT_FOUND = "Request with ID %s not found";
+    public static final String EXCEPTION_PARTY_NOT_FOUND = "Party with ID %s not found";
+    public static final String EXCEPTION_INVALID_REQUEST_ID = "Request ID cannot be null or empty";
+    public static final String EXCEPTION_REQUEST_TYPE_NULL = "RequestType value cannot be null";
+    public static final String EXCEPTION_REQUEST_TYPE_UNKNOWN = "Unknown RequestType value: %s";
+    public static final String EXCEPTION_MONEY_CURRENCY_MISMATCH = "Cannot add Money with different currencies";
+    public static final String EXCEPTION_MAPPER_NEVER_INSTANTIATE = "Never instantiate";
 
     // ============================================================
     // APPLICATION LIFECYCLE

@@ -14,6 +14,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.ModelInputs;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskFeature;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskMetrics;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
+import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 
 /**
  * Static mapper for converting Kafka scoring consumer message DTOs to domain
@@ -28,7 +29,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
 public class ScoringConsumerMessageMapper {
 
     private ScoringConsumerMessageMapper() {
-        throw new UnsupportedOperationException("Never instantiate");
+        throw new UnsupportedOperationException(LogMessage.EXCEPTION_MAPPER_NEVER_INSTANTIATE);
     }
 
     /**
