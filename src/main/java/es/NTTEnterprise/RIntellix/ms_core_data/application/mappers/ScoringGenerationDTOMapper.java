@@ -1,16 +1,13 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.mappers;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringGenerationRequest;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Contract;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.FinancialProfile;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Money;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.MortgageContract;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Person;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
@@ -82,7 +79,7 @@ public class ScoringGenerationDTOMapper {
         scoringGenerationRequest.setEducation(demographics.getEducation().toString());
         scoringGenerationRequest.setDependents(demographics.getNrDependants());
         scoringGenerationRequest.setHomeOwnership(demographics.getHomeOwnership().toString());
-        scoringGenerationRequest.setHasMortgage(hasMortgageInContracts(person.getActiveContracts()));
+        scoringGenerationRequest.setHasMortgage(person.getFinancials() != null && Boolean.TRUE.equals(person.getFinancials().getHasMortage()));
     }
 
     private void mapFinancialFeatures(Person person, ScoringGenerationRequest scoringGenerationRequest) {
@@ -100,6 +97,10 @@ public class ScoringGenerationDTOMapper {
 
         scoringGenerationRequest.setPreviousLoansCount(financials.getPreviousLoansCount());
         scoringGenerationRequest.setPreviousDefaultsCount(financials.getPreviousDefaultsCount());
+
+        if (financials != null) {
+            scoringGenerationRequest.setExistingObligations(financials.getExistingObligations());
+        }
 
         // DTI calculated from all active contracts and income
         scoringGenerationRequest.setDti(person.getGlobalDTI());
@@ -139,13 +140,6 @@ public class ScoringGenerationDTOMapper {
             scoringGenerationRequest.setLti(lti);
         }
 
-    }
-
-    private boolean hasMortgageInContracts(List<Contract> contracts) {
-        if (contracts == null || contracts.isEmpty()) {
-            return false;
-        }
-        return contracts.stream().anyMatch(contract -> contract instanceof MortgageContract);
     }
 
     public String calculateIncomeType(String employmentStatus) {

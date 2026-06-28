@@ -50,6 +50,7 @@ public class ScoringGenerationTransportDTOMapper {
         scoringGenerationDTO.setEmploymentStatus(scoringGenerationRequest.getEmploymentStatus());
         scoringGenerationDTO.setOccupationSector(scoringGenerationRequest.getOccupationSector());
         scoringGenerationDTO.setAnnualIncome(scoringGenerationRequest.getAnnualIncome());
+        scoringGenerationDTO.setExistingObligations(scoringGenerationRequest.getExistingObligations());
         scoringGenerationDTO.setRequestType(scoringGenerationRequest.getRequestType());
         scoringGenerationDTO.setPurpose(scoringGenerationRequest.getPurpose());
         scoringGenerationDTO.setLoanType(scoringGenerationRequest.getLoanType());

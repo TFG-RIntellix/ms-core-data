@@ -117,6 +117,10 @@ public class PartyMapper {
         EconomicDataEntity economicData = entity.getEconomicData();
         Money annualIncome = new Money(economicData.getAnnualIncome(), economicData.getCurrency());
         profile.setAnnualIncome(annualIncome);
+        profile.setExistingObligations(
+            economicData.getExistingObligations() != null ? economicData.getExistingObligations() : 0.0);
+        profile.setHasMortage(
+            economicData.getHasMortage() != null ? economicData.getHasMortage() : false);
 
         // Map from EmploymentEntity
         EmploymentEntity employment = entity.getEmployment();

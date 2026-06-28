@@ -9,13 +9,11 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDe
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestDetailsDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestSummaryDTOMapper;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Contract;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Person;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input.RequestPortService;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ContractPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.PartyPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
@@ -43,20 +41,17 @@ public class RequestApplicationService implements RequestPortService {
 
     private final RequestPortRepository requestPortRepository;
     private final PartyPortRepository partyPortRepository;
-    private final ContractPortRepository contractPortRepository;
     private final RequestSummaryDTOMapper requestSummaryDTOMapper;
     private final RequestDetailsDTOMapper requestDetailsDTOMapper;
     private final ScoringGenerationService scoringGenerationService;
 
     public RequestApplicationService(RequestPortRepository requestPortRepository,
             PartyPortRepository partyPortRepository,
-            ContractPortRepository contractPortRepository,
             RequestSummaryDTOMapper requestSummaryDTOMapper,
             RequestDetailsDTOMapper requestDetailsDTOMapper,
             ScoringGenerationService scoringGenerationService) {
         this.requestPortRepository = Objects.requireNonNull(requestPortRepository);
         this.partyPortRepository = Objects.requireNonNull(partyPortRepository);
-        this.contractPortRepository = Objects.requireNonNull(contractPortRepository);
         this.requestSummaryDTOMapper = Objects.requireNonNull(requestSummaryDTOMapper);
         this.requestDetailsDTOMapper = Objects.requireNonNull(requestDetailsDTOMapper);
         this.scoringGenerationService = Objects.requireNonNull(scoringGenerationService);
@@ -100,14 +95,6 @@ public class RequestApplicationService implements RequestPortService {
 
         // Resolve full Party for detailed view (orchestration at application layer)
         Party party = partyPortRepository.findById(request.getPartyId());
-
-        // Load active contracts and assign to Party
-        List<Contract> activeContracts = contractPortRepository.findActiveByPartyId(request.getPartyId());
-        log.debug(LogMessage.REPOSITORY_PARTY_CONTRACTS_LOADED, request.getPartyId(), activeContracts.size());
-
-        Person personDetails = party.getPersonDetails();
-        personDetails.setActiveContracts(activeContracts);
-        party.setPersonDetails(personDetails);
 
         request.setParty(party);
 

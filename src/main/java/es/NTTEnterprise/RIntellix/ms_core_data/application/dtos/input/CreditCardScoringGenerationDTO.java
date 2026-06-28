@@ -33,6 +33,7 @@ public class CreditCardScoringGenerationDTO {
     private Double annualIncome;
     private String incomeType;
     private String homeOwnership;
+    private Double existingObligations;
 
     // Credit card specific features
     private String requestType;
@@ -139,6 +140,14 @@ public class CreditCardScoringGenerationDTO {
         this.homeOwnership = homeOwnership;
     }
 
+    public Double getExistingObligations() {
+        return existingObligations;
+    }
+
+    public void setExistingObligations(Double existingObligations) {
+        this.existingObligations = existingObligations;
+    }
+
     public String getRequestType() {
         return requestType;
     }
@@ -199,8 +208,8 @@ public class CreditCardScoringGenerationDTO {
     public String toString() {
         return "CreditCardScoringGenerationDTO [requestId=" + requestId + ", partyId=" + partyId + ", age=" + age
                 + ", gender=" + gender + ", maritalStatus=" + maritalStatus + ", employmentStatus="
-                + employmentStatus + ", annualIncome=" + annualIncome + ", requestType=" + requestType
-                + ", creditLimit=" + creditLimit + ", isRevolving=" + isRevolving + "]";
+                + employmentStatus + ", annualIncome=" + annualIncome + ", existingObligations=" + existingObligations
+                + ", requestType=" + requestType + ", creditLimit=" + creditLimit + ", isRevolving=" + isRevolving + "]";
     }
 
 }

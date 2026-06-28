@@ -98,6 +98,9 @@ public class InputFeaturesDTO {
     @JsonProperty("isRevolving")
     private String isRevolving;
 
+    @JsonProperty("existingObligations")
+    private Double existingObligations;
+
     /**
      * Default constructor for InputFeaturesDTO.
      */
@@ -296,5 +299,13 @@ public class InputFeaturesDTO {
 
     public void setIsRevolving(String isRevolving) {
         this.isRevolving = isRevolving;
+    }
+
+    public Double getExistingObligations() {
+        return existingObligations;
+    }
+
+    public void setExistingObligations(Double existingObligations) {
+        this.existingObligations = existingObligations;
     }
 }

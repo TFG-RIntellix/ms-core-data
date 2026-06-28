@@ -23,6 +23,9 @@ public class FinancialProfile {
     private Money previousLoansAmount;
     private Boolean isNewCustomer;
 
+    private Double existingObligations;
+    private Boolean hasMortage;
+
     /**
      * Constructor of the FinancialProfile class.
      */
@@ -131,6 +134,22 @@ public class FinancialProfile {
         this.isNewCustomer = isNewCustomer;
     }
 
+    public Double getExistingObligations() {
+        return existingObligations;
+    }
+
+    public void setExistingObligations(Double existingObligations) {
+        this.existingObligations = existingObligations;
+    }
+
+    public Boolean getHasMortage() {
+        return hasMortage;
+    }
+
+    public void setHasMortage(Boolean hasMortage) {
+        this.hasMortage = hasMortage;
+    }
+
     // toString, hashCode and equals
     @Override
     public String toString() {
@@ -145,6 +164,8 @@ public class FinancialProfile {
         sb.append(", previousLoansCount=").append(previousLoansCount);
         sb.append(", previousLoansAmount=").append(previousLoansAmount);
         sb.append(", isNewCustomer=").append(isNewCustomer);
+        sb.append(", existingObligations=").append(existingObligations);
+        sb.append(", hasMortage=").append(hasMortage);
         sb.append('}');
         return sb.toString();
     }
@@ -162,6 +183,8 @@ public class FinancialProfile {
         result = prime * result + ((previousLoansCount == null) ? 0 : previousLoansCount.hashCode());
         result = prime * result + ((previousLoansAmount == null) ? 0 : previousLoansAmount.hashCode());
         result = prime * result + ((isNewCustomer == null) ? 0 : isNewCustomer.hashCode());
+        result = prime * result + ((existingObligations == null) ? 0 : existingObligations.hashCode());
+        result = prime * result + ((hasMortage == null) ? 0 : hasMortage.hashCode());
         return result;
     }
 
@@ -215,6 +238,16 @@ public class FinancialProfile {
             if (other.isNewCustomer != null)
                 return false;
         } else if (!isNewCustomer.equals(other.isNewCustomer))
+            return false;
+        if (existingObligations == null) {
+            if (other.existingObligations != null)
+                return false;
+        } else if (!existingObligations.equals(other.existingObligations))
+            return false;
+        if (hasMortage == null) {
+            if (other.hasMortage != null)
+                return false;
+        } else if (!hasMortage.equals(other.hasMortage))
             return false;
         return true;
     }

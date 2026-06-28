@@ -20,7 +20,31 @@ public class EconomicDataEntity {
     @Field("currency")
     private String currency;
 
+    @Field("existing_obligations")
+    private Double existingObligations;
+
+    @Field("has_mortage")
+    private Boolean hasMortage;
+
     public EconomicDataEntity() {
+    }
+
+    // Getters and Setters
+
+    public Double getExistingObligations() {
+        return existingObligations;
+    }
+
+    public void setExistingObligations(Double existingObligations) {
+        this.existingObligations = existingObligations;
+    }
+
+    public Boolean getHasMortage() {
+        return hasMortage;
+    }
+
+    public void setHasMortage(Boolean hasMortage) {
+        this.hasMortage = hasMortage;
     }
 
     // Getters and Setters

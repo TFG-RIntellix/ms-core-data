@@ -33,6 +33,7 @@ public class ScoringGenerationRequest {
     // Financial features
     private Double annualIncome;
     private String incomeType;
+    private Double existingObligations;
 
     // Loan/Request features
     private String requestType;
@@ -171,6 +172,14 @@ public class ScoringGenerationRequest {
         this.incomeType = incomeType;
     }
 
+    public Double getExistingObligations() {
+        return existingObligations;
+    }
+
+    public void setExistingObligations(final Double existingObligations) {
+        this.existingObligations = existingObligations;
+    }
+
     public String getRequestType() {
         return requestType;
     }
@@ -292,6 +301,7 @@ public class ScoringGenerationRequest {
                 ", employmentSeniorityYears=" + employmentSeniorityYears +
                 ", annualIncome=" + annualIncome +
                 ", incomeType='" + incomeType + '\'' +
+                ", existingObligations=" + existingObligations +
                 ", requestType='" + requestType + '\'' +
                 ", purpose='" + purpose + '\'' +
                 ", loanAmount=" + loanAmount +

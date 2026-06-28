@@ -99,6 +99,7 @@ public class ScoringConsumerMessageMapper {
         features.put("lti", dto.getLti());
         features.put("requested_limit", dto.getCreditLimit());
         features.put("is_revolving", mapIsRevolving(dto.getIsRevolving()));
+        features.put("existing_obligations", dto.getExistingObligations());
         return new ModelInputs(features);
     }
 

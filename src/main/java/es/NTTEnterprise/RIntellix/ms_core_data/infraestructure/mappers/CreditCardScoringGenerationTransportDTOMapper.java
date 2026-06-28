@@ -65,6 +65,7 @@ public class CreditCardScoringGenerationTransportDTOMapper {
         dto.setAnnualIncome(scoringGenerationRequest.getAnnualIncome());
         dto.setIncomeType(scoringGenerationRequest.getIncomeType());
         dto.setHomeOwnership(scoringGenerationRequest.getHomeOwnership());
+        dto.setExistingObligations(scoringGenerationRequest.getExistingObligations());
         dto.setCreditLimit(scoringGenerationRequest.getCreditLimit());
         dto.setIsRevolving(scoringGenerationRequest.getIsRevolving());
         dto.setInterestRate(scoringGenerationRequest.getInterestRate());
