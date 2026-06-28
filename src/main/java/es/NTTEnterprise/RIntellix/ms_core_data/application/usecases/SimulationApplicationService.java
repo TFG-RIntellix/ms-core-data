@@ -3,7 +3,10 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 
@@ -13,6 +16,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateSimu
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.SimulationDTOMapper;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskMetrics;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
@@ -73,10 +77,18 @@ public class SimulationApplicationService implements SimulationPortService {
         List<Simulation> simulations = simulationPortRepository.findWithFilters(requestId, partyId, archived);
         log.debug(LogMessage.SERVICE_LIST_SIMULATIONS_RESULT, simulations.size());
 
-        // Resolve partyName for each simulation (following SRP: party resolution at
-        // application layer)
+        // Extract unique party IDs
+        Set<String> uniquePartyIds = simulations.stream()
+                .map(Simulation::getPartyId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        // Resolve party names efficiently in a single query
+        Map<String, Party> partyMap = partyPortRepository.findPartyNames(uniquePartyIds);
+
+        // Assign party to each simulation
         simulations.forEach(simulation -> {
-            simulation.setParty(partyPortRepository.findPartyName(simulation.getPartyId()));
+            simulation.setParty(partyMap.get(simulation.getPartyId()));
         });
 
         simulations = filterByPartyName(simulations, partyName);

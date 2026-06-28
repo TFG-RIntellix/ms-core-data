@@ -1,7 +1,12 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.adapters.output;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Repository;
@@ -76,6 +81,27 @@ public class PartyRepositoryAdapter implements PartyPortRepository {
                 party.getPersonDetails() != null ? party.getPersonDetails().getFullName() : "null");
 
         return party;
+    }
+
+    @Override
+    public Map<String, Party> findPartyNames(Set<String> partyIds) {
+        log.debug("REPOSITORY_PARTY_FIND_NAMES_ONLY_START: {}", partyIds.size());
+        
+        if (partyIds == null || partyIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        List<ObjectId> objectIds = partyIds.stream()
+                .map(ObjectId::new)
+                .collect(Collectors.toList());
+
+        List<PartyNameProjection> projections = partyRepository.findPartyNameProjectionsByIdIn(objectIds);
+
+        return projections.stream()
+                .collect(Collectors.toMap(
+                        PartyNameProjection::getId,
+                        partyMapper::toPartialDomain
+                ));
     }
 
 }

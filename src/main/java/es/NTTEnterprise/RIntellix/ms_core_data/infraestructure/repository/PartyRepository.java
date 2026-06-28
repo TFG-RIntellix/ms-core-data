@@ -1,5 +1,7 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.repository;
 
+import java.util.List;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -28,5 +30,14 @@ public interface PartyRepository extends MongoRepository<PartyEntity, ObjectId> 
      */
     @Query(value = "{ '_id': ?0 }", fields = "{ 'demographics.first_name': 1, 'demographics.last_name': 1 }")
     PartyNameProjection findPartyNameProjectionById(ObjectId partyId);
+
+    /**
+     * Retrieves only the demographics name fields for multiple parties.
+     * 
+     * @param partyIds the list of party IDs
+     * @return list of projections with firstName and lastName
+     */
+    @Query(value = "{ '_id': { $in: ?0 } }", fields = "{ 'demographics.first_name': 1, 'demographics.last_name': 1 }")
+    List<PartyNameProjection> findPartyNameProjectionsByIdIn(List<ObjectId> partyIds);
 
 }
