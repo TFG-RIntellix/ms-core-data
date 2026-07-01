@@ -17,7 +17,6 @@ public class RequestDetailsDTO {
     public String requestId;
     public String requestDate;
     public String lastReviewDate;
-    public String partyId;
     public String partyName;
     public String partyNIF;
     public String requestDescription;
@@ -69,14 +68,6 @@ public class RequestDetailsDTO {
 
     public void setLastReviewDate(String lastReviewDate) {
         this.lastReviewDate = lastReviewDate;
-    }
-
-    public String getPartyId() {
-        return partyId;
-    }
-
-    public void setPartyId(String partyId) {
-        this.partyId = partyId;
     }
 
     public String getPartyName() {

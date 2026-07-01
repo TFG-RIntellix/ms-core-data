@@ -3,6 +3,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input;
 import java.util.List;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDetailsDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestPartyDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 
@@ -44,5 +45,19 @@ public interface RequestPortService {
      *                                  requestId.
      */
     RequestDetailsDTO getRequestDetails(String requestId) throws IllegalArgumentException, EntityNotFoundException;
+
+    /**
+     * Retrieves the party identifiers (id and name) associated with a request.
+     *
+     * Intended for internal service-to-service consumers that only need the
+     * party reference, avoiding exposure of the full request/party detail.
+     *
+     * @param requestId the unique identifier of the request.
+     * @return a RequestPartyDTO with the associated party id and name.
+     * @throws IllegalArgumentException if the requestId is null or empty.
+     * @throws EntityNotFoundException  if no request is found with the given
+     *                                  requestId.
+     */
+    RequestPartyDTO getRequestParty(String requestId) throws IllegalArgumentException, EntityNotFoundException;
 
 }

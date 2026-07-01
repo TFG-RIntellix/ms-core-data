@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDetailsDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestPartyDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input.RequestPortService;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
@@ -64,5 +65,26 @@ public class RequestControllerAdapter {
 
         log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS_SINGLE, 200, requestId);
         return ResponseEntity.ok(details);
+    }
+
+    /**
+     * Internal endpoint exposing only the party reference (id and name)
+     * associated with a request. Intended for service-to-service consumers
+     * (e.g. ms-reporting) so the frontend-facing details endpoint is not
+     * coupled to their needs and no extra PII is exposed.
+     *
+     * @param requestId the unique identifier of the request
+     * @return a ResponseEntity with the associated RequestPartyDTO
+     */
+    @GetMapping("/{requestId}/party")
+    public ResponseEntity<RequestPartyDTO> getRequestParty(@PathVariable String requestId) {
+
+        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/requests/" + requestId + "/party");
+        log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, requestId);
+
+        RequestPartyDTO party = requestPortService.getRequestParty(requestId);
+
+        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS_SINGLE, 200, requestId);
+        return ResponseEntity.ok(party);
     }
 }

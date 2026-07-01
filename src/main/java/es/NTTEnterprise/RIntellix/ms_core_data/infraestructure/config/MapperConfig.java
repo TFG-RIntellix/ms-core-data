@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestDetailsDTOMapper;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestPartyDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestSummaryDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringGenerationDTOMapper;
@@ -20,6 +21,11 @@ public class MapperConfig {
     @Bean
     public RequestSummaryDTOMapper requestSummaryDTOMapper() {
         return new RequestSummaryDTOMapper();
+    }
+
+    @Bean
+    public RequestPartyDTOMapper requestPartyDTOMapper() {
+        return new RequestPartyDTOMapper();
     }
 
     @Bean

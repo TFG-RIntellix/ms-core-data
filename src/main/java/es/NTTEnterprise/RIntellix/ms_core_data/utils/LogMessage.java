@@ -45,6 +45,9 @@ public final class LogMessage {
     public static final String SERVICE_GET_DETAILS_RETRIEVE_PARTY = "Retrieving associated Party for request - partyId: [{}]";
     public static final String SERVICE_GET_DETAILS_TRIGGER_SCORING = "Triggering asynchronous scoring generation for request - requestId: [{}]";
 
+    public static final String SERVICE_GET_PARTY_START = "Starting getRequestParty operation - requestId: [{}]";
+    public static final String SERVICE_GET_PARTY_COMPLETE = "getRequestParty operation completed successfully - requestId: [{}]";
+
     public static final String SERVICE_GET_SCORING_START = "Starting getScoringByRequestId operation - requestId: [{}]";
     public static final String SERVICE_GET_SCORING_VALIDATION = "Validating requestId for scoring: [{}]";
     public static final String SERVICE_GET_SCORING_VALIDATION_ERROR = "Validation failed for scoring requestId - Value is null or blank";

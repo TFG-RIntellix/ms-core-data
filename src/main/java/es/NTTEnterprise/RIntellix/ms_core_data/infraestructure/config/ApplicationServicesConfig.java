@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestDetailsDTOMapper;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestPartyDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestSummaryDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringGenerationDTOMapper;
@@ -71,8 +72,9 @@ public class ApplicationServicesConfig {
             PartyPortRepository partyPortRepository,
             RequestSummaryDTOMapper requestSummaryDTOMapper,
             RequestDetailsDTOMapper requestDetailsDTOMapper,
+            RequestPartyDTOMapper requestPartyDTOMapper,
             ScoringGenerationService scoringGenerationService) {
         return new RequestApplicationService(requestPortRepository, partyPortRepository, requestSummaryDTOMapper,
-                requestDetailsDTOMapper, scoringGenerationService);
+                requestDetailsDTOMapper, requestPartyDTOMapper, scoringGenerationService);
     }
 }
