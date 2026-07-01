@@ -225,6 +225,16 @@ public final class LogMessage {
     public static final String SERVICE_SCORING_CONSUMER_COMPLETE = "[ScoringConsumerService/Application] - COMPLETE: requestId: {}, scoringId: {}, topFeaturesCount: {}";
 
     // ============================================================
+    // REPORT LAYER - Service / Repository
+    // ============================================================
+
+    public static final String SERVICE_CREATE_REPORT_START = "Starting createReport operation - requestId: [{}], scoringId: [{}]";
+    public static final String SERVICE_CREATE_REPORT_COMPLETE = "createReport operation completed successfully - reportId: [{}]";
+
+    public static final String REPOSITORY_REPORT_SAVE_START = "Executing save operation on reports - requestId: [{}], scoringId: [{}]";
+    public static final String REPOSITORY_REPORT_SAVE_COMPLETE = "Save operation on reports completed - reportId: [{}]";
+
+    // ============================================================
     // EXCEPTION MESSAGES
     // ============================================================
 

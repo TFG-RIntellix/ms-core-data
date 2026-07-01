@@ -9,12 +9,14 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringDTOMap
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringGenerationDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.SimulationDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.output.ScoringGenerationPort;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.ReportApplicationService;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.RequestApplicationService;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.ScoringApplicationService;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.ScoringConsumerService;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.ScoringGenerationService;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.SimulationApplicationService;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.PartyPortRepository;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ReportPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ScoringPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.SimulationPortRepository;
@@ -55,6 +57,12 @@ public class ApplicationServicesConfig {
             RequestPortRepository requestPortRepository,
             ScoringDTOMapper scoringDTOMapper) {
         return new ScoringApplicationService(scoringPortRepository, scoringDTOMapper);
+    }
+
+    @Bean
+    public ReportApplicationService reportApplicationService(
+            ReportPortRepository reportPortRepository) {
+        return new ReportApplicationService(reportPortRepository);
     }
 
     @Bean

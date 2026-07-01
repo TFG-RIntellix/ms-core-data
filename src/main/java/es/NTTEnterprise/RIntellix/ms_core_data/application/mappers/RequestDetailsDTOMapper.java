@@ -39,6 +39,7 @@ public class RequestDetailsDTOMapper {
               requestDetailsDTO.setPurpose(request.getRequestDetails().getPurpose().toString());
 
               // Map party fields
+              requestDetailsDTO.setPartyId(request.getParty() != null ? request.getParty().getId() : request.getPartyId());
               requestDetailsDTO.setPartyName(request.getParty().getPersonDetails().getFullName());
               requestDetailsDTO.setPartyNIF(request.getParty().getPersonDetails().getNif());
               requestDetailsDTO.setPartyPhoneNumber(
