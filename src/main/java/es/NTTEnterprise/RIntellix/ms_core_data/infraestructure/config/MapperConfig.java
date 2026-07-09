@@ -3,6 +3,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.CreateReportDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestDetailsDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestPartyDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestSummaryDTOMapper;
@@ -12,6 +13,11 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.SimulationDTO
 
 @Configuration
 public class MapperConfig {
+
+    @Bean
+    public CreateReportDTOMapper createReportDTOMapper() {
+        return new CreateReportDTOMapper();
+    }
 
     @Bean
     public RequestDetailsDTOMapper requestDetailsDTOMapper() {

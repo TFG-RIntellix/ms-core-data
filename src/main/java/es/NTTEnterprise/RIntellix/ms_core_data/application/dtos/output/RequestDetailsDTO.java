@@ -24,11 +24,11 @@ public class RequestDetailsDTO {
     public String partyEmail;
     public String partyAddress;
     public String partyLaboralSituation;
-    public String partyIncome;
+    public Double partyIncome;
     public String requestType;
     public String status;
     public String currency;
-    public String requestedAmount;
+    public Double requestedAmount;
     public Integer requestTermMonths;
     public Double interestRate;
     public String purpose;
@@ -126,11 +126,11 @@ public class RequestDetailsDTO {
         this.partyLaboralSituation = partyLaboralSituation;
     }
 
-    public String getPartyIncome() {
+    public Double getPartyIncome() {
         return partyIncome;
     }
 
-    public void setPartyIncome(String partyIncome) {
+    public void setPartyIncome(Double partyIncome) {
         this.partyIncome = partyIncome;
     }
 
@@ -158,11 +158,11 @@ public class RequestDetailsDTO {
         this.currency = currency;
     }
 
-    public String getRequestedAmount() {
+    public Double getRequestedAmount() {
         return requestedAmount;
     }
 
-    public void setRequestedAmount(String requestedAmount) {
+    public void setRequestedAmount(Double requestedAmount) {
         this.requestedAmount = requestedAmount;
     }
 

@@ -2,9 +2,8 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.mappers;
 
 import java.util.List;
 
-
-
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestSummaryDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Money;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 
 /**
@@ -27,16 +26,16 @@ public class RequestSummaryDTOMapper {
                 requestSummaryDTO.setRequestId(request.getId());
                 requestSummaryDTO.setStatus(request.getRequestStatus().toString());
                 requestSummaryDTO.setRequestType(request.getRequestDetails().getRequestType().toString());
-                requestSummaryDTO.setAmount(request.getRequestDetails().getRequestedAmount() != null
-                                ? request.getRequestDetails().getRequestedAmount().getAmount()
-                                : null);
-                requestSummaryDTO.setCurrency(request.getRequestDetails().getRequestedAmount() != null
-                                ? request.getRequestDetails().getRequestedAmount().getCurrency()
-                                : null);
-                requestSummaryDTO.setCreationDate(request.getCreationDate().toString());
+                Money money = request.getRequestDetails().getRequestedAmount() != null
+                                ? request.getRequestDetails().getRequestedAmount()
+                                : request.getRequestDetails().getCreditLimit();
+
+                requestSummaryDTO.setAmount(money != null ? money.getAmount() : null);
+                requestSummaryDTO.setCurrency(money != null ? money.getCurrency() : null);
+                requestSummaryDTO.setCreationDate(request.getCreationDate().toInstant().toString());
                 requestSummaryDTO
                                 .setLastReviewDate(request.getLastReviewDate() != null
-                                                ? request.getLastReviewDate().toString()
+                                                ? request.getLastReviewDate().toInstant().toString()
                                                 : null);
                 requestSummaryDTO.setPartyName(request.getParty().getPersonDetails().getFullName());
 

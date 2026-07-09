@@ -27,12 +27,12 @@ public class RequestDetailsDTOMapper {
        public RequestDetailsDTO toDTO(Request request) {
               RequestDetailsDTO requestDetailsDTO = new RequestDetailsDTO();
               requestDetailsDTO.setRequestId(request.getId());
-              requestDetailsDTO.setRequestDate(request.getCreationDate().toString());
+              requestDetailsDTO.setRequestDate(request.getCreationDate().toInstant().toString());
               requestDetailsDTO.setRequestType(request.getRequestDetails().getRequestType().toString());
               requestDetailsDTO.setStatus(request.getRequestStatus().toString());
 
               requestDetailsDTO.setRequestedAmount(request.getRequestDetails().getRequestedAmount() != null
-                            ? request.getRequestDetails().getRequestedAmount().toString()
+                            ? request.getRequestDetails().getRequestedAmount().getAmount()
                             : null);
               requestDetailsDTO.setRequestTermMonths(request.getRequestDetails().getTermMonths());
               requestDetailsDTO.setInterestRate(request.getRequestDetails().getInterestRate());
@@ -48,7 +48,7 @@ public class RequestDetailsDTOMapper {
               requestDetailsDTO.setPartyLaboralSituation(
                             request.getParty().getPersonDetails().getFinancials().getEmploymentStatus().toString());
               requestDetailsDTO.setPartyIncome(
-                            request.getParty().getPersonDetails().getFinancials().getAnnualIncome().toString());
+                            request.getParty().getPersonDetails().getFinancials().getAnnualIncome().getAmount());
 
               // Map creditCard fields
               requestDetailsDTO.setRequestedCreditLimit(request.getRequestDetails().getCreditLimit() != null
@@ -62,7 +62,7 @@ public class RequestDetailsDTOMapper {
                             : request.getRequestDetails().getCreditLimit();
               requestDetailsDTO.setCurrency(money != null ? money.getCurrency() : null);
               requestDetailsDTO.setLastReviewDate(request.getLastReviewDate() != null
-                            ? request.getLastReviewDate().toString()
+                            ? request.getLastReviewDate().toInstant().toString()
                             : null);
 
               return requestDetailsDTO;

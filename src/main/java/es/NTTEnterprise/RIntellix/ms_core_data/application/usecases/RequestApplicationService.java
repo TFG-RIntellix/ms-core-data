@@ -1,7 +1,10 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestPartyDTO;
@@ -64,8 +67,14 @@ public class RequestApplicationService implements RequestPortService {
         log.debug(LogMessage.SERVICE_LIST_REQUESTS_RESULT, requests.size());
 
         // Resolve party name for each request at application layer to keep SRP.
+        Set<String> partyIds = requests.stream()
+                .map(Request::getPartyId)
+                .collect(Collectors.toSet());
+
+        Map<String, Party> partyNames = partyPortRepository.findPartyNames(partyIds);
+
         requests.forEach(request -> {
-            request.setParty(partyPortRepository.findPartyName(request.getPartyId()));
+            request.setParty(partyNames.get(request.getPartyId()));
         });
 
         // Filter by name because repository does not support this direct filtering.
@@ -84,10 +93,7 @@ public class RequestApplicationService implements RequestPortService {
         log.debug(LogMessage.SERVICE_GET_DETAILS_START, requestId);
         log.debug(LogMessage.SERVICE_GET_DETAILS_VALIDATION, requestId);
 
-        if (requestId == null || requestId.isBlank()) {
-            log.warn(LogMessage.SERVICE_GET_DETAILS_VALIDATION_ERROR);
-            throw new IllegalArgumentException(LogMessage.EXCEPTION_INVALID_REQUEST_ID);
-        }
+        validateRequestId(requestId);
 
         Request request = requestPortRepository.findById(requestId);
         log.debug(LogMessage.SERVICE_GET_DETAILS_FOUND, requestId);
@@ -113,17 +119,14 @@ public class RequestApplicationService implements RequestPortService {
 
         log.debug(LogMessage.SERVICE_GET_PARTY_START, requestId);
 
-        if (requestId == null || requestId.isBlank()) {
-            log.warn(LogMessage.SERVICE_GET_DETAILS_VALIDATION_ERROR);
-            throw new IllegalArgumentException(LogMessage.EXCEPTION_INVALID_REQUEST_ID);
-        }
+        validateRequestId(requestId);
 
         Request request = requestPortRepository.findById(requestId);
 
         // Resolve only the party name (no full PII) for this internal projection.
-        request.setParty(partyPortRepository.findPartyName(request.getPartyId()));
+        Party party = partyPortRepository.findPartyName(request.getPartyId());
 
-        RequestPartyDTO result = requestPartyDTOMapper.toDTO(request);
+        RequestPartyDTO result = requestPartyDTOMapper.toDTO(request, party);
 
         log.debug(LogMessage.SERVICE_GET_PARTY_COMPLETE, requestId);
         return result;
@@ -145,6 +148,13 @@ public class RequestApplicationService implements RequestPortService {
         return requests.stream()
                 .filter(request -> request.getParty().getPersonDetails().getFullName().contains(partyName))
                 .toList();
+    }
+
+    private void validateRequestId(String requestId) {
+        if (requestId == null || requestId.isBlank()) {
+            log.warn(LogMessage.SERVICE_GET_DETAILS_VALIDATION_ERROR);
+            throw new IllegalArgumentException(LogMessage.EXCEPTION_INVALID_REQUEST_ID);
+        }
     }
 
 }

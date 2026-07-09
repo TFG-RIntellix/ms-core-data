@@ -19,8 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/requests")
+@RequestMapping(RequestControllerAdapter.BASE_PATH)
 public class RequestControllerAdapter {
+
+    public static final String BASE_PATH = "/api/requests";
+    public static final String DETAILS_PATH = "/{requestId}";
+    public static final String PARTY_PATH = "/{requestId}/party";
 
     private final RequestPortService requestPortService;
 
@@ -46,7 +50,7 @@ public class RequestControllerAdapter {
             @RequestParam(required = false) String partyId,
             @RequestParam(required = false) String requestStatus) {
 
-        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/requests");
+        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", BASE_PATH);
         log.debug(LogMessage.CONTROLLER_REQUEST_PARAMS, partyName, requestStatus);
 
         List<RequestSummaryDTO> requests = requestPortService.listRequests(partyName, partyId, requestStatus);
@@ -55,10 +59,10 @@ public class RequestControllerAdapter {
         return ResponseEntity.ok(requests);
     }
 
-    @GetMapping("/{requestId}")
+    @GetMapping(DETAILS_PATH)
     public ResponseEntity<RequestDetailsDTO> getRequestDetails(@PathVariable String requestId) {
 
-        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/requests/" + requestId);
+        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", BASE_PATH + DETAILS_PATH);
         log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, requestId);
 
         RequestDetailsDTO details = requestPortService.getRequestDetails(requestId);
@@ -76,10 +80,10 @@ public class RequestControllerAdapter {
      * @param requestId the unique identifier of the request
      * @return a ResponseEntity with the associated RequestPartyDTO
      */
-    @GetMapping("/{requestId}/party")
+    @GetMapping(PARTY_PATH)
     public ResponseEntity<RequestPartyDTO> getRequestParty(@PathVariable String requestId) {
 
-        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/requests/" + requestId + "/party");
+        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", BASE_PATH + PARTY_PATH);
         log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, requestId);
 
         RequestPartyDTO party = requestPortService.getRequestParty(requestId);

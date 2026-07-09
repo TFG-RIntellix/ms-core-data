@@ -3,6 +3,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.CreateReportDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestDetailsDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestPartyDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestSummaryDTOMapper;
@@ -62,8 +63,9 @@ public class ApplicationServicesConfig {
 
     @Bean
     public ReportApplicationService reportApplicationService(
-            ReportPortRepository reportPortRepository) {
-        return new ReportApplicationService(reportPortRepository);
+            ReportPortRepository reportPortRepository,
+            CreateReportDTOMapper createReportDTOMapper) {
+        return new ReportApplicationService(reportPortRepository, createReportDTOMapper);
     }
 
     @Bean

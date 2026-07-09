@@ -251,6 +251,8 @@ public final class LogMessage {
     public static final String EXCEPTION_INVALID_REQUEST_ID = "Request ID cannot be null or empty";
     public static final String EXCEPTION_REQUEST_TYPE_NULL = "RequestType value cannot be null";
     public static final String EXCEPTION_REQUEST_TYPE_UNKNOWN = "Unknown RequestType value: %s";
+    public static final String EXCEPTION_INVALID_REPORT_TYPE = "Invalid report type: %s";
+    public static final String EXCEPTION_INVALID_SEVERITY = "Invalid risk factor severity: %s";
     public static final String EXCEPTION_MONEY_CURRENCY_MISMATCH = "Cannot add Money with different currencies";
     public static final String EXCEPTION_MAPPER_NEVER_INSTANTIATE = "Never instantiate";
 
