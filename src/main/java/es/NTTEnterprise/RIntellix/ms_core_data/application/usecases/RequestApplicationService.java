@@ -60,10 +60,18 @@ public class RequestApplicationService implements RequestPortService {
     }
 
     @Override
-    public List<RequestSummaryDTO> listRequests(String partyName, String partyId, String requestStatus) {
-        log.debug(LogMessage.SERVICE_LIST_REQUESTS_START, partyName, partyId, requestStatus);
+    public List<RequestSummaryDTO> listRequests(String search, String requestStatus) {
+        log.debug(LogMessage.SERVICE_LIST_REQUESTS_START, search, requestStatus);
 
-        List<Request> requests = requestPortRepository.findWithFilters(partyId, requestStatus);
+        // 1. Resolve matching party IDs based on the search string
+        Set<String> matchingPartyIds = null;
+        if (search != null && !search.isBlank()) {
+            matchingPartyIds = partyPortRepository.findPartyIdsByNameMatch(search);
+        }
+
+        // 2. Retrieve requests applying the generic search and party IDs
+        List<String> partyIdsList = matchingPartyIds != null ? matchingPartyIds.stream().toList() : null;
+        List<Request> requests = requestPortRepository.findWithFilters(search, partyIdsList, requestStatus);
         log.debug(LogMessage.SERVICE_LIST_REQUESTS_RESULT, requests.size());
 
         // Resolve party name for each request at application layer to keep SRP.
@@ -76,9 +84,6 @@ public class RequestApplicationService implements RequestPortService {
         requests.forEach(request -> {
             request.setParty(partyNames.get(request.getPartyId()));
         });
-
-        // Filter by name because repository does not support this direct filtering.
-        requests = filterByPartyName(requests, partyName);
 
         log.debug(LogMessage.SERVICE_LIST_REQUESTS_MAPPING, requests.size());
         return requests.stream()
@@ -132,23 +137,7 @@ public class RequestApplicationService implements RequestPortService {
         return result;
     }
 
-    /**
-     * Helper method to filter requests by party name. This is used when
-     * the repository does not support filtering by party name directly,
-     * so we retrieve all requests and then filter in memory.
-     *
-     * @param requests  the list of requests to filter
-     * @param partyName the party name to filter by
-     * @return the filtered list of requests that match the party name
-     */
-    private List<Request> filterByPartyName(List<Request> requests, String partyName) {
-        if (partyName == null || partyName.isBlank()) {
-            return requests;
-        }
-        return requests.stream()
-                .filter(request -> request.getParty().getPersonDetails().getFullName().contains(partyName))
-                .toList();
-    }
+
 
     private void validateRequestId(String requestId) {
         if (requestId == null || requestId.isBlank()) {

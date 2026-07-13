@@ -46,14 +46,13 @@ public class RequestControllerAdapter {
      */
     @GetMapping
     public ResponseEntity<List<RequestSummaryDTO>> listRequests(
-            @RequestParam(required = false) String partyName,
-            @RequestParam(required = false) String partyId,
+            @RequestParam(required = false) String search,
             @RequestParam(required = false) String requestStatus) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", BASE_PATH);
-        log.debug(LogMessage.CONTROLLER_REQUEST_PARAMS, partyName, requestStatus);
+        log.debug(LogMessage.CONTROLLER_REQUEST_PARAMS, search, requestStatus);
 
-        List<RequestSummaryDTO> requests = requestPortService.listRequests(partyName, partyId, requestStatus);
+        List<RequestSummaryDTO> requests = requestPortService.listRequests(search, requestStatus);
 
         log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS, 200, requests.size());
         return ResponseEntity.ok(requests);

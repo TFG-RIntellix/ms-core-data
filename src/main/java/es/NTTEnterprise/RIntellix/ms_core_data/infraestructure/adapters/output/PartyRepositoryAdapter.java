@@ -104,4 +104,23 @@ public class PartyRepositoryAdapter implements PartyPortRepository {
                 ));
     }
 
+    @Override
+    public Set<String> findPartyIdsByNameMatch(String searchTerm) {
+        log.debug("REPOSITORY_PARTY_FIND_IDS_BY_NAME_START: {}", searchTerm);
+
+        if (searchTerm == null || searchTerm.isBlank()) {
+            return Collections.emptySet();
+        }
+
+        List<PartyNameProjection> projections = partyRepository.findPartyNameProjectionsByNameMatch(searchTerm);
+
+        Set<String> partyIds = projections.stream()
+                .map(PartyNameProjection::getId)
+                .collect(Collectors.toSet());
+        
+        log.debug("REPOSITORY_PARTY_FIND_IDS_BY_NAME_RESULT: found {} parties", partyIds.size());
+        
+        return partyIds;
+    }
+
 }

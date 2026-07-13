@@ -66,10 +66,20 @@ public class RequestRepositoryAdapter implements RequestPortRepository {
     }
 
     @Override
-    public List<Request> findWithFilters(String partyName, String requestStatus) {
-        log.debug(LogMessage.REPOSITORY_FIND_WITH_FILTERS_START, partyName, requestStatus);
+    public List<Request> findWithFilters(String search, List<String> partyIds, String requestStatus) {
+        log.debug(LogMessage.REPOSITORY_FIND_WITH_FILTERS_START, search, requestStatus);
 
-        List<RequestEntity> entities = requestRepository.findWithFilters(partyName, requestStatus);
+        String searchParam = (search != null && !search.isBlank()) ? search : "";
+
+        List<ObjectId> partyOids = List.of();
+        if (partyIds != null && !partyIds.isEmpty()) {
+            partyOids = partyIds.stream()
+                    .filter(ObjectId::isValid)
+                    .map(ObjectId::new)
+                    .toList();
+        }
+
+        List<RequestEntity> entities = requestRepository.findWithFilters(searchParam, partyOids, requestStatus);
         log.debug(LogMessage.REPOSITORY_FIND_WITH_FILTERS_RESULT, entities.size());
 
         log.debug(LogMessage.REPOSITORY_FIND_WITH_FILTERS_MAPPING, entities.size());

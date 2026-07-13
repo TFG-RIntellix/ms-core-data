@@ -40,4 +40,13 @@ public interface PartyRepository extends MongoRepository<PartyEntity, ObjectId> 
     @Query(value = "{ '_id': { $in: ?0 } }", fields = "{ 'demographics.first_name': 1, 'demographics.last_name': 1 }")
     List<PartyNameProjection> findPartyNameProjectionsByIdIn(List<ObjectId> partyIds);
 
+    /**
+     * Retrieves only the IDs (via projection) of parties whose first or last name matches the given regex.
+     * 
+     * @param search the partial name to search for
+     * @return list of projections with ID and demographics names
+     */
+    @Query(value = "{ $expr: { $regexMatch: { input: { $concat: [ { $ifNull: [ '$demographics.first_name', '' ] }, ' ', { $ifNull: [ '$demographics.last_name', '' ] } ] }, regex: ?0, options: 'i' } } }", fields = "{ '_id': 1 }")
+    List<PartyNameProjection> findPartyNameProjectionsByNameMatch(String search);
+
 }

@@ -55,13 +55,20 @@ public class SimulationRepositoryAdapter implements SimulationPortRepository {
     }
 
     @Override
-    public List<Simulation> findWithFilters(String requestId, String partyId, boolean archived) {
-        log.debug(LogMessage.REPOSITORY_SIMULATION_FIND_WITH_FILTERS_START, requestId, partyId);
+    public List<Simulation> findWithFilters(String search, List<String> partyIds, Boolean archived) {
+        log.debug(LogMessage.REPOSITORY_SIMULATION_FIND_WITH_FILTERS_START, search, partyIds);
 
-        ObjectId requestOid = requestId != null ? new ObjectId(requestId) : null;
-        ObjectId partyOid = partyId != null ? new ObjectId(partyId) : null;
+        String searchParam = (search != null && !search.isBlank()) ? search : "";
 
-        List<SimulationEntity> entities = simulationRepository.findWithFilters(requestOid, partyOid, archived);
+        List<ObjectId> partyOids = List.of();
+        if (partyIds != null && !partyIds.isEmpty()) {
+            partyOids = partyIds.stream()
+                    .filter(ObjectId::isValid)
+                    .map(ObjectId::new)
+                    .toList();
+        }
+
+        List<SimulationEntity> entities = simulationRepository.findWithFilters(searchParam, partyOids, archived);
         log.debug(LogMessage.REPOSITORY_SIMULATION_FIND_WITH_FILTERS_RESULT, entities.size());
 
         return entities.stream()
@@ -103,5 +110,14 @@ public class SimulationRepositoryAdapter implements SimulationPortRepository {
 
         simulationRepository.deleteById(oid);
         log.debug(LogMessage.REPOSITORY_SIMULATION_DELETE_COMPLETE, simulationId);
+    }
+
+    @Override
+    public boolean existsByRequestIdAndScenarioName(String requestId, String scenarioName) {
+        log.debug("Checking if simulation exists with scenarioName: {} for requestId: {}", scenarioName, requestId);
+        if (requestId == null || scenarioName == null || scenarioName.isBlank()) {
+            return false;
+        }
+        return simulationRepository.existsByRequestIdAndScenarioName(new ObjectId(requestId), scenarioName);
     }
 }

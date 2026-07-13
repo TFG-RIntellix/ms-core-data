@@ -44,10 +44,11 @@ public interface RequestPortRepository {
      * Retrieves requests with dynamic filtering.
      * Only non-null parameters are applied as filters.
      *
-     * @param partyName     the name of the party (optional filter)
+     * @param search        the generic search term (optional filter)
+     * @param partyIds      the list of matching party IDs (optional filter)
      * @param requestStatus the status of the request (optional filter)
      * @return List of requests matching the specified filters
      */
-    public List<Request> findWithFilters(String partyName, String requestStatus);
+    public List<Request> findWithFilters(String search, List<String> partyIds, String requestStatus);
 
 }

@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.CreateReportDTOMapper;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ReportDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestDetailsDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestPartyDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestSummaryDTOMapper;
@@ -64,8 +65,9 @@ public class ApplicationServicesConfig {
     @Bean
     public ReportApplicationService reportApplicationService(
             ReportPortRepository reportPortRepository,
-            CreateReportDTOMapper createReportDTOMapper) {
-        return new ReportApplicationService(reportPortRepository, createReportDTOMapper);
+            CreateReportDTOMapper createReportDTOMapper,
+            ReportDTOMapper reportDTOMapper) {
+        return new ReportApplicationService(reportPortRepository, createReportDTOMapper, reportDTOMapper);
     }
 
     @Bean

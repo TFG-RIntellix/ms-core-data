@@ -51,12 +51,19 @@ public class SimulationMapper {
 
         // Simulated results → RiskMetrics + decision
         simulation.setSimulatedResults(mapSimulatedResults(entity.getSimulatedResults()));
-        simulation.setSimulatedDecision(entity.getSimulatedResults().getDecision());
+        simulation.setSimulatedDecision(entity.getSimulatedResults() != null ? entity.getSimulatedResults().getDecision() : null);
 
         // Delta fields
-        simulation.setPdChange(entity.getDelta().getPdChange());
-        simulation.setElChange(entity.getDelta().getElChange());
-        simulation.setRiskGradeChange(entity.getDelta().getRiskGradeChange());
+        if (entity.getDelta() != null) {
+            simulation.setPdChange(entity.getDelta().getPdChange());
+            simulation.setEclChange(entity.getDelta().getEclChange());
+            simulation.setRiskGradeChange(entity.getDelta().getRiskGradeChange());
+            simulation.setMonthlyPaymentChange(entity.getDelta().getMonthlyPaymentChange());
+            simulation.setDtiChange(entity.getDelta().getDtiChange());
+            simulation.setTotalPaymentChange(entity.getDelta().getTotalPaymentChange());
+            simulation.setTotalInterestChange(entity.getDelta().getTotalInterestChange());
+            simulation.setMonthlyDisposableIncomeChange(entity.getDelta().getMonthlyDisposableIncomeChange());
+        }
 
         // Archived flag
         simulation.setArchived(entity.getIsArchived() != null ? entity.getIsArchived() : false);
@@ -94,8 +101,13 @@ public class SimulationMapper {
         // Delta fields → DeltaEntity
         DeltaEntity delta = new DeltaEntity();
         delta.setPdChange(simulation.getPdChange());
-        delta.setElChange(simulation.getElChange());
+        delta.setEclChange(simulation.getEclChange());
         delta.setRiskGradeChange(simulation.getRiskGradeChange());
+        delta.setMonthlyPaymentChange(simulation.getMonthlyPaymentChange());
+        delta.setDtiChange(simulation.getDtiChange());
+        delta.setTotalPaymentChange(simulation.getTotalPaymentChange());
+        delta.setTotalInterestChange(simulation.getTotalInterestChange());
+        delta.setMonthlyDisposableIncomeChange(simulation.getMonthlyDisposableIncomeChange());
         entity.setDelta(delta);
 
         // Archived flag
@@ -112,14 +124,20 @@ public class SimulationMapper {
      */
     private HashMap<String, Object> mapFormChanges(FormChangesEntity entity) {
         HashMap<String, Object> changes = new HashMap<>();
+        if (entity == null) {
+            return changes;
+        }
 
-        putIfNotNull(changes, "annual_income", entity.getAnnualIncome());
-        putIfNotNull(changes, "term_months", entity.getTermMonths());
-        putIfNotNull(changes, "amount", entity.getAmount());
-        putIfNotNull(changes, "interest_rate", entity.getInterestRate());
-        putIfNotNull(changes, "nr_dependants", entity.getNrDependants());
-        putIfNotNull(changes, "repayment_system", entity.getRepaymentSystem());
-        putIfNotNull(changes, "employment_status", entity.getEmploymentStatus());
+        putIfNotNull(changes, "annualIncome", entity.getAnnualIncome());
+        putIfNotNull(changes, "termMonths", entity.getTermMonths());
+        putIfNotNull(changes, "loanAmount", entity.getLoanAmount());
+        putIfNotNull(changes, "interestRate", entity.getInterestRate());
+        putIfNotNull(changes, "nrDependants", entity.getNrDependants());
+        putIfNotNull(changes, "repaymentSystem", entity.getRepaymentSystem());
+        putIfNotNull(changes, "employmentStatus", entity.getEmploymentStatus());
+        putIfNotNull(changes, "isRevolving", entity.getIsRevolving());
+        putIfNotNull(changes, "propertyValue", entity.getPropertyValue());
+        putIfNotNull(changes, "creditLimit", entity.getCreditLimit());
 
         return changes;
     }
@@ -128,12 +146,26 @@ public class SimulationMapper {
      * Maps SimulatedResultsEntity to RiskMetrics domain object.
      */
     private RiskMetrics mapSimulatedResults(SimulatedResultsEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+        es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.FinancialMetrics fm = null;
+        if (entity.getFinancialMetrics() != null) {
+            fm = new es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.FinancialMetrics(
+                    entity.getFinancialMetrics().getMonthlyPayment(),
+                    entity.getFinancialMetrics().getDebtToIncomeRatio(),
+                    entity.getFinancialMetrics().getTotalPayment(),
+                    entity.getFinancialMetrics().getTotalInterest(),
+                    entity.getFinancialMetrics().getMonthlyDisposableIncome()
+            );
+        }
         return new RiskMetrics(
                 entity.getPd(),
                 entity.getLgd(),
                 entity.getEad(),
                 entity.getEcl(),
-                entity.getRiskGrade());
+                entity.getRiskGrade(),
+                fm);
     }
 
     private void putIfNotNull(HashMap<String, Object> map, String key, Object value) {
@@ -152,26 +184,45 @@ public class SimulationMapper {
             return entity;
         }
 
-        if (formChanges.get("annual_income") instanceof Number n) {
+        Object annualIncome = formChanges.containsKey("annualIncome") ? formChanges.get("annualIncome") : formChanges.get("annual_income");
+        if (annualIncome instanceof Number n) {
             entity.setAnnualIncome(n.doubleValue());
         }
-        if (formChanges.get("term_months") instanceof Number n) {
+        Object termMonths = formChanges.containsKey("termMonths") ? formChanges.get("termMonths") : formChanges.get("term_months");
+        if (termMonths instanceof Number n) {
             entity.setTermMonths(n.intValue());
         }
-        if (formChanges.get("amount") instanceof Number n) {
-            entity.setAmount(n.doubleValue());
+        Object loanAmount = formChanges.containsKey("loanAmount") ? formChanges.get("loanAmount") : (formChanges.containsKey("loan_amount") ? formChanges.get("loan_amount") : formChanges.get("amount"));
+        if (loanAmount instanceof Number n) {
+            entity.setLoanAmount(n.doubleValue());
         }
-        if (formChanges.get("interest_rate") instanceof Number n) {
+        Object interestRate = formChanges.containsKey("interestRate") ? formChanges.get("interestRate") : formChanges.get("interest_rate");
+        if (interestRate instanceof Number n) {
             entity.setInterestRate(n.doubleValue());
         }
-        if (formChanges.get("nr_dependants") instanceof Number n) {
+        Object nrDependants = formChanges.containsKey("nrDependants") ? formChanges.get("nrDependants") : formChanges.get("nr_dependants");
+        if (nrDependants instanceof Number n) {
             entity.setNrDependants(n.intValue());
         }
-        if (formChanges.get("repayment_system") instanceof String s) {
+        Object repaymentSystem = formChanges.containsKey("repaymentSystem") ? formChanges.get("repaymentSystem") : formChanges.get("repayment_system");
+        if (repaymentSystem instanceof String s) {
             entity.setRepaymentSystem(s);
         }
-        if (formChanges.get("employment_status") instanceof String s) {
+        Object employmentStatus = formChanges.containsKey("employmentStatus") ? formChanges.get("employmentStatus") : formChanges.get("employment_status");
+        if (employmentStatus instanceof String s) {
             entity.setEmploymentStatus(s);
+        }
+        Object isRevolving = formChanges.containsKey("isRevolving") ? formChanges.get("isRevolving") : formChanges.get("is_revolving");
+        if (isRevolving instanceof Boolean b) {
+            entity.setIsRevolving(b);
+        }
+        Object propertyValue = formChanges.containsKey("propertyValue") ? formChanges.get("propertyValue") : formChanges.get("property_value");
+        if (propertyValue instanceof Number n) {
+            entity.setPropertyValue(n.doubleValue());
+        }
+        Object creditLimit = formChanges.containsKey("creditLimit") ? formChanges.get("creditLimit") : formChanges.get("credit_limit");
+        if (creditLimit instanceof Number n) {
+            entity.setCreditLimit(n.doubleValue());
         }
 
         return entity;
@@ -189,6 +240,15 @@ public class SimulationMapper {
             entity.setEad(metrics.getExposureAtDefault());
             entity.setEcl(metrics.getExpectedCalculatedLoss());
             entity.setRiskGrade(metrics.getRiskLevel());
+            if (metrics.getFinancialMetrics() != null) {
+                entity.setFinancialMetrics(new es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded.FinancialMetricsEntity(
+                        metrics.getFinancialMetrics().getMonthlyPayment(),
+                        metrics.getFinancialMetrics().getDebtToIncomeRatio(),
+                        metrics.getFinancialMetrics().getTotalPayment(),
+                        metrics.getFinancialMetrics().getTotalInterest(),
+                        metrics.getFinancialMetrics().getMonthlyDisposableIncome()
+                ));
+            }
         }
         entity.setDecision(decision);
         return entity;

@@ -53,4 +53,12 @@ public interface PartyPortRepository {
      */
     Map<String, Party> findPartyNames(Set<String> partyIds);
 
+    /**
+     * Searches for parties whose first or last name partially matches the search term.
+     * 
+     * @param searchTerm the string to search for (case-insensitive)
+     * @return a Set of unique party identifiers that match the search term
+     */
+    Set<String> findPartyIdsByNameMatch(String searchTerm);
+
 }

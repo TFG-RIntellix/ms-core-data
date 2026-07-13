@@ -20,19 +20,13 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.NotArchivedExce
 public interface SimulationPortService {
 
         /**
-         * Retrieves a list of simulations with their basic information, supporting
-         * optional filtering
-         * by associated request ID, party name or party ID.
-         *
-         * @param requestId the ID of the associated request (optional filter)
-         * @param partyName the name of the client (optional filter, resolved at
-         *                  application layer)
-         * @param partyId   the ID of the client (optional filter)
-         * @param archived  flag to filter archived simulations (optional filter)
-         * @return a list of SimulationSummaryDTO objects matching the filters
+         * Lists simulations based on optional filters.
+         * 
+         * @param search    a generic search term to match against request ID or party name (optional)
+         * @param archived  the archive status of the simulations (optional)
+         * @return a list of SimulationSummaryDTO objects matching the given criteria
          */
-        List<SimulationSummaryDTO> listSimulations(String requestId, String partyName, String partyId,
-                        Boolean archived);
+        List<SimulationSummaryDTO> listSimulations(String search, Boolean archived);
 
         /**
          * Retrieves the detailed information of a specific simulation, including

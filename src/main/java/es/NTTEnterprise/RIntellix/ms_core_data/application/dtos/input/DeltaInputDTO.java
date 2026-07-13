@@ -1,46 +1,25 @@
-package es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.embedded;
-
-import org.springframework.data.mongodb.core.mapping.Field;
+package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input;
 
 /**
- * Embedded entity mapping the "delta" sub-document from the "simulations"
- * MongoDB collection.
- * Contains the computed differences between the base scoring and the simulated
- * scenario.
+ * Nested input DTO for simulation deltas, representing differences in PD, ECL,
+ * risk grade, and monthly affordability metrics.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @Date 07-10-2026
  */
-public class DeltaEntity {
+public class DeltaInputDTO {
 
-    @Field("pd_change")
     private Double pdChange;
-
-    @Field("ecl_change")
     private Double eclChange;
-
-    @Field("risk_grade_change")
     private String riskGradeChange;
-
-    @Field("monthly_payment_change")
     private Double monthlyPaymentChange;
-
-    @Field("dti_change")
     private Double dtiChange;
-
-    @Field("total_payment_change")
     private Double totalPaymentChange;
-
-    @Field("total_interest_change")
     private Double totalInterestChange;
-
-    @Field("monthly_disposable_income_change")
     private Double monthlyDisposableIncomeChange;
 
-    public DeltaEntity() {
+    public DeltaInputDTO() {
     }
-
-    // Getters and Setters
 
     public Double getPdChange() {
         return pdChange;

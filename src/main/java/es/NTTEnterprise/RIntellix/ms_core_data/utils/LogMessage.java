@@ -234,6 +234,12 @@ public final class LogMessage {
     public static final String SERVICE_CREATE_REPORT_START = "Starting createReport operation - requestId: [{}], scoringId: [{}]";
     public static final String SERVICE_CREATE_REPORT_COMPLETE = "createReport operation completed successfully - reportId: [{}]";
 
+    public static final String SERVICE_LIST_REPORTS_START = "Starting listReports operation";
+    public static final String SERVICE_LIST_REPORTS_RESULT = "listReports operation completed - Found {} report(s)";
+
+    public static final String REPOSITORY_REPORT_FIND_ALL_START = "Executing findAll operation on reports";
+    public static final String REPOSITORY_REPORT_FIND_ALL_COMPLETE = "findAll operation on reports completed - Retrieved {} entity(ies)";
+
     public static final String REPOSITORY_REPORT_SAVE_START = "Executing save operation on reports - requestId: [{}], scoringId: [{}]";
     public static final String REPOSITORY_REPORT_SAVE_COMPLETE = "Save operation on reports completed - reportId: [{}]";
 

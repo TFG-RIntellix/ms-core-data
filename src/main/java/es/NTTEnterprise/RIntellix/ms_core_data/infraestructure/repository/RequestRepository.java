@@ -22,19 +22,22 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.RequestE
 public interface RequestRepository extends MongoRepository<RequestEntity, ObjectId> {
 
     /**
-     * Finds requests with dynamic filtering based on party name and request status.
-     * Only non-null parameters are applied as filters. If a parameter is null, it
-     * will not be used as a filter.
+     * Finds requests with dynamic filtering based on a generic search term (ID or party name) and request status.
+     * The search term applies to the _id (regex) OR party_id (in list of IDs).
      * 
-     * @param partyId the name of the party associated with the request (optional
-     *                filter)
-     * @param status  the status of the request (optional filter)
+     * @param search   the search term to match against _id (optional)
+     * @param partyIds the list of party IDs to match against (optional)
+     * @param status   the status of the request (optional filter)
      * @return list of request entities matching the provided filters
      */
     @Query("{ $and: [ " +
-            "{ $or: [ { $expr: { $eq: [:#{#partyId}, null] } }, { 'party.name': :#{#partyId} } ] }, " +
+            "{ $or: [ " +
+                "{ $expr: { $eq: [:#{#search}, ''] } }, " +
+                "{ $expr: { $regexMatch: { input: { $toString: '$_id' }, regex: :#{#search}, options: 'i' } } }, " +
+                "{ 'party_id': { $in: :#{#partyIds} } } " +
+            "] }, " +
             "{ $or: [ { $expr: { $eq: [:#{#status}, null] } }, { 'status': :#{#status} } ] } " +
             "] }")
-    List<RequestEntity> findWithFilters(@Param("partyId") String partyId, @Param("status") String status);
+    List<RequestEntity> findWithFilters(@Param("search") String search, @Param("partyIds") List<ObjectId> partyIds, @Param("status") String status);
 
 }

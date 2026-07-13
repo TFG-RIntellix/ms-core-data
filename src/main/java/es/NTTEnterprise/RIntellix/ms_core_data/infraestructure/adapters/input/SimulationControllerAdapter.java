@@ -59,16 +59,13 @@ public class SimulationControllerAdapter {
      */
     @GetMapping
     public ResponseEntity<List<SimulationSummaryDTO>> listSimulations(
-            @RequestParam(required = false) String requestId,
-            @RequestParam(required = false) String partyName,
-            @RequestParam(required = false) String partyId,
+            @RequestParam(required = false) String search,
             @RequestParam(required = false) Boolean archived) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/simulations");
-        log.debug(LogMessage.CONTROLLER_SIMULATION_REQUEST_PARAMS, requestId, partyName, partyId, archived);
+        log.debug(LogMessage.CONTROLLER_SIMULATION_REQUEST_PARAMS, search, "", "", archived);
 
-        List<SimulationSummaryDTO> simulations = simulationPortService.listSimulations(requestId, partyName, partyId,
-                archived);
+        List<SimulationSummaryDTO> simulations = simulationPortService.listSimulations(search, archived);
 
         log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS, 200, simulations.size());
         return ResponseEntity.ok(simulations);
@@ -182,4 +179,5 @@ public class SimulationControllerAdapter {
 
         return ResponseEntity.ok().body(deletedId);
     }
+
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.DuplicateSimulationNameException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.NotArchivedException;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
@@ -130,6 +131,22 @@ public class GlobalExceptionHandler {
         log.warn(LogMessage.CONTROLLER_VALIDATION_ERROR, ex.getMessage());
         log.warn(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.BAD_REQUEST.value(), ex.getMessage());
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getRequestURI());
+    }
+
+    /**
+     * Handles DuplicateSimulationNameException thrown when attempting to create a simulation
+     * with a name that already exists for the given request.
+     * 
+     * @param ex      the exception instance
+     * @param request the HttpServletRequest
+     * @return ResponseEntity with the error details and appropriate HTTP status
+     */
+    @ExceptionHandler(DuplicateSimulationNameException.class)
+    public ResponseEntity<Map<String, Object>> handleDuplicateSimulationNameException(DuplicateSimulationNameException ex,
+            HttpServletRequest request) {
+        log.warn(LogMessage.CONTROLLER_VALIDATION_ERROR, ex.getMessage());
+        log.warn(LogMessage.CONTROLLER_RESPONSE_ERROR, HttpStatus.CONFLICT.value(), ex.getMessage());
+        return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), request.getRequestURI());
     }
 
     /**

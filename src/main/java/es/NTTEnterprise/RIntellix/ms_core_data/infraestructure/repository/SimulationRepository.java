@@ -21,23 +21,31 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infraestructure.entities.Simulati
 public interface SimulationRepository extends MongoRepository<SimulationEntity, ObjectId> {
 
     /**
-     * Finds simulations with dynamic filtering based on request ID and party ID.
-     * Only non-null parameters are applied as filters. If a parameter is null, it
-     * will not be used as a filter.
-     * When both parameters are null, all simulations are returned.
+     * Finds simulations with dynamic filtering based on a generic search term, specific party IDs, and archive status.
+     * The search term applies to the request_id (regex) OR party_id (in list of IDs).
      * 
-     * @param requestId the ID of the associated request (optional filter, as
-     *                  ObjectId)
-     * @param partyId   the ID of the associated party (optional filter, as
-     *                  ObjectId)
+     * @param search   the search term to match against request_id (optional)
+     * @param partyIds the list of party IDs to match against (optional)
+     * @param archived the archive status (optional filter)
      * @return list of simulation entities matching the provided filters
      */
     @Query("{ $and: [ " +
-            "{ $or: [ { $expr: { $eq: [:#{#requestId}, null] } }, { 'request_id': :#{#requestId} } ] }, " +
-            "{ $or: [ { $expr: { $eq: [:#{#partyId}, null] } }, { 'party_id': :#{#partyId} } ] }, " +
-            "{ $or: [ { $expr: { $eq: [:#{#is_archived}, null] } }, { 'is_archived': :#{#is_archived} } ] } " +
+            "{ $or: [ " +
+                "{ $expr: { $eq: [:#{#search}, ''] } }, " +
+                "{ $expr: { $regexMatch: { input: { $toString: { $ifNull: [ '$request_id', '' ] } }, regex: :#{#search}, options: 'i' } } }, " +
+                "{ 'party_id': { $in: :#{#partyIds} } } " +
+            "] }, " +
+            "{ $or: [ { $expr: { $eq: [:#{#archived}, null] } }, { 'is_archived': :#{#archived} } ] } " +
             "] }")
-    List<SimulationEntity> findWithFilters(@Param("requestId") ObjectId requestId, @Param("partyId") ObjectId partyId,
-            @Param("is_archived") boolean archived);
+    List<SimulationEntity> findWithFilters(@Param("search") String search, @Param("partyIds") List<ObjectId> partyIds, @Param("archived") Boolean archived);
+
+    /**
+     * Checks if a simulation with the given scenario name already exists for the given request ID.
+     * 
+     * @param requestId the ID of the associated request
+     * @param scenarioName the name of the scenario to check
+     * @return true if a simulation exists, false otherwise
+     */
+    boolean existsByRequestIdAndScenarioName(ObjectId requestId, String scenarioName);
 
 }

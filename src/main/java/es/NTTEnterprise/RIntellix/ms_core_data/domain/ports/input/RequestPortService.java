@@ -21,18 +21,13 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundE
 public interface RequestPortService {
 
     /**
-     * Retrieves a list of rqeuests with their detailed information based on a
-     * defined number of maximun requests per page.
+     * Retrieves all requests with optional filtering.
      * 
-     * @param partyName   the name of the party that made the request, which can be
-     *                    used to filter the requests by the party that made them.
-     * @param partyId     the ID of the party that made the request, which can be
-     *                    used to filter the requests by the party that made them.
-     * @param requestType the type of request, which can be used to filter the
-     *                    requests by their type (loan, mortgage or credit card).
-     * @return a list of RequestSummaryDTO objects.
+     * @param search        a generic search term to match against request ID or party name (optional filter)
+     * @param requestStatus the status of the request (optional filter)
+     * @return List of request summary DTOs
      */
-    List<RequestSummaryDTO> listRequests(String partyName, String partyId, String requestType);
+    List<RequestSummaryDTO> listRequests(String search, String requestStatus);
 
     /**
      * Retrieves the detailed information of a specific request.

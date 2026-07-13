@@ -31,6 +31,9 @@ public class SimulatedResultsEntity {
     @Field("decision")
     private String decision;
 
+    @Field("financial_metrics")
+    private FinancialMetricsEntity financialMetrics;
+
     public SimulatedResultsEntity() {
     }
 
@@ -82,5 +85,13 @@ public class SimulatedResultsEntity {
 
     public void setDecision(String decision) {
         this.decision = decision;
+    }
+
+    public FinancialMetricsEntity getFinancialMetrics() {
+        return financialMetrics;
+    }
+
+    public void setFinancialMetrics(FinancialMetricsEntity financialMetrics) {
+        this.financialMetrics = financialMetrics;
     }
 }

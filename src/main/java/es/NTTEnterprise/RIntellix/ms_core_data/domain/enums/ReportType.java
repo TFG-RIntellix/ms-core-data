@@ -7,5 +7,6 @@ package es.NTTEnterprise.RIntellix.ms_core_data.domain.enums;
  * @Date 03-29-2026
  */
 public enum ReportType {
-    RISK_ANALYSIS
+    RISK_ANALYSIS,
+    SCORING
 }
