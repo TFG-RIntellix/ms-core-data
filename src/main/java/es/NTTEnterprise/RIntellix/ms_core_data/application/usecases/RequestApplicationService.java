@@ -15,11 +15,13 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestSummar
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input.RequestPortService;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input.RequestPortService;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.PartyPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestStatus;
 import lombok.extern.slf4j.Slf4j;
+import java.util.Date;
 
 /**
  * Application service implementing business logic for request operations.
@@ -137,7 +139,23 @@ public class RequestApplicationService implements RequestPortService {
         return result;
     }
 
-
+    @Override
+    public void markRequestAsReviewed(String requestId) throws EntityNotFoundException {
+        log.debug(LogMessage.SERVICE_MARK_REVIEWED_START, requestId);
+        validateRequestId(requestId);
+        
+        Request request = requestPortRepository.findById(requestId);
+        if (request.getRequestStatus() == RequestStatus.PENDIENTE_DE_REVISION) {
+            requestPortRepository.updateReviewStatus(
+                requestId, 
+                RequestStatus.REVISADO, 
+                new Date()
+            );
+            log.info(LogMessage.SERVICE_MARK_REVIEWED_SUCCESS, requestId);
+        } else {
+            log.debug(LogMessage.SERVICE_MARK_REVIEWED_SKIPPED, requestId);
+        }
+    }
 
     private void validateRequestId(String requestId) {
         if (requestId == null || requestId.isBlank()) {

@@ -6,7 +6,7 @@ import java.util.Objects;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringResultMessageDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringConsumerMessageMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input.ScoringConsumerPortService;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input.ScoringConsumerPortService;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ScoringPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import lombok.extern.slf4j.Slf4j;

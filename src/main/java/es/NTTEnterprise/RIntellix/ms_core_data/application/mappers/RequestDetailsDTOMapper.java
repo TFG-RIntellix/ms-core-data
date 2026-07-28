@@ -57,6 +57,11 @@ public class RequestDetailsDTOMapper {
               requestDetailsDTO.setIsRevolving(request.getRequestDetails().isRevolving());
 
               // Map common fields
+              if (request.getCollateral() != null) {
+                     requestDetailsDTO.setPropertyValue(request.getCollateral().getPropertyValue().getAmount());
+                     requestDetailsDTO.setIsFirstHome(request.getCollateral().isFirstHome());
+              }
+
               Money money = request.getRequestDetails().getRequestedAmount() != null
                             ? request.getRequestDetails().getRequestedAmount()
                             : request.getRequestDetails().getCreditLimit();

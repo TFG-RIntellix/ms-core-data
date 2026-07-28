@@ -10,8 +10,10 @@ package es.NTTEnterprise.RIntellix.ms_core_data.utils;
  */
 public final class LogMessage {
 
+    public static final String UTILITY_CLASS_NEVER_INSTANTIATE = "Never instantiate";
+
     private LogMessage() {
-        // Private constructor to prevent instantiation
+        throw new UnsupportedOperationException(UTILITY_CLASS_NEVER_INSTANTIATE);
     }
 
     // ============================================================
@@ -27,6 +29,11 @@ public final class LogMessage {
     public static final String CONTROLLER_RESPONSE_ERROR = "Error response sent - Status: {} - Reason: {}";
     public static final String CONTROLLER_VALIDATION_ERROR = "Validation error: {}";
     public static final String CONTROLLER_UNEXPECTED_ERROR = "Unexpected error processing request: {}";
+    
+    public static final String CONTROLLER_REPORT_NOT_FOUND_REQ = "Report not found for requestId: {}";
+    public static final String CONTROLLER_REPORT_NO_FILE = "Report {} has no file path associated";
+    public static final String CONTROLLER_REPORT_FILE_NOT_READABLE = "File {} for report {} does not exist or is not readable";
+    public static final String CONTROLLER_REPORT_URL_ERROR = "Error generating URL for file path: {}";
 
     // ============================================================
     // APPLICATION LAYER - Use Cases / Services
@@ -47,6 +54,10 @@ public final class LogMessage {
 
     public static final String SERVICE_GET_PARTY_START = "Starting getRequestParty operation - requestId: [{}]";
     public static final String SERVICE_GET_PARTY_COMPLETE = "getRequestParty operation completed successfully - requestId: [{}]";
+    
+    public static final String SERVICE_MARK_REVIEWED_START = "Starting markRequestAsReviewed for requestId: [{}]";
+    public static final String SERVICE_MARK_REVIEWED_SUCCESS = "Request status updated to REVISADO for requestId: [{}]";
+    public static final String SERVICE_MARK_REVIEWED_SKIPPED = "Request status is not PENDIENTE_DE_REVISION for requestId: [{}], no update performed.";
 
     public static final String SERVICE_GET_SCORING_START = "Starting getScoringByRequestId operation - requestId: [{}]";
     public static final String SERVICE_GET_SCORING_VALIDATION = "Validating requestId for scoring: [{}]";
@@ -96,6 +107,8 @@ public final class LogMessage {
     public static final String SERVICE_ARCHIVE_SIMULATION_VALIDATION_ERROR = "Validation failed for simulationId - Value is null or blank";
     public static final String SERVICE_ARCHIVE_SIMULATION_FOUND = "Simulation found for archiving - simulationId: [{}]";
     public static final String SERVICE_ARCHIVE_SIMULATION_COMPLETE = "archiveSimulation operation completed successfully - simulationId: [{}], isArchived: [{}]";
+    public static final String SERVICE_SIMULATION_DEFAULT_NAME = "No scenario name provided. Generated default name: {}";
+    public static final String SERVICE_SIMULATION_ALREADY_EXISTS = "Simulation with name '{}' already exists for request {}";
 
     // Simulation Delete (DELETE)
     public static final String SERVICE_DELETE_SIMULATION_START = "Starting deleteSimulation operation - simulationId: [{}]";
@@ -112,6 +125,7 @@ public final class LogMessage {
     public static final String REPOSITORY_FIND_BY_ID_FOUND = "Entity found in database - requestId: [{}]";
     public static final String REPOSITORY_FIND_BY_ID_NOT_FOUND = "Entity not found in database - requestId: [{}]";
     public static final String REPOSITORY_FIND_BY_ID_MAPPING = "Mapping RequestEntity to Request domain - requestId: [{}]";
+    public static final String REPOSITORY_REQUEST_UPDATING_REVIEW_STATUS = "Updating review status for requestId: [{}]";
 
     public static final String REPOSITORY_FIND_WITH_FILTERS_START = "Executing findWithFilters operation - partyName: [{}], requestStatus: [{}]";
     public static final String REPOSITORY_FIND_WITH_FILTERS_RESULT = "findWithFilters operation completed - Retrieved {} entity(ies)";
@@ -124,6 +138,9 @@ public final class LogMessage {
     public static final String REPOSITORY_PARTY_FIND_BY_ID_MAPPING = "Mapping PartyEntity to Party domain - partyId: [{}]";
 
     public static final String REPOSITORY_PARTY_FIND_NAME_ONLY_START = "Executing findPartyWithNameOnly operation - partyId: [{}]";
+    public static final String REPOSITORY_PARTY_FIND_NAMES_ONLY_START = "REPOSITORY_PARTY_FIND_NAMES_ONLY_START: {}";
+    public static final String REPOSITORY_PARTY_FIND_IDS_BY_NAME_START = "REPOSITORY_PARTY_FIND_IDS_BY_NAME_START: {}";
+    public static final String REPOSITORY_PARTY_FIND_IDS_BY_NAME_RESULT = "REPOSITORY_PARTY_FIND_IDS_BY_NAME_RESULT: found {} parties";
     public static final String REPOSITORY_PARTY_FIND_NAME_ONLY_NOT_FOUND = "Party not found for name query - partyId: [{}]";
     public static final String REPOSITORY_PARTY_FIND_NAME_ONLY_RESULT = "Partial Party retrieved - partyId: [{}], fullName: [{}]";
 
@@ -161,6 +178,7 @@ public final class LogMessage {
     public static final String REPOSITORY_SIMULATION_DELETE_NOT_FOUND = "Simulation not found for deletion - simulationId: [{}]";
     public static final String REPOSITORY_SIMULATION_DELETE_NOT_ARCHIVED = "Cannot delete simulation - simulation is not archived - simulationId: [{}]";
     public static final String REPOSITORY_SIMULATION_DELETE_COMPLETE = "Delete operation on simulations completed - simulationId: [{}]";
+    public static final String REPOSITORY_SIMULATION_CHECK_EXISTS = "Checking if simulation exists with scenarioName: {} for requestId: {}";
 
     // ============================================================
     // INFRASTRUCTURE LAYER - Mappers
@@ -236,9 +254,23 @@ public final class LogMessage {
 
     public static final String SERVICE_LIST_REPORTS_START = "Starting listReports operation";
     public static final String SERVICE_LIST_REPORTS_RESULT = "listReports operation completed - Found {} report(s)";
+    
+    public static final String SERVICE_GET_REPORT_REQ_START = "Starting getReportByRequestId operation - requestId: [{}]";
+    public static final String SERVICE_GET_REPORT_REQ_COMPLETE = "getReportByRequestId operation completed";
+    public static final String SERVICE_GET_REPORT_ID_START = "Starting getReport operation - reportId: [{}]";
+    public static final String SERVICE_GET_REPORT_ID_FAILED = "getReport operation failed - reportId is null or empty";
+    public static final String SERVICE_GET_REPORT_ID_COMPLETE = "getReport operation completed - Retrieved report: [{}]";
 
     public static final String REPOSITORY_REPORT_FIND_ALL_START = "Executing findAll operation on reports";
     public static final String REPOSITORY_REPORT_FIND_ALL_COMPLETE = "findAll operation on reports completed - Retrieved {} entity(ies)";
+
+    public static final String REPOSITORY_REPORT_FIND_BY_REQUEST_ID_START = "Executing findByRequestId on reports - requestId: [{}]";
+    public static final String REPOSITORY_REPORT_INVALID_OBJECT_ID = "Invalid ObjectId format for requestId: {}";
+    public static final String REPOSITORY_REPORT_NOT_FOUND_FOR_REQUEST_ID = "No report found for requestId: {}";
+    public static final String REPOSITORY_REPORT_FIND_BY_REQUEST_ID_COMPLETED = "findByRequestId on reports completed - Retrieved entity";
+    public static final String REPOSITORY_REPORT_FIND_BY_ID_START = "Executing findById on reports - id: [{}]";
+    public static final String REPOSITORY_REPORT_NOT_FOUND_FOR_ID = "Report not found for id: [{}]";
+    public static final String REPOSITORY_REPORT_FIND_BY_ID_COMPLETED = "findById on reports completed - Retrieved entity";
 
     public static final String REPOSITORY_REPORT_SAVE_START = "Executing save operation on reports - requestId: [{}], scoringId: [{}]";
     public static final String REPOSITORY_REPORT_SAVE_COMPLETE = "Save operation on reports completed - reportId: [{}]";
@@ -250,6 +282,7 @@ public final class LogMessage {
     public static final String EXCEPTION_ENTITY_NOT_FOUND = "Entity not found - Type: {} - ID: [{}]";
     public static final String EXCEPTION_ILLEGAL_ARGUMENT = "Illegal argument: {}";
     public static final String EXCEPTION_UNEXPECTED = "Unexpected exception occurred: {}";
+    public static final String API_ERROR_UNEXPECTED_MESSAGE = "An unexpected error occurred. Please try again later.";
     
     public static final String EXCEPTION_SIMULATION_NOT_FOUND = "Simulation with ID %s not found";
     public static final String EXCEPTION_REQUEST_NOT_FOUND = "Request with ID %s not found";

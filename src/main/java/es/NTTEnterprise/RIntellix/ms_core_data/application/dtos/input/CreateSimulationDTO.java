@@ -1,5 +1,7 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input;
 
+import jakarta.validation.Valid;
+
 import java.util.Map;
 
 import jakarta.validation.constraints.NotBlank;
@@ -36,12 +38,12 @@ public class CreateSimulationDTO {
 
     // Simulated results (recalculated)
     @NotNull(message = "Simulated results must be provided")
-    @jakarta.validation.Valid
+    @Valid
     private SimulatedResultsInputDTO simulatedResults;
 
     // Delta (comparison with base scoring)
     @NotNull(message = "Delta must be provided")
-    @jakarta.validation.Valid
+    @Valid
     private DeltaInputDTO delta;
 
     public CreateSimulationDTO() {

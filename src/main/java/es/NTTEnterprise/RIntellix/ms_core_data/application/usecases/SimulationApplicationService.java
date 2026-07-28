@@ -1,5 +1,8 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.FinancialMetrics;
+import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +26,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.DuplicateSimula
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.NotArchivedException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.RequestPartyMismatchException;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input.SimulationPortService;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input.SimulationPortService;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.PartyPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ScoringPortRepository;
@@ -192,16 +195,16 @@ public class SimulationApplicationService implements SimulationPortService {
 
         // Generate scenario name if not provided
         if (dto.getScenarioName() == null || dto.getScenarioName().isBlank()) {
-            java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             String defaultName = "Simulación " + formatter.format(new Date());
             dto.setScenarioName(defaultName);
-            log.debug("No scenario name provided. Generated default name: {}", defaultName);
+            log.debug(LogMessage.SERVICE_SIMULATION_DEFAULT_NAME, defaultName);
         }
 
         // Check if a simulation with this scenario name already exists for this request
         if (simulationPortRepository.existsByRequestIdAndScenarioName(dto.getRequestId(), dto.getScenarioName())) {
-            log.warn("Simulation with name '{}' already exists for request {}", dto.getScenarioName(),
-                    dto.getRequestId());
+            log.warn(LogMessage.SERVICE_SIMULATION_ALREADY_EXISTS, dto.getScenarioName(),
+                    request.getId());
             throw new DuplicateSimulationNameException("Ya existe una simulación con este nombre.");
         }
 
@@ -248,13 +251,13 @@ public class SimulationApplicationService implements SimulationPortService {
 
         // Simulated results and decision
         if (dto.getSimulatedResults() != null) {
-            es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.FinancialMetrics fm = null;
+            FinancialMetrics fm = null;
             if (dto.getSimulatedResults().getMonthlyPayment() != null
                     || dto.getSimulatedResults().getDti() != null
                     || dto.getSimulatedResults().getTotalPayment() != null
                     || dto.getSimulatedResults().getTotalInterest() != null
                     || dto.getSimulatedResults().getDisposableIncome() != null) {
-                fm = new es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.FinancialMetrics(
+                fm = new FinancialMetrics(
                         dto.getSimulatedResults().getMonthlyPayment(),
                         dto.getSimulatedResults().getDti(),
                         dto.getSimulatedResults().getTotalPayment(),
@@ -308,13 +311,13 @@ public class SimulationApplicationService implements SimulationPortService {
 
         // Simulated results and decision
         if (dto.getSimulatedResults() != null) {
-            es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.FinancialMetrics fm = null;
+            FinancialMetrics fm = null;
             if (dto.getSimulatedResults().getMonthlyPayment() != null
                     || dto.getSimulatedResults().getDti() != null
                     || dto.getSimulatedResults().getTotalPayment() != null
                     || dto.getSimulatedResults().getTotalInterest() != null
                     || dto.getSimulatedResults().getDisposableIncome() != null) {
-                fm = new es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.FinancialMetrics(
+                fm = new FinancialMetrics(
                         dto.getSimulatedResults().getMonthlyPayment(),
                         dto.getSimulatedResults().getDti(),
                         dto.getSimulatedResults().getTotalPayment(),

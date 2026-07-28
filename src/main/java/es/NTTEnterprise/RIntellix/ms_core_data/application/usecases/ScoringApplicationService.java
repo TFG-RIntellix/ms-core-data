@@ -8,7 +8,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringDT
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input.ScoringPortService;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input.ScoringPortService;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ScoringPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import lombok.extern.slf4j.Slf4j;

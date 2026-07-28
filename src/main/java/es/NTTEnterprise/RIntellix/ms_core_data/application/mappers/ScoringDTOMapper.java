@@ -71,7 +71,7 @@ public class ScoringDTOMapper {
             return new ArrayList<>();
         }
         return features.stream()
-                .map(f -> new TopFeatureDTO(f.getFeatureName(), f.getFeatureValue(), f.getShapValue()))
+                .map(f -> new TopFeatureDTO(f.getFeatureName(), f.getFeatureValue(), f.getShapValue(), f.getDescription()))
                 .collect(Collectors.toList());
     }
 }

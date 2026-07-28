@@ -4,6 +4,8 @@ import java.util.List;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestStatus;
+import java.util.Date;
 
 /**
  * Output port for Request aggregate persistence.
@@ -50,5 +52,15 @@ public interface RequestPortRepository {
      * @return List of requests matching the specified filters
      */
     public List<Request> findWithFilters(String search, List<String> partyIds, String requestStatus);
+
+    /**
+     * Updates the status and last review date of a request.
+     * 
+     * @param requestId the unique identifier of the request
+     * @param status the new status
+     * @param lastReviewDate the date of the review
+     * @throws EntityNotFoundException if the request does not exist
+     */
+    public void updateReviewStatus(String requestId, RequestStatus status, Date lastReviewDate) throws EntityNotFoundException;
 
 }
