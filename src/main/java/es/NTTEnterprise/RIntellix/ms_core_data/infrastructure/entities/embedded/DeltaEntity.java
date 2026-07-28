@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * scenario.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public class DeltaEntity {
 

@@ -14,8 +14,8 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input;
  * data is sent to the scoring engine for credit cards, following the
  * Strategy Pattern for type-specific message transport.
  *
- * @author Lucia Fernandez Mancebo
- * @Date 04-05-2026
+ * @author Lucía Fernández Mancebo
+ * @date 05/04/2026
  */
 public class CreditCardScoringGenerationDTO {
 

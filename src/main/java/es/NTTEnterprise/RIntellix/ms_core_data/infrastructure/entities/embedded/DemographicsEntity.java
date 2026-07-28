@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * Contains personal identification and demographic data.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-01-2026
+ * @date 01/03/2026
  */
 public class DemographicsEntity {
 

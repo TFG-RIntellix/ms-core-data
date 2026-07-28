@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * ReportMapper to convert between entities and domain objects.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-29-2026
+ * @date 29/03/2026
  */
 @Slf4j
 @Repository

@@ -17,6 +17,14 @@ import java.util.Date;
  * Since this is a READ-ONLY microservice, only retrieval operations are
  * supported.
  */
+/**
+ * Core component: RequestPortRepository.
+ * Encapsulates the logic and responsibilities assigned to this element
+ * within the Hexagonal Architecture, ensuring separation of concerns.
+ *
+ * @author Lucía Fernández Mancebo
+ * @date 28/07/2026
+ */
 public interface RequestPortRepository {
 
     /**

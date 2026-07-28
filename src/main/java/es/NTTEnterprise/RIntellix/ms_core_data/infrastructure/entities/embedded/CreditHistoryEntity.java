@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * This subdocument is optional and may not exist for new customers.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-01-2026
+ * @date 01/03/2026
  */
 public class CreditHistoryEntity {
 

@@ -12,6 +12,14 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringDTOMap
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringGenerationDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.SimulationDTOMapper;
 
+/**
+ * Core component: MapperConfig.
+ * Encapsulates the logic and responsibilities assigned to this element
+ * within the Hexagonal Architecture, ensuring separation of concerns.
+ *
+ * @author Lucía Fernández Mancebo
+ * @date 28/07/2026
+ */
 @Configuration
 public class MapperConfig {
 

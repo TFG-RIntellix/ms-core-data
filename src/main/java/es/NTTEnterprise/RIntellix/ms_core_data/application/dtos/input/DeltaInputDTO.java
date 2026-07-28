@@ -5,7 +5,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input;
  * risk grade, and monthly affordability metrics.
  *
  * @author Lucía Fernández Mancebo
- * @Date 07-10-2026
+ * @date 10/07/2026
  */
 public class DeltaInputDTO {
 

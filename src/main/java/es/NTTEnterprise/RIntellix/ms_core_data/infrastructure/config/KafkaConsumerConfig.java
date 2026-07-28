@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
  * - Error handling: selective retries based on exception type
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-21-2026
+ * @date 21/03/2026
  */
 @Configuration
 @Slf4j

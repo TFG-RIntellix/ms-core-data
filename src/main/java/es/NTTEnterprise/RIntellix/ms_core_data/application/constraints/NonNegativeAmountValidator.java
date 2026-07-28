@@ -8,7 +8,7 @@ import jakarta.validation.ConstraintValidatorContext;
  * Checks that amount (if provided) is greater than or equal to 0.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-21-2026
+ * @date 21/03/2026
  */
 public class NonNegativeAmountValidator implements ConstraintValidator<NonNegativeAmount, Number> {
 

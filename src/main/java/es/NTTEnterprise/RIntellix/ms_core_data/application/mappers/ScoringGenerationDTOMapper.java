@@ -26,8 +26,8 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.SocioDemographicP
  * - Person details structure is complete when present
  * - Only optional Money and numeric values are checked for null
  *
- * @author Lucia Fernandez Mancebo
- * @Date 03-22-2026
+ * @author Lucía Fernández Mancebo
+ * @date 22/03/2026
  */
 public class ScoringGenerationDTOMapper {
 

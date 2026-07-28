@@ -16,7 +16,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.Simulatio
  * and defines a dynamic query for filtered retrieval of simulations.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public interface SimulationRepository extends MongoRepository<SimulationEntity, ObjectId> {
 

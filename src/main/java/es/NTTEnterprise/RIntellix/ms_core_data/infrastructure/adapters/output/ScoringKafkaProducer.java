@@ -30,8 +30,8 @@ import lombok.extern.slf4j.Slf4j;
  * - Retry logic configured at producer level
  * - Error handling and logging
  *
- * @author Lucia Fernandez Mancebo
- * @Date 03-22-2026
+ * @author Lucía Fernández Mancebo
+ * @date 22/03/2026
  */
 @Slf4j
 @Component

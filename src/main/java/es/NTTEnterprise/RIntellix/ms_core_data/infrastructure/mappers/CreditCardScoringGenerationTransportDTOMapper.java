@@ -21,8 +21,8 @@ import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
  * All required credit card fields are now present in ScoringGenerationRequest
  * after mapping from Request entity, making this mapper fully self-contained.
  *
- * @author Lucia Fernandez Mancebo
- * @Date 04-05-2026
+ * @author Lucía Fernández Mancebo
+ * @date 05/04/2026
  */
 public class CreditCardScoringGenerationTransportDTOMapper {
 

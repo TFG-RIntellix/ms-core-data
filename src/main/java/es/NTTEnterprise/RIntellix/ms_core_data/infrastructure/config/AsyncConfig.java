@@ -20,7 +20,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
  * - Thread name prefix: "scoring-" (for easy identification in logs)
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-15-2026
+ * @date 15/03/2026
  */
 @Configuration
 @EnableAsync

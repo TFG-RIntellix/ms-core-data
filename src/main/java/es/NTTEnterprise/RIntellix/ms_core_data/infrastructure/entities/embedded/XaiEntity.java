@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * Contains the SHAP base value and the list of top contributing features.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public class XaiEntity {
 

@@ -6,6 +6,14 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Report;
 /**
  * Mapper that converts a {@link Report} domain entity into a {@link ReportDTO}.
  */
+/**
+ * Core component: ReportDTOMapper.
+ * Encapsulates the logic and responsibilities assigned to this element
+ * within the Hexagonal Architecture, ensuring separation of concerns.
+ *
+ * @author Lucía Fernández Mancebo
+ * @date 28/07/2026
+ */
 public class ReportDTOMapper {
 
     public ReportDTO toDTO(Report report) {

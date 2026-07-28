@@ -22,8 +22,8 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.mappers.CreditCard
  * populated during the mapping phase from the Request entity's RequestDetails.
  * This strategy is stateless and self-contained.
  *
- * @author Lucia Fernandez Mancebo
- * @Date 04-05-2026
+ * @author Lucía Fernández Mancebo
+ * @date 05/04/2026
  */
 public class CreditCardScoringTransportStrategy implements ScoringTransportStrategy {
 

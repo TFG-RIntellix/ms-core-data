@@ -38,8 +38,8 @@ import lombok.extern.slf4j.Slf4j;
  * Errors during scoring generation are logged but do not affect the request
  * flow.
  *
- * @author Lucia Fernandez Mancebo
- * @Date 03-22-2026
+ * @author Lucía Fernández Mancebo
+ * @date 22/03/2026
  */
 @Slf4j
 public class ScoringGenerationService {

@@ -5,7 +5,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions;
  * that already exists for the same request.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-08-2026
+ * @date 08/03/2026
  */
 public class DuplicateSimulationNameException extends RuntimeException {
 

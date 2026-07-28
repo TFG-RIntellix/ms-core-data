@@ -8,7 +8,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundE
  * Defines the use cases available for scoring retrieval.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public interface ScoringPortService {
 

@@ -9,6 +9,14 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskFactor;
  * Output DTO for Report.
  * Contains the report data to be returned to the client.
  */
+/**
+ * Core component: ReportDTO.
+ * Encapsulates the logic and responsibilities assigned to this element
+ * within the Hexagonal Architecture, ensuring separation of concerns.
+ *
+ * @author Lucía Fernández Mancebo
+ * @date 28/07/2026
+ */
 public class ReportDTO {
 
     private String reportId;

@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * Contains income and financial information.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-01-2026
+ * @date 01/03/2026
  */
 public class EconomicDataEntity {
 

@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
  * Used when the user recalculates and updates a simulation that was already saved.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-07-2026
+ * @date 07/03/2026
  */
 public class CalculatedSimulationDTO {
 

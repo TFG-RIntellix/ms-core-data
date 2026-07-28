@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * grade, as well as financial affordability metrics (as of 05-26-2026).
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  * @Updated 05-26-2026 - Added FinancialMetricsEntity
  */
 public class ResultsEntity {

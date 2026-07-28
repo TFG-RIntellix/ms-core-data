@@ -13,7 +13,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.ScoringEn
  * Extends Spring Data MongoDB's MongoRepository for standard CRUD operations.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public interface ScoringRepository extends MongoRepository<ScoringEntity, ObjectId> {
 

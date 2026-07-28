@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
  * and uses ScoringMapper to convert entities to domain objects.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 @Slf4j
 @Repository

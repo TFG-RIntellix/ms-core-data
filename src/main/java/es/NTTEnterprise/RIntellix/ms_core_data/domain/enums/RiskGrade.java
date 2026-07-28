@@ -7,7 +7,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.domain.enums;
  * credit rating conventions.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-21-2026
+ * @date 21/03/2026
  */
 public enum RiskGrade {
 

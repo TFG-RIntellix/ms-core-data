@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
  * every other field is required by the schema.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-29-2026
+ * @date 29/03/2026
  */
 public class CreateReportDTO {
 

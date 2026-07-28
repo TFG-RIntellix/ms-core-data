@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * Contains employment status and work experience data.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-01-2026
+ * @date 01/03/2026
  */
 public class EmploymentEntity {
 

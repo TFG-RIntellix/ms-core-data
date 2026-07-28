@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * Implements error handling with retry policy.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-21-2026
+ * @date 21/03/2026
  */
 @Component
 @Slf4j

@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
  * and persisting them to MongoDB.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-21-2026
+ * @date 21/03/2026
  */
 @Slf4j
 public class ScoringConsumerService implements ScoringConsumerPortService {

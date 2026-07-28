@@ -7,7 +7,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.EmploymentStatus;
  * Contains income, employment and credit history information.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-01-2026
+ * @date 01/03/2026
  */
 public class FinancialProfile {
 

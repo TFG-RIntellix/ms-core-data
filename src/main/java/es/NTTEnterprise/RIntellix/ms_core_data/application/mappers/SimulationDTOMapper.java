@@ -15,7 +15,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Simulation;
  * Handles both summary and detail conversions for the two simulation endpoints.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public class SimulationDTOMapper {
 

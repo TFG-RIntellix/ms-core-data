@@ -14,7 +14,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.ReportType;
  * set); {@code fileSizeBytes} always reflects the size of the rendered PDF.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-29-2026
+ * @date 29/03/2026
  */
 public class Report {
 

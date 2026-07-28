@@ -8,7 +8,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output;
  * exposing all the details of the request entity.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 02-28-2026
+ * @date 28/02/2026
  */
 public class RequestSummaryDTO {
 

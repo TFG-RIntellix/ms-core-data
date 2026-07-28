@@ -12,8 +12,8 @@ import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
  * ensuring the adapter layer remains clean of mapping logic. Follows the
  * static mapper pattern with null-safe field mapping.
  *
- * @author Lucia Fernandez Mancebo
- * @Date 03-22-2026
+ * @author Lucía Fernández Mancebo
+ * @date 22/03/2026
  */
 public class ScoringGenerationTransportDTOMapper {
 

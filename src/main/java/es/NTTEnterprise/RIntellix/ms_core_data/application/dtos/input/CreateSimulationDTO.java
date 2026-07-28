@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
  * (modifying parameters, recalculating) and decides to save the final result.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-08-2026
+ * @date 08/03/2026
  */
 public class CreateSimulationDTO {
 

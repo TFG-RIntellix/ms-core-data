@@ -24,6 +24,14 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRe
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ScoringPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.SimulationPortRepository;
 
+/**
+ * Core component: ApplicationServicesConfig.
+ * Encapsulates the logic and responsibilities assigned to this element
+ * within the Hexagonal Architecture, ensuring separation of concerns.
+ *
+ * @author Lucía Fernández Mancebo
+ * @date 28/07/2026
+ */
 @Configuration
 public class ApplicationServicesConfig {
 

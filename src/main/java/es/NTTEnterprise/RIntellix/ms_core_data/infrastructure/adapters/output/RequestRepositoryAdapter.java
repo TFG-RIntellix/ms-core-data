@@ -25,7 +25,7 @@ import java.time.ZoneId;
  * Party resolution is handled at the application layer to respect SRP.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 02-28-2026
+ * @date 28/02/2026
  */
 @Slf4j
 @Repository

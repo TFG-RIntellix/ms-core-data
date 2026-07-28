@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * the AI analyst.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-29-2026
+ * @date 29/03/2026
  */
 public class RiskFactorEntity {
 

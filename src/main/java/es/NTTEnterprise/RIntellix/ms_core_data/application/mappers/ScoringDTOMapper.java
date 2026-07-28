@@ -14,11 +14,13 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskFeature;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
 
 /**
- * Mapper class to convert between Scoring (domain) and ScoringDTO
- * (application).
+ * Orchestrates the conversion of financial scoring domain entities into standard 
+ * data transfer objects (DTOs) for API responses. This mapper ensures that internal 
+ * domain structures and calculations are properly formatted and safely exposed 
+ * to external clients.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public class ScoringDTOMapper {
 

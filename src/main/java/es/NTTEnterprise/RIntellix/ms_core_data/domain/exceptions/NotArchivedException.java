@@ -8,7 +8,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions;
  * marked as archived.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-07-2026
+ * @date 07/03/2026
  */
 public class NotArchivedException extends RuntimeException {
 

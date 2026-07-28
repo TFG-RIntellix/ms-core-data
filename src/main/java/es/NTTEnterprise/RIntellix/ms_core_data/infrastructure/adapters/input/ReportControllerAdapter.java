@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
  * aggregate, receiving AI-generated risk reports from ms-reporting.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-29-2026
+ * @date 29/03/2026
  */
 @Slf4j
 @RestController

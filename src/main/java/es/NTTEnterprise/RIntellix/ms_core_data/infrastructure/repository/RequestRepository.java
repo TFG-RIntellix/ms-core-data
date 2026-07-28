@@ -17,7 +17,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.RequestEn
  * party name and status.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 02-28-2026
+ * @date 28/02/2026
  */
 public interface RequestRepository extends MongoRepository<RequestEntity, ObjectId> {
 

@@ -5,7 +5,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.domain.enums;
  * Each type has a different monthly payment calculation for DTI purposes.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-02-2026
+ * @date 02/03/2026
  */
 public enum ContractType {
     PRESTAMO,

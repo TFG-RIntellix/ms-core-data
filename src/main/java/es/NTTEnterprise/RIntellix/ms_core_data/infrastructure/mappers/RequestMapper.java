@@ -17,7 +17,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.RequestEn
  * (domain).
  * 
  * @author Lucía Fernández Mancebo
- * @Date 02-28-2026
+ * @date 28/02/2026
  */
 @Component
 public class RequestMapper {

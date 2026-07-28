@@ -17,7 +17,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded.
  * including modified inputs, recalculated risk metrics and deltas.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 @Document(collection = "simulations")
 public class SimulationEntity {

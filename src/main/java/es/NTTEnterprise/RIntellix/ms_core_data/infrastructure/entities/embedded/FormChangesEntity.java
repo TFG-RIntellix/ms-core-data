@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * Contains the user-modified input values for the simulation scenario.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public class FormChangesEntity {
 

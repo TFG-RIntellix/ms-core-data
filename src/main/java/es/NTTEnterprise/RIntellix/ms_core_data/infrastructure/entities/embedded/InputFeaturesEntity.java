@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * Contains all features used as input for the credit risk model.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public class InputFeaturesEntity {
 

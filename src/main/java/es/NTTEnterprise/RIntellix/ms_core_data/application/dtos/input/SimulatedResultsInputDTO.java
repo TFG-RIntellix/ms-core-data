@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
  * decision, and detailed financial affordability metrics.
  *
  * @author Lucía Fernández Mancebo
- * @Date 07-10-2026
+ * @date 10/07/2026
  */
 public class SimulatedResultsInputDTO {
 

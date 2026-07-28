@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
  * DTI is expressed as a decimal (0-1 range, e.g., 0.35 = 35%).
  * 
  * @author Lucía Fernández Mancebo
- * @Date 05-26-2026
+ * @date 26/05/2026
  */
 public class FinancialMetricsDTO {
 

@@ -19,7 +19,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded.
  * including the input feature snapshot, risk metrics and SHAP explainability.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 @Document(collection = "scorings")
 @JsonInclude(JsonInclude.Include.NON_NULL)

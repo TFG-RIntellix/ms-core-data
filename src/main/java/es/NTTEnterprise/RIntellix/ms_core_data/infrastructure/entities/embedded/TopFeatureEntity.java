@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * Represents a single SHAP feature contribution.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public class TopFeatureEntity {
 

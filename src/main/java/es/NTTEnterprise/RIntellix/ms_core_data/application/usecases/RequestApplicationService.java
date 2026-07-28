@@ -35,7 +35,7 @@ import java.util.Date;
  * - Credit Cards: Credit card-specific processing
  *
  * @author Lucía Fernández Mancebo
- * @Date 02-28-2026
+ * @date 28/02/2026
  */
 @Slf4j
 public class RequestApplicationService implements RequestPortService {

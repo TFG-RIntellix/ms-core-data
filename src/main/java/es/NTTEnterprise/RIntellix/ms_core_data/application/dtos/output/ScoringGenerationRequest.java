@@ -7,8 +7,8 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output;
  * layer and sent through the scoring publication port to infrastructure
  * adapters (e.g., Kafka).
  *
- * @author Lucia Fernandez Mancebo
- * @Date 03-22-2026
+ * @author Lucía Fernández Mancebo
+ * @date 22/03/2026
  */
 public class ScoringGenerationRequest {
 

@@ -6,7 +6,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output;
  * scenario name, associated client, linked request and creation date.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public class SimulationSummaryDTO {
 

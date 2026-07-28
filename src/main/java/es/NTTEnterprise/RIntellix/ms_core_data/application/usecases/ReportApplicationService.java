@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
  * AI-generated risk reports received from ms-reporting.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-29-2026
+ * @date 29/03/2026
  */
 @Slf4j
 public class ReportApplicationService implements ReportPortService {

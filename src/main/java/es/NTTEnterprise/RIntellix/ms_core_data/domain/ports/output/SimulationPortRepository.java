@@ -13,7 +13,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.NotArchivedExce
  * supported.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public interface SimulationPortRepository {
 

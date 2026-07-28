@@ -19,7 +19,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded.
  * recommendations and the generated PDF metadata.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-29-2026
+ * @date 29/03/2026
  */
 @Document(collection = "reports")
 @JsonInclude(JsonInclude.Include.NON_NULL)

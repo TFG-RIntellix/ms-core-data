@@ -5,7 +5,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.domain.enums;
  * Values are kept in Spanish to match the "reports" collection schema.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-29-2026
+ * @date 29/03/2026
  */
 public enum Severity {
     BAJO,

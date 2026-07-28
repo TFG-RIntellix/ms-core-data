@@ -8,7 +8,7 @@ import java.util.Map;
  * the original (base) scoring results and the computed deltas for comparison.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public class SimulationDetailsDTO {
 

@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
  * Party resolution is handled at the application layer to respect SRP.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 @Slf4j
 @Repository

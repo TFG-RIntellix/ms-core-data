@@ -21,6 +21,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping(RequestControllerAdapter.BASE_PATH)
+/**
+ * Core component: RequestControllerAdapter.
+ * Encapsulates the logic and responsibilities assigned to this element
+ * within the Hexagonal Architecture, ensuring separation of concerns.
+ *
+ * @author Lucía Fernández Mancebo
+ * @date 28/07/2026
+ */
 public class RequestControllerAdapter {
 
     public static final String BASE_PATH = "/api/requests";

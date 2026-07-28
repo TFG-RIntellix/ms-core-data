@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * total interest, and monthly disposable income.
  *
  * @author Lucía Fernández Mancebo
- * @Date 05-26-2026
+ * @date 26/05/2026
  */
 public class FinancialMetricsEntity {
 

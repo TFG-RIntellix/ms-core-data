@@ -7,7 +7,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output;
  * SHAP contribution.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public class TopFeatureDTO {
 

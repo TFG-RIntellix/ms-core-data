@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotBlank;
  * Part of the ScoringConsumerMessageDTO nested structure.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-21-2026
+ * @date 21/03/2026
  * @Updated 05-26-2026 - Added financialMetrics field
  */
 public class RiskResultsDTO {
