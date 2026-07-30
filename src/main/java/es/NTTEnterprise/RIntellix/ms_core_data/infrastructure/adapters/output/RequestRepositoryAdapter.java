@@ -1,8 +1,11 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.adapters.output;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Repository;
@@ -16,6 +19,8 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.repository.Request
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestStatus;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Collections;
 import java.util.Date;
 import java.time.ZoneId;
 
@@ -92,7 +97,8 @@ public class RequestRepositoryAdapter implements RequestPortRepository {
     }
 
     @Override
-    public void updateReviewStatus(String requestId, RequestStatus status, Date lastReviewDate) throws EntityNotFoundException {
+    public void updateReviewStatus(String requestId, RequestStatus status, Date lastReviewDate)
+            throws EntityNotFoundException {
         log.debug(LogMessage.REPOSITORY_REQUEST_UPDATING_REVIEW_STATUS, requestId);
         Optional<RequestEntity> requestEntityOpt = requestRepository.findById(new ObjectId(requestId));
         if (requestEntityOpt.isEmpty()) {
@@ -104,6 +110,24 @@ public class RequestRepositoryAdapter implements RequestPortRepository {
             entity.setLastReviewDate(lastReviewDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         }
         requestRepository.save(entity);
+    }
+
+    @Override
+    public Map<String, Request> findRequestsByIds(Set<String> requestIds) {
+        if (requestIds == null || requestIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        List<ObjectId> objectIds = requestIds.stream()
+                .filter(ObjectId::isValid)
+                .map(ObjectId::new)
+                .toList();
+
+        List<RequestEntity> entities = (List<RequestEntity>) requestRepository.findAllById(objectIds);
+
+        return entities.stream()
+                .map(requestMapper::toDomain)
+                .collect(Collectors.toMap(Request::getId, req -> req));
     }
 
 }

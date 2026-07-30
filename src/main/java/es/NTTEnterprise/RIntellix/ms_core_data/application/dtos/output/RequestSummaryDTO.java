@@ -13,6 +13,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output;
 public class RequestSummaryDTO {
 
     private String requestId;
+    private String requestCode;
     private String partyName;
     private String status;
     private String requestType;
@@ -62,6 +63,14 @@ public class RequestSummaryDTO {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public String getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(String requestCode) {
+        this.requestCode = requestCode;
     }
 
     public String getStatus() {

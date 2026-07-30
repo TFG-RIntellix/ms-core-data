@@ -24,6 +24,7 @@ public class RequestSummaryDTOMapper {
         public RequestSummaryDTO toDTO(Request request) {
                 RequestSummaryDTO requestSummaryDTO = new RequestSummaryDTO();
                 requestSummaryDTO.setRequestId(request.getId());
+                requestSummaryDTO.setRequestCode(request.getRequestCode());
                 requestSummaryDTO.setStatus(request.getRequestStatus().toString());
                 requestSummaryDTO.setRequestType(request.getRequestDetails().getRequestType().toString());
                 Money money = request.getRequestDetails().getRequestedAmount() != null

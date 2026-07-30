@@ -71,10 +71,7 @@ public final class LogMessage {
     public static final String SERVICE_SCORING_GENERATION_PUBLISHED = "Scoring generation request published for request - requestId: [{}]";
     public static final String SERVICE_SCORING_GENERATION_ENTITY_NOT_FOUND = "Entity not found during scoring generation - requestId: [{}], error: {}";
     public static final String SERVICE_SCORING_GENERATION_UNEXPECTED_ERROR = "Unexpected error during scoring generation - requestId: [{}], error: {}";
-    public static final String SERVICE_SCORING_HARD_CUTOFF_DTI = "Hard-cutoff rule triggered - DTI: {}, requestId: {}";
-    public static final String SERVICE_SCORING_HARD_CUTOFF_LTV = "Hard-cutoff rule triggered - LTV: {}, requestId: {}";
-    public static final String SERVICE_SCORING_HARD_CUTOFF_LTI = "Hard-cutoff rule triggered - LTI: {}, requestId: {}";
-    public static final String SERVICE_SCORING_HARD_CUTOFF_PERSISTED = "Hard-cutoff scoring persisted - requestId: {}, EAD: {}, LGD: {}, ECL: {}";
+
 
     // Simulation Service
     public static final String SERVICE_LIST_SIMULATIONS_START = "Starting listSimulations operation with filters - requestId: [{}], partyName: [{}], partyId: [{}]";

@@ -90,9 +90,22 @@ public class SimulationApplicationService implements SimulationPortService {
         // Resolve party names efficiently in a single query
         Map<String, Party> partyMap = partyPortRepository.findPartyNames(uniquePartyIds);
 
-        // Assign party to each simulation
+        // Extract unique request IDs to fetch request codes
+        Set<String> uniqueRequestIds = simulations.stream()
+                .map(Simulation::getRequestId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+                
+        // Resolve requests efficiently in a single query
+        Map<String, Request> requestMap = requestPortRepository.findRequestsByIds(uniqueRequestIds);
+
+        // Assign party and requestCode to each simulation
         simulations.forEach(simulation -> {
             simulation.setParty(partyMap.get(simulation.getPartyId()));
+            Request req = requestMap.get(simulation.getRequestId());
+            if (req != null) {
+                simulation.setRequestCode(req.getRequestCode());
+            }
         });
 
         log.debug(LogMessage.SERVICE_LIST_SIMULATIONS_MAPPING, simulations.size());

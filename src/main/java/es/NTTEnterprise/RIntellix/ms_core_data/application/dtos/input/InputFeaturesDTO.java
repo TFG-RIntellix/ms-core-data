@@ -68,11 +68,11 @@ public class InputFeaturesDTO {
     private Double interestRate;
 
     @JsonProperty("ltv")
-    @ValidPercentage(message = "LTV must be between 0 and 1")
+    @NonNegativeAmount(message = "LTV cannot be negative")
     private Double ltv;
 
     @JsonProperty("dti")
-    @ValidPercentage(message = "DTI must be between 0 and 1")
+    @NonNegativeAmount(message = "DTI cannot be negative")
     private Double dti;
 
     @JsonProperty("previousLoansCount")
@@ -88,7 +88,7 @@ public class InputFeaturesDTO {
     private Integer employmentSeniorityYears;
 
     @JsonProperty("lti")
-    @ValidPercentage(message = "LTI must be between 0 and 1")
+    @NonNegativeAmount(message = "LTI cannot be negative")
     private Double lti;
 
     @JsonProperty("creditLimit")

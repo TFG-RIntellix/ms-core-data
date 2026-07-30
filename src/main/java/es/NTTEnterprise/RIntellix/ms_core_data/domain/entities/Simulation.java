@@ -20,6 +20,7 @@ import java.util.HashMap;
 public class Simulation {
 
     private String id;
+    private String requestCode;
     private String requestId; // Reference to the associated scoring request
     private String partyId; // Reference to the associated party (customer)
     private String baseScoringId;
@@ -71,6 +72,14 @@ public class Simulation {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(String requestCode) {
+        this.requestCode = requestCode;
     }
 
     public String getRequestId() {

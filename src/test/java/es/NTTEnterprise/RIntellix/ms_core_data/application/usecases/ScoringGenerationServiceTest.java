@@ -1,10 +1,8 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +17,6 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringGe
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringGenerationDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.output.ScoringGenerationPort;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Money;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.PropertyCollateral;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Person;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
@@ -92,48 +89,6 @@ class ScoringGenerationServiceTest {
 
         verify(scoringGenerationPort).publishScoringGenerationRequest(payload);
         verify(scoringPortRepository, never()).save(any(Scoring.class));
-    }
-
-    @Test
-    @DisplayName("Should apply DTI hard cutoff for all types")
-    void generateScoring_hardCutoff_DTI() throws EntityNotFoundException {
-        Request request = buildRequest(RequestType.PRESTAMO);
-        request.setId("REQ-3");
-        Party party = buildParty(0.6); // DTI > 0.50
-        request.setParty(party);
-
-        when(scoringPortRepository.findByRequestId("REQ-3")).thenThrow(new EntityNotFoundException(""));
-
-        service.generateScoring(request);
-
-        verify(scoringPortRepository).save(scoringCaptor.capture());
-        Scoring saved = scoringCaptor.getValue();
-        assertEquals(1.0, saved.getResults().getProbabilityOfDefault());
-        assertEquals("HIGH", saved.getResults().getRiskLevel());
-        verifyNoInteractions(scoringGenerationPort);
-    }
-
-    @Test
-    @DisplayName("Should apply LTV hard cutoff for mortgages")
-    void generateScoring_hardCutoff_LTV() throws EntityNotFoundException {
-        Request request = buildRequest(RequestType.HIPOTECA);
-        request.setId("REQ-4");
-        // Loan 90k, Property 100k -> LTV 0.90 (> 0.80)
-        request.getRequestDetails().setRequestedAmount(new Money(90000.0, "EUR"));
-        PropertyCollateral collateral = new PropertyCollateral(new Money(100000.0, "EUR"), true);
-        request.setCollateral(collateral);
-
-        Party party = buildParty(0.3);
-        request.setParty(party);
-
-        when(scoringPortRepository.findByRequestId("REQ-4")).thenThrow(new EntityNotFoundException(""));
-
-        service.generateScoring(request);
-
-        verify(scoringPortRepository).save(scoringCaptor.capture());
-        Scoring saved = scoringCaptor.getValue();
-        assertEquals(1.0, saved.getResults().getProbabilityOfDefault());
-        verifyNoInteractions(scoringGenerationPort);
     }
 
     private Request buildRequest(RequestType type) {

@@ -34,6 +34,7 @@ class RequestMapperTest {
         ObjectId partyId = new ObjectId();
         entity.setId(id);
         entity.setPartyId(partyId);
+        entity.setRequestCode("REQ-2026-00001");
         entity.setRequestType(RequestType.PRESTAMO);
         entity.setPurpose(Purpose.COMPRA_VEHICULO);
         entity.setCurrency("EUR");
@@ -49,6 +50,7 @@ class RequestMapperTest {
 
         assertEquals(id.toHexString(), request.getId());
         assertEquals(partyId.toHexString(), request.getPartyId());
+        assertEquals("REQ-2026-00001", request.getRequestCode());
         assertEquals(RequestType.PRESTAMO, request.getRequestDetails().getRequestType());
         assertEquals(Purpose.COMPRA_VEHICULO, request.getRequestDetails().getPurpose());
         assertEquals(25000.0, request.getRequestDetails().getRequestedAmount().getAmount());

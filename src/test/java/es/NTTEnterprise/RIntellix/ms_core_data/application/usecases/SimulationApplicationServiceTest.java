@@ -12,12 +12,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ArchiveSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CalculatedSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateSimulationDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.SimulatedResultsInputDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.DeltaInputDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.SimulationDTOMapper;
@@ -34,10 +38,6 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRe
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ScoringPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.SimulationPortRepository;
 
-/**
- * Unit tests for {@link SimulationApplicationService}.
- * Covers listing, creating, archiving, updating templates, and party mismatches.
- */
 @DisplayName("SimulationApplicationService Tests")
 @ExtendWith(MockitoExtension.class)
 class SimulationApplicationServiceTest {
@@ -53,6 +53,9 @@ class SimulationApplicationServiceTest {
     @Mock
     private SimulationDTOMapper simulationDTOMapper;
 
+    @Captor
+    private ArgumentCaptor<Simulation> simulationCaptor;
+
     private SimulationApplicationService service;
 
     @BeforeEach
@@ -62,25 +65,86 @@ class SimulationApplicationServiceTest {
             requestPortRepository, simulationDTOMapper);
     }
 
+    // --- listSimulations ---
+
     @Test
-    @DisplayName("Should list simulations resolving party names")
-    void listSimulations_success() {
+    @DisplayName("Should list simulations resolving party names without search string")
+    void listSimulations_success_noSearch() {
         Simulation sim = new Simulation();
         sim.setPartyId("P-1");
+        sim.setRequestId("REQ-1");
         
-        when(simulationPortRepository.findWithFilters(null, null, false))
-                .thenReturn(List.of(sim));
-        when(partyPortRepository.findPartyNames(Set.of("P-1")))
-                .thenReturn(Map.of("P-1", new Party()));
+        when(simulationPortRepository.findWithFilters(null, null, false)).thenReturn(List.of(sim));
+        when(partyPortRepository.findPartyNames(Set.of("P-1"))).thenReturn(Map.of("P-1", new Party()));
+        
+        Request req = new Request();
+        req.setRequestCode("REQ-CODE-1");
+        when(requestPortRepository.findRequestsByIds(anySet())).thenReturn(Map.of("REQ-1", req));
                 
-        SimulationSummaryDTO dto = new SimulationSummaryDTO();
-        when(simulationDTOMapper.toSummaryDTO(sim)).thenReturn(dto);
+        when(simulationDTOMapper.toSummaryDTO(sim)).thenReturn(new SimulationSummaryDTO());
 
         List<SimulationSummaryDTO> results = service.listSimulations(null, false);
-
         assertEquals(1, results.size());
-        verify(partyPortRepository).findPartyNames(Set.of("P-1"));
+        verify(partyPortRepository, never()).findPartyIdsByNameMatch(anyString());
     }
+
+    @Test
+    @DisplayName("Should list simulations resolving party names with search string")
+    void listSimulations_success_withSearch() {
+        Simulation sim = new Simulation();
+        sim.setPartyId("P-1");
+        sim.setRequestId("REQ-1");
+
+        when(partyPortRepository.findPartyIdsByNameMatch("test")).thenReturn(Set.of("P-1"));
+        when(simulationPortRepository.findWithFilters("test", List.of("P-1"), true)).thenReturn(List.of(sim));
+        when(partyPortRepository.findPartyNames(Set.of("P-1"))).thenReturn(Map.of("P-1", new Party()));
+        when(requestPortRepository.findRequestsByIds(anySet())).thenReturn(Map.of());
+                
+        when(simulationDTOMapper.toSummaryDTO(sim)).thenReturn(new SimulationSummaryDTO());
+
+        List<SimulationSummaryDTO> results = service.listSimulations("test", true);
+        assertEquals(1, results.size());
+    }
+
+    // --- getSimulationDetails ---
+
+    @Test
+    @DisplayName("Should get simulation details successfully")
+    void getSimulationDetails_success() throws EntityNotFoundException {
+        Simulation sim = new Simulation();
+        sim.setBaseScoringId("SCORE-1");
+        Scoring baseScoring = new Scoring();
+
+        when(simulationPortRepository.findById("SIM-1")).thenReturn(sim);
+        when(scoringPortRepository.findById("SCORE-1")).thenReturn(baseScoring);
+        when(simulationDTOMapper.toDetailsDTO(sim, baseScoring)).thenReturn(new SimulationDetailsDTO());
+
+        SimulationDetailsDTO result = service.getSimulationDetails("SIM-1");
+        assertNotNull(result);
+    }
+
+    @Test
+    @DisplayName("Should get simulation details when base scoring is missing")
+    void getSimulationDetails_baseScoringMissing() throws EntityNotFoundException {
+        Simulation sim = new Simulation();
+        sim.setBaseScoringId("SCORE-1");
+
+        when(simulationPortRepository.findById("SIM-1")).thenReturn(sim);
+        when(scoringPortRepository.findById("SCORE-1")).thenThrow(new EntityNotFoundException("Not found"));
+        when(simulationDTOMapper.toDetailsDTO(sim, null)).thenReturn(new SimulationDetailsDTO());
+
+        SimulationDetailsDTO result = service.getSimulationDetails("SIM-1");
+        assertNotNull(result);
+    }
+
+    @Test
+    @DisplayName("Should throw when getSimulationDetails receives invalid ID")
+    void getSimulationDetails_invalidId() {
+        assertThrows(IllegalArgumentException.class, () -> service.getSimulationDetails(null));
+        assertThrows(IllegalArgumentException.class, () -> service.getSimulationDetails("   "));
+    }
+
+    // --- createSimulation ---
 
     @Test
     @DisplayName("Should create simulation with generated name if null")
@@ -107,6 +171,56 @@ class SimulationApplicationServiceTest {
     }
 
     @Test
+    @DisplayName("Should create simulation with full results and delta")
+    void createSimulation_fullResultsAndDelta() {
+        CreateSimulationDTO dto = new CreateSimulationDTO();
+        dto.setRequestId("REQ-1");
+        dto.setPartyId("P-1");
+        dto.setScenarioName("Custom");
+        
+        SimulatedResultsInputDTO results = new SimulatedResultsInputDTO();
+        results.setDti(0.5);
+        results.setMonthlyPayment(500.0);
+        dto.setSimulatedResults(results);
+
+        DeltaInputDTO delta = new DeltaInputDTO();
+        delta.setDtiChange(0.1);
+        dto.setDelta(delta);
+
+        Request req = new Request();
+        req.setPartyId("P-1");
+        when(requestPortRepository.findById("REQ-1")).thenReturn(req);
+        when(simulationPortRepository.existsByRequestIdAndScenarioName("REQ-1", "Custom")).thenReturn(false);
+        
+        Simulation saved = new Simulation();
+        saved.setId("SIM-1");
+        when(simulationPortRepository.save(simulationCaptor.capture())).thenReturn(saved);
+
+        service.createSimulation(dto);
+
+        Simulation captured = simulationCaptor.getValue();
+        assertNotNull(captured.getSimulatedResults().getFinancialMetrics());
+        assertEquals(0.5, captured.getSimulatedResults().getFinancialMetrics().getDebtToIncomeRatio());
+        assertEquals(0.1, captured.getDtiChange());
+    }
+
+    @Test
+    @DisplayName("Should throw DuplicateSimulationNameException if name exists")
+    void createSimulation_duplicateName() {
+        CreateSimulationDTO dto = new CreateSimulationDTO();
+        dto.setRequestId("REQ-1");
+        dto.setPartyId("P-1");
+        dto.setScenarioName("Custom");
+        
+        Request req = new Request();
+        req.setPartyId("P-1");
+        when(requestPortRepository.findById("REQ-1")).thenReturn(req);
+        when(simulationPortRepository.existsByRequestIdAndScenarioName("REQ-1", "Custom")).thenReturn(true);
+
+        assertThrows(DuplicateSimulationNameException.class, () -> service.createSimulation(dto));
+    }
+
+    @Test
     @DisplayName("Should throw mismatch exception if party does not match request")
     void createSimulation_partyMismatch() {
         CreateSimulationDTO dto = new CreateSimulationDTO();
@@ -115,11 +229,45 @@ class SimulationApplicationServiceTest {
         
         Request req = new Request();
         req.setPartyId("P-1");
-        
         when(requestPortRepository.findById("REQ-1")).thenReturn(req);
 
         assertThrows(RequestPartyMismatchException.class, () -> service.createSimulation(dto));
     }
+
+    // --- updateSimulationTemplate ---
+
+    @Test
+    @DisplayName("Should update simulation template successfully")
+    void updateSimulationTemplate_success() throws EntityNotFoundException {
+        Simulation sim = new Simulation();
+        CalculatedSimulationDTO dto = new CalculatedSimulationDTO();
+        
+        SimulatedResultsInputDTO results = new SimulatedResultsInputDTO();
+        results.setRiskGrade("A");
+        dto.setSimulatedResults(results);
+
+        DeltaInputDTO delta = new DeltaInputDTO();
+        delta.setPdChange(0.01);
+        dto.setDelta(delta);
+
+        when(simulationPortRepository.findById("SIM-1")).thenReturn(sim);
+
+        service.updateSimulationTemplate("SIM-1", dto);
+
+        verify(simulationPortRepository).save(simulationCaptor.capture());
+        Simulation captured = simulationCaptor.getValue();
+        assertEquals("A", captured.getSimulatedResults().getRiskLevel()); // getRiskLevel
+        assertEquals(0.01, captured.getPdChange());
+    }
+
+    @Test
+    @DisplayName("Should throw when updateSimulationTemplate receives invalid ID")
+    void updateSimulationTemplate_invalidId() {
+        assertThrows(IllegalArgumentException.class, () -> service.updateSimulationTemplate(null, new CalculatedSimulationDTO()));
+        assertThrows(IllegalArgumentException.class, () -> service.updateSimulationTemplate("  ", new CalculatedSimulationDTO()));
+    }
+
+    // --- archiveSimulation ---
 
     @Test
     @DisplayName("Should archive simulation successfully")
@@ -137,6 +285,15 @@ class SimulationApplicationServiceTest {
         assertTrue(sim.isArchived());
         verify(simulationPortRepository).save(sim);
     }
+
+    @Test
+    @DisplayName("Should throw when archiveSimulation receives invalid ID")
+    void archiveSimulation_invalidId() {
+        assertThrows(IllegalArgumentException.class, () -> service.archiveSimulation(null, new ArchiveSimulationDTO()));
+        assertThrows(IllegalArgumentException.class, () -> service.archiveSimulation("  ", new ArchiveSimulationDTO()));
+    }
+
+    // --- deleteSimulation ---
 
     @Test
     @DisplayName("Should delete simulation successfully")

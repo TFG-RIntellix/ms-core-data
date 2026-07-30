@@ -38,10 +38,15 @@ public class SimulationDTOMapper {
         dto.setSimulationId(simulation.getId());
         dto.setScenarioName(simulation.getScenarioName());
         dto.setRequestId(simulation.getRequestId());
+        dto.setRequestCode(simulation.getRequestCode());
         dto.setSimulationDate(DATE_FORMAT.format(simulation.getSimulationDate()));
 
         // Party name (resolved at application layer)
-        dto.setPartyName(simulation.getParty().getPersonDetails().getFullName());
+        if (simulation.getParty() != null && simulation.getParty().getPersonDetails() != null) {
+            dto.setPartyName(simulation.getParty().getPersonDetails().getFullName());
+        } else {
+            dto.setPartyName(simulation.getParty() != null ? "" : null);
+        }
 
         // Archived flag
         dto.setIsArchived(simulation.isArchived());
@@ -70,6 +75,7 @@ public class SimulationDTOMapper {
         dto.setScenarioName(simulation.getScenarioName());
         dto.setSimulationDate(DATE_FORMAT.format(simulation.getSimulationDate()));
         dto.setRequestId(simulation.getRequestId());
+        dto.setRequestCode(simulation.getRequestCode());
         dto.setBaseScoringId(simulation.getBaseScoringId());
 
         // Modified values

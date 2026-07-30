@@ -16,6 +16,7 @@ public class SimulationDetailsDTO {
     private String scenarioName;
     private String simulationDate;
     private String requestId;
+    private String requestCode;
     private String baseScoringId;
 
     // Modified values applied in the simulation
@@ -79,6 +80,14 @@ public class SimulationDetailsDTO {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public String getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(String requestCode) {
+        this.requestCode = requestCode;
     }
 
     public String getBaseScoringId() {

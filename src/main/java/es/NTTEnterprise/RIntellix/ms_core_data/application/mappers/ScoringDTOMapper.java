@@ -50,16 +50,20 @@ public class ScoringDTOMapper {
         dto.setInputFeatures(inputFeatures);
 
         // Risk metrics
-        dto.setPd(scoring.getResults().getProbabilityOfDefault());
-        dto.setLgd(scoring.getResults().getLossGivenDefault());
-        dto.setEad(scoring.getResults().getExposureAtDefault());
-        dto.setEcl(scoring.getResults().getExpectedCalculatedLoss());
-        dto.setRiskGrade(scoring.getResults().getRiskLevel());
-        dto.setMonthlyPayment(scoring.getResults().getFinancialMetrics().getMonthlyPayment());
-        dto.setDti(scoring.getResults().getFinancialMetrics().getDebtToIncomeRatio());
-        dto.setTotalPayment(scoring.getResults().getFinancialMetrics().getTotalPayment());
-        dto.setTotalInterest(scoring.getResults().getFinancialMetrics().getTotalInterest());
-        dto.setMonthlyDisposableIncome(scoring.getResults().getFinancialMetrics().getMonthlyDisposableIncome());
+        if (scoring.getResults() != null) {
+            dto.setPd(scoring.getResults().getProbabilityOfDefault());
+            dto.setLgd(scoring.getResults().getLossGivenDefault());
+            dto.setEad(scoring.getResults().getExposureAtDefault());
+            dto.setEcl(scoring.getResults().getExpectedCalculatedLoss());
+            dto.setRiskGrade(scoring.getResults().getRiskLevel());
+            if (scoring.getResults().getFinancialMetrics() != null) {
+                dto.setMonthlyPayment(scoring.getResults().getFinancialMetrics().getMonthlyPayment());
+                dto.setDti(scoring.getResults().getFinancialMetrics().getDebtToIncomeRatio());
+                dto.setTotalPayment(scoring.getResults().getFinancialMetrics().getTotalPayment());
+                dto.setTotalInterest(scoring.getResults().getFinancialMetrics().getTotalInterest());
+                dto.setMonthlyDisposableIncome(scoring.getResults().getFinancialMetrics().getMonthlyDisposableIncome());
+            }
+        }
 
         // Explainability
         dto.setBaseValue(scoring.getBaseValue());

@@ -13,6 +13,7 @@ public class SimulationSummaryDTO {
     private String simulationId;
     private String scenarioName;
     private String partyName;
+    private String requestCode;
     private String requestId;
     private String simulationDate;
     private Boolean isArchived;
@@ -64,6 +65,14 @@ public class SimulationSummaryDTO {
 
     public void setPartyName(String partyName) {
         this.partyName = partyName;
+    }
+
+    public String getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(String requestCode) {
+        this.requestCode = requestCode;
     }
 
     public String getRequestId() {

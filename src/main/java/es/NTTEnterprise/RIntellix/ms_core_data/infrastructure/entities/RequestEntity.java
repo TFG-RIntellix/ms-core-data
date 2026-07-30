@@ -27,6 +27,9 @@ public class RequestEntity {
     @Field("request_type")
     private RequestType requestType;
 
+    @Field("request_code")
+    private String requestCode;
+
     @Field("party_id")
     private ObjectId partyId;
 
@@ -91,6 +94,14 @@ public class RequestEntity {
 
     public void setRequestType(RequestType requestType) {
         this.requestType = requestType;
+    }
+
+    public String getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(String requestCode) {
+        this.requestCode = requestCode;
     }
 
     public ObjectId getPartyId() {

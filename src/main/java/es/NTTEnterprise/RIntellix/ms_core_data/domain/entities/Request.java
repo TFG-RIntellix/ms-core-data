@@ -16,6 +16,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestStatus;
 public class Request {
 
     private String id;
+    private String requestCode;
     private String partyId; // Reference to Party by ID (for lazy loading)
     private Date creationDate;
     private Date lastReviewDate;
@@ -61,6 +62,14 @@ public class Request {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(String requestCode) {
+        this.requestCode = requestCode;
     }
 
     public String getPartyId() {

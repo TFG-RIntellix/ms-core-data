@@ -94,4 +94,47 @@ class ScoringDTOMapperTest {
         assertEquals(-0.2, dto.getTopFeatures().get(0).getShapValue());
         assertEquals("Reduce el riesgo de impago", dto.getTopFeatures().get(0).getDescription());
     }
+
+    @Test
+    @DisplayName("Should map correctly when FinancialMetrics is null")
+    void toDTO_nullFinancialMetrics() {
+        Scoring scoring = new Scoring();
+        scoring.setId("SCO-2");
+        scoring.setExecutionDate(new Date());
+        ModelInputs inputs = new ModelInputs();
+        inputs.setFeatures(new java.util.HashMap<>());
+        scoring.setInputSnapshot(inputs);
+        RiskMetrics metrics = new RiskMetrics();
+        metrics.setProbabilityOfDefault(0.1);
+        // Do not set FinancialMetrics
+        scoring.setResults(metrics);
+
+        ScoringDTO dto = mapper.toDTO(scoring);
+
+        assertNotNull(dto);
+        assertEquals(0.1, dto.getPd());
+        assertNull(dto.getMonthlyPayment());
+        assertNull(dto.getDti());
+        assertNull(dto.getTotalPayment());
+        assertNull(dto.getTotalInterest());
+        assertNull(dto.getMonthlyDisposableIncome());
+    }
+
+    @Test
+    @DisplayName("Should map correctly when Results is entirely null")
+    void toDTO_nullResults() {
+        Scoring scoring = new Scoring();
+        scoring.setId("SCO-3");
+        scoring.setExecutionDate(new Date());
+        ModelInputs inputs = new ModelInputs();
+        inputs.setFeatures(new java.util.HashMap<>());
+        scoring.setInputSnapshot(inputs);
+        // Do not set Results
+        
+        ScoringDTO dto = mapper.toDTO(scoring);
+        
+        assertNotNull(dto);
+        assertNull(dto.getPd());
+        assertNull(dto.getDti());
+    }
 }
