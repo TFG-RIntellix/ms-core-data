@@ -43,7 +43,7 @@ public class ScoringRepositoryAdapter implements ScoringPortRepository {
     @Override
     public Scoring findByRequestId(String requestId) throws EntityNotFoundException {
         log.debug(LogMessage.REPOSITORY_SCORING_FIND_BY_REQUEST_START, requestId);
-        Optional<ScoringEntity> entityOpt = scoringRepository.findByRequestId(new ObjectId(requestId));
+        Optional<ScoringEntity> entityOpt = scoringRepository.findFirstByRequestIdOrderByScoringDateDesc(new ObjectId(requestId));
 
         if (entityOpt.isEmpty()) {
             log.warn(LogMessage.REPOSITORY_SCORING_FIND_BY_REQUEST_NOT_FOUND, requestId);

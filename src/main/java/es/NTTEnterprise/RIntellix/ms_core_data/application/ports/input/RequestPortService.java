@@ -2,6 +2,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input;
 
 import java.util.List;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestPartyDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestSummaryDTO;
@@ -21,13 +22,18 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundE
 public interface RequestPortService {
 
     /**
-     * Retrieves all requests with optional filtering.
+     * Retrieves all requests with optional filtering and pagination.
      * 
      * @param search        a generic search term to match against request ID or party name (optional filter)
      * @param requestStatus the status of the request (optional filter)
-     * @return List of request summary DTOs
+     * @param page          the page number (0-indexed)
+     * @param size          the page size
+     * @param sortBy        the field to sort by
+     * @param sortDir       the sort direction ("asc" or "desc")
+     * @return PageResponseDTO containing RequestSummaryDTOs
      */
-    List<RequestSummaryDTO> listRequests(String search, String requestStatus);
+    PageResponseDTO<RequestSummaryDTO> listRequests(
+            String search, String requestStatus, int page, int size, String sortBy, String sortDir);
 
     /**
      * Retrieves the detailed information of a specific request.

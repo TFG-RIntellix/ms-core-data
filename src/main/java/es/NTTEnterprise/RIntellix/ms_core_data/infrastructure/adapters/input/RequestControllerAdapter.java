@@ -1,6 +1,5 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.adapters.input;
 
-import java.util.List;
 import java.util.Objects;
 
 import org.springframework.http.ResponseEntity;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestPartyDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestSummaryDTO;
@@ -47,24 +47,31 @@ public class RequestControllerAdapter {
      * and request status.
      * Example: GET /api/requests?partyName=John%20Doe&requestStatus=pending
      * 
-     * @param partyName   the name of the party to filter requests by (optional)
-     * @param requestType the type of request to filter by (optional)
-     * @return a ResponseEntity containing a list of RequestSummaryDTO objects
+     * @param search        the generic search term (optional)
+     * @param requestStatus the status of the request to filter by (optional)
+     * @param page          the page number (0-indexed)
+     * @param size          the page size
+     * @param sortBy        the field to sort by
+     * @param sortDir       the sort direction ("asc" or "desc")
+     * @return a ResponseEntity containing a PageResponseDTO of RequestSummaryDTO objects
      *         matching the filters, or an appropriate error response if the input
      *         is invalid or an unexpected error occurs.
-     * 
      */
     @GetMapping
-    public ResponseEntity<List<RequestSummaryDTO>> listRequests(
+    public ResponseEntity<PageResponseDTO<RequestSummaryDTO>> listRequests(
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) String requestStatus) {
+            @RequestParam(required = false) String requestStatus,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "creationDate") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", BASE_PATH);
         log.debug(LogMessage.CONTROLLER_REQUEST_PARAMS, search, requestStatus);
 
-        List<RequestSummaryDTO> requests = requestPortService.listRequests(search, requestStatus);
+        PageResponseDTO<RequestSummaryDTO> requests = requestPortService.listRequests(search, requestStatus, page, size, sortBy, sortDir);
 
-        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS, 200, requests.size());
+        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS, 200, requests.getContent().size());
         return ResponseEntity.ok(requests);
     }
 

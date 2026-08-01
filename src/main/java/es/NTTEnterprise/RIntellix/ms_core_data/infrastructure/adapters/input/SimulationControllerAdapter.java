@@ -1,7 +1,6 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.adapters.input;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Objects;
 
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ArchiveSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CalculatedSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateSimulationDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input.SimulationPortService;
@@ -58,16 +58,21 @@ public class SimulationControllerAdapter {
      *         response.
      */
     @GetMapping
-    public ResponseEntity<List<SimulationSummaryDTO>> listSimulations(
+    public ResponseEntity<PageResponseDTO<SimulationSummaryDTO>> listSimulations(
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) Boolean archived) {
+            @RequestParam(required = false) Boolean archived,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "simulationDate") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/simulations");
         log.debug(LogMessage.CONTROLLER_SIMULATION_REQUEST_PARAMS, search, "", "", archived);
 
-        List<SimulationSummaryDTO> simulations = simulationPortService.listSimulations(search, archived);
+        PageResponseDTO<SimulationSummaryDTO> simulations = 
+            simulationPortService.listSimulations(search, archived, page, size, sortBy, sortDir);
 
-        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS, 200, simulations.size());
+        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS, 200, simulations.getContent().size());
         return ResponseEntity.ok(simulations);
     }
 

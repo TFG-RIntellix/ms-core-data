@@ -15,6 +15,7 @@ public class RequestDetailsDTO {
     // Amount and income are represented as String to preserve formatting at API
     // boundary.
     public String requestId;
+    public String requestCode;
     public String requestDate;
     public String lastReviewDate;
     public String partyName;
@@ -52,6 +53,14 @@ public class RequestDetailsDTO {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public String getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(String requestCode) {
+        this.requestCode = requestCode;
     }
 
     public String getRequestDate() {

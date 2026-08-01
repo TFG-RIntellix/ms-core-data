@@ -6,12 +6,10 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Objects;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateReportDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ReportDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Report;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input.ReportPortService;
@@ -71,17 +70,28 @@ public class ReportControllerAdapter {
 
     /**
      * GET /api/reports
-     * Retrieves all stored reports.
+     * Retrieves all stored reports with dynamic filtering and pagination.
      *
-     * @return 200 OK with the list of reports
+     * @param search  the generic search term (optional)
+     * @param page    the page number (0-indexed)
+     * @param size    the page size
+     * @param sortBy  the field to sort by
+     * @param sortDir the sort direction ("asc" or "desc")
+     * @return 200 OK with the page of reports
      */
     @GetMapping
-    public ResponseEntity<List<ReportDTO>> listReports() {
+    public ResponseEntity<PageResponseDTO<ReportDTO>> listReports(
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "generationDate") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/reports");
 
-        List<ReportDTO> reports = reportPortService.listReports();
+        PageResponseDTO<ReportDTO> reports = 
+            reportPortService.listReports(search, page, size, sortBy, sortDir);
 
-        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS, 200, reports.size());
+        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS, 200, reports.getContent().size());
         return ResponseEntity.ok(reports);
     }
 

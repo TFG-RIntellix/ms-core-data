@@ -25,7 +25,6 @@ public interface ScoringRepository extends MongoRepository<ScoringEntity, Object
      * @return An Optional containing the latest ScoringEntity, or empty if none
      *         found.
      */
-    @Query(value = "{ 'request_id': ?0 }")
-    Optional<ScoringEntity> findByRequestId(ObjectId requestId);
+    Optional<ScoringEntity> findFirstByRequestIdOrderByScoringDateDesc(ObjectId requestId);
 
 }

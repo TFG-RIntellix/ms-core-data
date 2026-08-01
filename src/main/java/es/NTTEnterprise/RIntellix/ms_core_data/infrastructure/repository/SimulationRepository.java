@@ -6,6 +6,8 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.SimulationEntity;
 
@@ -21,8 +23,10 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.Simulatio
 public interface SimulationRepository extends MongoRepository<SimulationEntity, ObjectId> {
 
     /**
-     * Finds simulations with dynamic filtering based on a generic search term, specific party IDs, and archive status.
-     * The search term applies to the request_id (regex) OR party_id (in list of IDs).
+     * Finds simulations with dynamic filtering based on a generic search term,
+     * specific party IDs, and archive status.
+     * The search term applies to the request_id (regex) OR party_id (in list of
+     * IDs).
      * 
      * @param search   the search term to match against request_id (optional)
      * @param partyIds the list of party IDs to match against (optional)
@@ -31,18 +35,22 @@ public interface SimulationRepository extends MongoRepository<SimulationEntity, 
      */
     @Query("{ $and: [ " +
             "{ $or: [ " +
-                "{ $expr: { $eq: [:#{#search}, ''] } }, " +
-                "{ $expr: { $regexMatch: { input: { $toString: { $ifNull: [ '$request_id', '' ] } }, regex: :#{#search}, options: 'i' } } }, " +
-                "{ 'party_id': { $in: :#{#partyIds} } } " +
+            "{ $expr: { $eq: [:#{#search}, ''] } }, " +
+            "{ $expr: { $regexMatch: { input: { $toString: { $ifNull: [ '$scenario_name', '' ] } }, regex: :#{#search}, options: 'i' } } }, "
+            +
+            "{ 'party_id': { $in: :#{#partyIds} } }, " +
+            "{ 'request_id': { $in: :#{#requestIds} } } " +
             "] }, " +
             "{ $or: [ { $expr: { $eq: [:#{#archived}, null] } }, { 'is_archived': :#{#archived} } ] } " +
             "] }")
-    List<SimulationEntity> findWithFilters(@Param("search") String search, @Param("partyIds") List<ObjectId> partyIds, @Param("archived") Boolean archived);
+    Page<SimulationEntity> findWithFilters(@Param("search") String search, @Param("partyIds") List<ObjectId> partyIds,
+            @Param("requestIds") List<ObjectId> requestIds, @Param("archived") Boolean archived, Pageable pageable);
 
     /**
-     * Checks if a simulation with the given scenario name already exists for the given request ID.
+     * Checks if a simulation with the given scenario name already exists for the
+     * given request ID.
      * 
-     * @param requestId the ID of the associated request
+     * @param requestId    the ID of the associated request
      * @param scenarioName the name of the scenario to check
      * @return true if a simulation exists, false otherwise
      */

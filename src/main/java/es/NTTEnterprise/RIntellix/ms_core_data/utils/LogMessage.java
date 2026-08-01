@@ -117,6 +117,7 @@ public final class LogMessage {
 
     public static final String REPOSITORY_FIND_ALL_START = "Executing findAll operation on database";
     public static final String REPOSITORY_FIND_ALL_RESULT = "findAll operation completed - Retrieved {} entity(ies)";
+    public static final String REPOSITORY_FIND_REQUEST_IDS_BY_SEARCH = "Executing findRequestIdsBySearch - search: [{}]";
 
     public static final String REPOSITORY_FIND_BY_ID_START = "Executing findById operation - requestId: [{}]";
     public static final String REPOSITORY_FIND_BY_ID_FOUND = "Entity found in database - requestId: [{}]";
@@ -285,6 +286,11 @@ public final class LogMessage {
     public static final String EXCEPTION_REQUEST_NOT_FOUND = "Request with ID %s not found";
     public static final String EXCEPTION_PARTY_NOT_FOUND = "Party with ID %s not found";
     public static final String EXCEPTION_INVALID_REQUEST_ID = "Request ID cannot be null or empty";
+    public static final String EXCEPTION_REPORT_NOT_FOUND_FOR_REQUEST = "Report not found for requestId: %s";
+    public static final String EXCEPTION_REPORT_NOT_FOUND_FOR_ID = "Report not found with id: %s";
+    public static final String EXCEPTION_INVALID_REPORT_ID = "Report ID cannot be null or empty";
+    public static final String EXCEPTION_REQUEST_PARTY_MISMATCH = "Request %s belongs to party %s, not to %s";
+    public static final String EXCEPTION_DUPLICATE_SIMULATION_NAME = "Ya existe una simulación con este nombre.";
     public static final String EXCEPTION_REQUEST_TYPE_NULL = "RequestType value cannot be null";
     public static final String EXCEPTION_REQUEST_TYPE_UNKNOWN = "Unknown RequestType value: %s";
     public static final String EXCEPTION_INVALID_REPORT_TYPE = "Invalid report type: %s";

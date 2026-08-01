@@ -15,12 +15,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestPartyDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestDetailsDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestPartyDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestSummaryDTOMapper;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.PagedResult;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
@@ -73,8 +75,11 @@ class RequestApplicationServiceTest {
         
         Request request = new Request();
         request.setPartyId("P-1");
-        when(requestPortRepository.findWithFilters(search, List.of("P-1"), status))
-                .thenReturn(List.of(request));
+        
+        PagedResult<Request> pagedResult = new PagedResult<>(List.of(request), 1, 1, 0, 10);
+        
+        when(requestPortRepository.findWithFilters(search, List.of("P-1"), status, 0, 10, "creationDate", "desc"))
+                .thenReturn(pagedResult);
                 
         Party party = new Party();
         when(partyPortRepository.findPartyNames(Set.of("P-1"))).thenReturn(Map.of("P-1", party));
@@ -82,10 +87,10 @@ class RequestApplicationServiceTest {
         RequestSummaryDTO summaryDTO = new RequestSummaryDTO();
         when(requestSummaryDTOMapper.toDTO(request)).thenReturn(summaryDTO);
 
-        List<RequestSummaryDTO> results = service.listRequests(search, status);
+        PageResponseDTO<RequestSummaryDTO> results = service.listRequests(search, status, 0, 10, "creationDate", "desc");
 
-        assertEquals(1, results.size());
-        assertEquals(summaryDTO, results.get(0));
+        assertEquals(1, results.getContent().size());
+        assertEquals(summaryDTO, results.getContent().get(0));
         assertEquals(party, request.getParty()); // Verify party name was resolved
     }
 

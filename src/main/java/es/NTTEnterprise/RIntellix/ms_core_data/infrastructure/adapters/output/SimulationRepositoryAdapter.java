@@ -5,8 +5,14 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.PagedResult;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Simulation;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.NotArchivedException;
@@ -55,7 +61,9 @@ public class SimulationRepositoryAdapter implements SimulationPortRepository {
     }
 
     @Override
-    public List<Simulation> findWithFilters(String search, List<String> partyIds, Boolean archived) {
+    public PagedResult<Simulation> findWithFilters(
+            String search, List<String> partyIds, List<String> requestIds, Boolean archived,
+            int page, int size, String sortBy, String sortDir) {
         log.debug(LogMessage.REPOSITORY_SIMULATION_FIND_WITH_FILTERS_START, search, partyIds);
 
         String searchParam = (search != null && !search.isBlank()) ? search : "";
@@ -68,12 +76,32 @@ public class SimulationRepositoryAdapter implements SimulationPortRepository {
                     .toList();
         }
 
-        List<SimulationEntity> entities = simulationRepository.findWithFilters(searchParam, partyOids, archived);
-        log.debug(LogMessage.REPOSITORY_SIMULATION_FIND_WITH_FILTERS_RESULT, entities.size());
+        List<ObjectId> requestOids = List.of();
+        if (requestIds != null && !requestIds.isEmpty()) {
+            requestOids = requestIds.stream()
+                    .filter(ObjectId::isValid)
+                    .map(ObjectId::new)
+                    .toList();
+        }
 
-        return entities.stream()
+        Direction direction = sortDir.equalsIgnoreCase("asc") ? Direction.ASC : Direction.DESC;
+        Pageable pageable = PageRequest.of(
+                page, size, Sort.by(direction, sortBy));
+
+        Page<SimulationEntity> entityPage = simulationRepository.findWithFilters(searchParam, partyOids, requestOids,
+                archived, pageable);
+        log.debug(LogMessage.REPOSITORY_SIMULATION_FIND_WITH_FILTERS_RESULT, entityPage.getTotalElements());
+
+        List<Simulation> domainList = entityPage.getContent().stream()
                 .map(simulationMapper::toDomain)
                 .toList();
+
+        return new PagedResult<>(
+                domainList,
+                entityPage.getTotalElements(),
+                entityPage.getTotalPages(),
+                entityPage.getNumber(),
+                entityPage.getSize());
     }
 
     @Override

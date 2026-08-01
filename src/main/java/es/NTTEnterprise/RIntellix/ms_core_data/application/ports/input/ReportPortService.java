@@ -5,6 +5,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundE
 import java.util.List;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateReportDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ReportDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Report;
 
@@ -29,11 +30,17 @@ public interface ReportPortService {
     String createReport(CreateReportDTO dto) throws IllegalArgumentException;
 
     /**
-     * Retrieves all reports.
+     * Retrieves all reports with dynamic filtering and pagination.
      *
-     * @return a list of ReportDTO objects
+     * @param search   the generic search term (optional filter)
+     * @param page     the page number (0-indexed)
+     * @param size     the page size
+     * @param sortBy   the field to sort by
+     * @param sortDir  the sort direction ("asc" or "desc")
+     * @return a PageResponseDTO of ReportDTO objects
      */
-    List<ReportDTO> listReports();
+    PageResponseDTO<ReportDTO> listReports(
+            String search, int page, int size, String sortBy, String sortDir);
 
     /**
      * Retrieves a report by its associated request ID.

@@ -73,9 +73,10 @@ public class ApplicationServicesConfig {
     @Bean
     public ReportApplicationService reportApplicationService(
             ReportPortRepository reportPortRepository,
+            RequestPortRepository requestPortRepository,
             CreateReportDTOMapper createReportDTOMapper,
             ReportDTOMapper reportDTOMapper) {
-        return new ReportApplicationService(reportPortRepository, createReportDTOMapper, reportDTOMapper);
+        return new ReportApplicationService(reportPortRepository, requestPortRepository, createReportDTOMapper, reportDTOMapper);
     }
 
     @Bean

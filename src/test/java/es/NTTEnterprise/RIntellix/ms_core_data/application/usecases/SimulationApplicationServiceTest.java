@@ -22,9 +22,11 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.Calculated
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.SimulatedResultsInputDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.DeltaInputDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.SimulationDTOMapper;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.PagedResult;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
@@ -74,7 +76,9 @@ class SimulationApplicationServiceTest {
         sim.setPartyId("P-1");
         sim.setRequestId("REQ-1");
         
-        when(simulationPortRepository.findWithFilters(null, null, false)).thenReturn(List.of(sim));
+        PagedResult<Simulation> pagedResult = new PagedResult<>(List.of(sim), 1, 1, 0, 10);
+        
+        when(simulationPortRepository.findWithFilters(null, null, null, false, 0, 10, "simulationDate", "desc")).thenReturn(pagedResult);
         when(partyPortRepository.findPartyNames(Set.of("P-1"))).thenReturn(Map.of("P-1", new Party()));
         
         Request req = new Request();
@@ -83,9 +87,10 @@ class SimulationApplicationServiceTest {
                 
         when(simulationDTOMapper.toSummaryDTO(sim)).thenReturn(new SimulationSummaryDTO());
 
-        List<SimulationSummaryDTO> results = service.listSimulations(null, false);
-        assertEquals(1, results.size());
+        PageResponseDTO<SimulationSummaryDTO> results = service.listSimulations(null, false, 0, 10, "simulationDate", "desc");
+        assertEquals(1, results.getContent().size());
         verify(partyPortRepository, never()).findPartyIdsByNameMatch(anyString());
+        verify(requestPortRepository, never()).findRequestIdsBySearch(anyString());
     }
 
     @Test
@@ -95,15 +100,18 @@ class SimulationApplicationServiceTest {
         sim.setPartyId("P-1");
         sim.setRequestId("REQ-1");
 
+        PagedResult<Simulation> pagedResult = new PagedResult<>(List.of(sim), 1, 1, 0, 10);
+
         when(partyPortRepository.findPartyIdsByNameMatch("test")).thenReturn(Set.of("P-1"));
-        when(simulationPortRepository.findWithFilters("test", List.of("P-1"), true)).thenReturn(List.of(sim));
+        when(requestPortRepository.findRequestIdsBySearch("test")).thenReturn(List.of("REQ-1"));
+        when(simulationPortRepository.findWithFilters("test", List.of("P-1"), List.of("REQ-1"), true, 0, 10, "simulationDate", "desc")).thenReturn(pagedResult);
         when(partyPortRepository.findPartyNames(Set.of("P-1"))).thenReturn(Map.of("P-1", new Party()));
         when(requestPortRepository.findRequestsByIds(anySet())).thenReturn(Map.of());
                 
         when(simulationDTOMapper.toSummaryDTO(sim)).thenReturn(new SimulationSummaryDTO());
 
-        List<SimulationSummaryDTO> results = service.listSimulations("test", true);
-        assertEquals(1, results.size());
+        PageResponseDTO<SimulationSummaryDTO> results = service.listSimulations("test", true, 0, 10, "simulationDate", "desc");
+        assertEquals(1, results.getContent().size());
     }
 
     // --- getSimulationDetails ---

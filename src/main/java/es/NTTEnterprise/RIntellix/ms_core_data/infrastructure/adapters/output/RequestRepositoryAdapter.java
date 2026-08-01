@@ -8,8 +8,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.PagedResult;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRepository;
@@ -74,7 +79,9 @@ public class RequestRepositoryAdapter implements RequestPortRepository {
     }
 
     @Override
-    public List<Request> findWithFilters(String search, List<String> partyIds, String requestStatus) {
+    public PagedResult<Request> findWithFilters(
+            String search, List<String> partyIds, String requestStatus, 
+            int page, int size, String sortBy, String sortDir) {
         log.debug(LogMessage.REPOSITORY_FIND_WITH_FILTERS_START, search, requestStatus);
 
         String searchParam = (search != null && !search.isBlank()) ? search : "";
@@ -87,13 +94,36 @@ public class RequestRepositoryAdapter implements RequestPortRepository {
                     .toList();
         }
 
-        List<RequestEntity> entities = requestRepository.findWithFilters(searchParam, partyOids, requestStatus);
-        log.debug(LogMessage.REPOSITORY_FIND_WITH_FILTERS_RESULT, entities.size());
+        Sort.Direction direction = sortDir.equalsIgnoreCase("asc") ? 
+            Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(
+            page, size, Sort.by(direction, sortBy));
 
-        log.debug(LogMessage.REPOSITORY_FIND_WITH_FILTERS_MAPPING, entities.size());
-        return entities.stream()
+        Page<RequestEntity> entityPage = 
+            requestRepository.findWithFilters(searchParam, partyOids, requestStatus, pageable);
+            
+        log.debug(LogMessage.REPOSITORY_FIND_WITH_FILTERS_RESULT, entityPage.getTotalElements());
+        log.debug(LogMessage.REPOSITORY_FIND_WITH_FILTERS_MAPPING, entityPage.getContent().size());
+
+        List<Request> domainList = entityPage.getContent().stream()
                 .map(requestMapper::toDomain)
                 .toList();
+
+        return new PagedResult<>(
+                domainList,
+                entityPage.getTotalElements(),
+                entityPage.getTotalPages(),
+                entityPage.getNumber(),
+                entityPage.getSize()
+        );
+    }
+
+    @Override
+    public List<String> findRequestIdsBySearch(String search) {
+        log.debug(LogMessage.REPOSITORY_FIND_REQUEST_IDS_BY_SEARCH, search);
+        String searchParam = (search != null && !search.isBlank()) ? search : "";
+        List<RequestEntity> entities = requestRepository.findRequestIdsBySearch(searchParam);
+        return entities.stream().map(e -> e.getId().toHexString()).toList();
     }
 
     @Override

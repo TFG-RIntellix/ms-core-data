@@ -14,12 +14,14 @@ import java.util.stream.Collectors;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ArchiveSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CalculatedSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateSimulationDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.SimulationDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskMetrics;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.PagedResult;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Simulation;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.DuplicateSimulationNameException;
@@ -67,7 +69,8 @@ public class SimulationApplicationService implements SimulationPortService {
     }
 
     @Override
-    public List<SimulationSummaryDTO> listSimulations(String search, Boolean archived) {
+    public PageResponseDTO<SimulationSummaryDTO> listSimulations(
+            String search, Boolean archived, int page, int size, String sortBy, String sortDir) {
         log.debug(LogMessage.SERVICE_LIST_SIMULATIONS_START, search);
 
         // Resolve matching party IDs based on the search string
@@ -76,9 +79,19 @@ public class SimulationApplicationService implements SimulationPortService {
             matchingPartyIds = partyPortRepository.findPartyIdsByNameMatch(search);
         }
 
-        // Retrieve simulations applying the generic search and party IDs
+        // Resolve matching request IDs based on the search string
+        List<String> matchingRequestIds = null;
+        if (search != null && !search.isBlank()) {
+
+            matchingRequestIds = requestPortRepository.findRequestIdsBySearch(search);
+        }
+
+        // Retrieve simulations applying the generic search, party IDs, request IDs, and pagination
         List<String> partyIdsList = matchingPartyIds != null ? matchingPartyIds.stream().toList() : null;
-        List<Simulation> simulations = simulationPortRepository.findWithFilters(search, partyIdsList, archived);
+        PagedResult<Simulation> pageResult = 
+            simulationPortRepository.findWithFilters(search, partyIdsList, matchingRequestIds, archived, page, size, sortBy, sortDir);
+        
+        List<Simulation> simulations = pageResult.getContent();
         log.debug(LogMessage.SERVICE_LIST_SIMULATIONS_RESULT, simulations.size());
 
         // Extract unique party IDs to fetch full names
@@ -109,9 +122,17 @@ public class SimulationApplicationService implements SimulationPortService {
         });
 
         log.debug(LogMessage.SERVICE_LIST_SIMULATIONS_MAPPING, simulations.size());
-        return simulations.stream()
+        List<SimulationSummaryDTO> dtoList = simulations.stream()
                 .map(simulationDTOMapper::toSummaryDTO)
                 .toList();
+                
+        return new PageResponseDTO<>(
+                dtoList,
+                pageResult.getTotalElements(),
+                pageResult.getTotalPages(),
+                pageResult.getNumber(),
+                pageResult.getSize()
+        );
     }
 
     @Override
@@ -202,8 +223,8 @@ public class SimulationApplicationService implements SimulationPortService {
                     dto.getRequestId(), dto.getPartyId(), request.getPartyId());
 
             throw new RequestPartyMismatchException(
-                    "Request " + dto.getRequestId() + " belongs to party " + request.getPartyId()
-                            + ", not to " + dto.getPartyId());
+                    String.format(LogMessage.EXCEPTION_REQUEST_PARTY_MISMATCH,
+                            dto.getRequestId(), request.getPartyId(), dto.getPartyId()));
         }
 
         // Generate scenario name if not provided
@@ -218,7 +239,7 @@ public class SimulationApplicationService implements SimulationPortService {
         if (simulationPortRepository.existsByRequestIdAndScenarioName(dto.getRequestId(), dto.getScenarioName())) {
             log.warn(LogMessage.SERVICE_SIMULATION_ALREADY_EXISTS, dto.getScenarioName(),
                     request.getId());
-            throw new DuplicateSimulationNameException("Ya existe una simulación con este nombre.");
+            throw new DuplicateSimulationNameException(LogMessage.EXCEPTION_DUPLICATE_SIMULATION_NAME);
         }
 
         Simulation simulation = buildSimulation(dto);

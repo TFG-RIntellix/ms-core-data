@@ -1,10 +1,10 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.PagedResult;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Report;
 
 import java.util.List;
-
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Report;
 
 /**
  * Output port for Report aggregate persistence.
@@ -24,11 +24,18 @@ public interface ReportPortRepository {
      */
     Report save(Report report);
     /**
-     * Retrieves all report aggregates from the database.
+     * Retrieves report aggregates from the database with dynamic filtering and pagination.
      *
-     * @return a list of all Report domain entities
+     * @param search     the generic search term (optional filter)
+     * @param requestIds the list of request IDs to filter by (optional)
+     * @param page       the page number (0-indexed)
+     * @param size       the page size
+     * @param sortBy     the field to sort by
+     * @param sortDir    the sort direction ("asc" or "desc")
+     * @return PagedResult of Report domain entities
      */
-    List<Report> findAll();
+    PagedResult<Report> findWithFilters(
+            String search, List<String> requestIds, int page, int size, String sortBy, String sortDir);
 
     /**
      * Retrieves a report by its associated request ID.

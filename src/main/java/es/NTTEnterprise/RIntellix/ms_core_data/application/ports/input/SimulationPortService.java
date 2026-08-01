@@ -5,6 +5,7 @@ import java.util.List;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ArchiveSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CalculatedSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateSimulationDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
@@ -20,13 +21,18 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.NotArchivedExce
 public interface SimulationPortService {
 
         /**
-         * Lists simulations based on optional filters.
+         * Lists simulations based on optional filters and pagination.
          * 
          * @param search    a generic search term to match against request ID or party name (optional)
          * @param archived  the archive status of the simulations (optional)
-         * @return a list of SimulationSummaryDTO objects matching the given criteria
+         * @param page      the page number (0-indexed)
+         * @param size      the page size
+         * @param sortBy    the field to sort by
+         * @param sortDir   the sort direction ("asc" or "desc")
+         * @return a PageResponseDTO of SimulationSummaryDTO objects matching the given criteria
          */
-        List<SimulationSummaryDTO> listSimulations(String search, Boolean archived);
+        PageResponseDTO<SimulationSummaryDTO> listSimulations(
+                String search, Boolean archived, int page, int size, String sortBy, String sortDir);
 
         /**
          * Retrieves the detailed information of a specific simulation, including

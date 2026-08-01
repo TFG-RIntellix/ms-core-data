@@ -7,9 +7,13 @@ import org.bson.types.ObjectId;
 import java.util.List;
 import java.util.Objects;
 
-import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.PagedResult;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Report;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ReportPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.ReportEntity;
@@ -50,13 +54,41 @@ public class ReportRepositoryAdapter implements ReportPortRepository {
     }
 
     @Override
-    public List<Report> findAll() {
+    public PagedResult<Report> findWithFilters(
+            String search, List<String> requestIds, int page, int size, String sortBy, String sortDir) {
         log.debug(LogMessage.REPOSITORY_REPORT_FIND_ALL_START);
 
-        List<ReportEntity> entities = reportRepository.findAll();
+        String searchParam = (search != null && !search.isBlank()) ? search : "";
 
-        log.debug(LogMessage.REPOSITORY_REPORT_FIND_ALL_COMPLETE, entities.size());
-        return entities.stream().map(reportMapper::toDomain).toList();
+        List<ObjectId> requestOids = List.of();
+        if (requestIds != null && !requestIds.isEmpty()) {
+            requestOids = requestIds.stream()
+                    .filter(ObjectId::isValid)
+                    .map(ObjectId::new)
+                    .toList();
+        }
+
+        Sort.Direction direction = sortDir.equalsIgnoreCase("asc") ? 
+            Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(
+            page, size, Sort.by(direction, sortBy));
+
+        Page<ReportEntity> entityPage = 
+            reportRepository.findWithFilters(searchParam, requestOids, pageable);
+
+        log.debug(LogMessage.REPOSITORY_REPORT_FIND_ALL_COMPLETE, entityPage.getTotalElements());
+
+        List<Report> domainList = entityPage.getContent().stream()
+                .map(reportMapper::toDomain)
+                .toList();
+
+        return new PagedResult<>(
+                domainList,
+                entityPage.getTotalElements(),
+                entityPage.getTotalPages(),
+                entityPage.getNumber(),
+                entityPage.getSize()
+        );
     }
 
     @Override
@@ -64,7 +96,7 @@ public class ReportRepositoryAdapter implements ReportPortRepository {
         log.debug(LogMessage.REPOSITORY_REPORT_FIND_BY_REQUEST_ID_START, requestId);
 
         if (requestId == null || requestId.trim().isEmpty()) {
-            throw new IllegalArgumentException("requestId must not be null or empty");
+            throw new IllegalArgumentException(LogMessage.EXCEPTION_INVALID_REQUEST_ID);
         }
 
         ObjectId requestOid;
@@ -72,14 +104,14 @@ public class ReportRepositoryAdapter implements ReportPortRepository {
             requestOid = new ObjectId(requestId);
         } catch (IllegalArgumentException e) {
             log.warn(LogMessage.REPOSITORY_REPORT_INVALID_OBJECT_ID, requestId);
-            throw new EntityNotFoundException("Report not found for requestId: " + requestId);
+            throw new EntityNotFoundException(String.format(LogMessage.EXCEPTION_REPORT_NOT_FOUND_FOR_REQUEST, requestId));
         }
 
-        Optional<ReportEntity> entityOpt = reportRepository.findByRequestId(requestOid);
+        Optional<ReportEntity> entityOpt = reportRepository.findFirstByRequestIdOrderByGeneratedDateDesc(requestOid);
 
         if (entityOpt.isEmpty()) {
             log.debug(LogMessage.REPOSITORY_REPORT_NOT_FOUND_FOR_REQUEST_ID, requestId);
-            throw new EntityNotFoundException("Report not found for requestId: " + requestId);
+            throw new EntityNotFoundException(String.format(LogMessage.EXCEPTION_REPORT_NOT_FOUND_FOR_REQUEST, requestId));
         }
 
         log.debug(LogMessage.REPOSITORY_REPORT_FIND_BY_REQUEST_ID_COMPLETED);
@@ -94,7 +126,7 @@ public class ReportRepositoryAdapter implements ReportPortRepository {
 
         if (entityOpt.isEmpty()) {
             log.warn(LogMessage.REPOSITORY_REPORT_NOT_FOUND_FOR_ID, id);
-            throw new EntityNotFoundException("Report not found with id: " + id);
+            throw new EntityNotFoundException(String.format(LogMessage.EXCEPTION_REPORT_NOT_FOUND_FOR_ID, id));
         }
 
         log.debug(LogMessage.REPOSITORY_REPORT_FIND_BY_ID_COMPLETED);

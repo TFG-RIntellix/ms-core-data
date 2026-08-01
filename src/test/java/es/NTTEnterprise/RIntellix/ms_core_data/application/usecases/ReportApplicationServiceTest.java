@@ -17,9 +17,13 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateRepo
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ReportDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.CreateReportDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ReportDTOMapper;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.PagedResult;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Report;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ReportPortRepository;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRepository;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 
 /**
  * Unit tests for {@link ReportApplicationService}.
@@ -33,6 +37,9 @@ class ReportApplicationServiceTest {
     private ReportPortRepository reportPortRepository;
     
     @Mock
+    private RequestPortRepository requestPortRepository;
+    
+    @Mock
     private CreateReportDTOMapper createReportDTOMapper;
     
     @Mock
@@ -42,7 +49,7 @@ class ReportApplicationServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new ReportApplicationService(reportPortRepository, createReportDTOMapper, reportDTOMapper);
+        service = new ReportApplicationService(reportPortRepository, requestPortRepository, createReportDTOMapper, reportDTOMapper);
     }
 
     @Test
@@ -64,18 +71,41 @@ class ReportApplicationServiceTest {
     }
 
     @Test
-    @DisplayName("Should list all reports")
-    void listReports_success() {
+    @DisplayName("Should list reports without search param")
+    void testListReports_WithoutSearchParam() {
         Report report = new Report();
         ReportDTO reportDTO = new ReportDTO();
+        PagedResult<Report> pagedResult = new PagedResult<>(List.of(report), 1, 1, 0, 10);
 
-        when(reportPortRepository.findAll()).thenReturn(List.of(report));
+        when(reportPortRepository.findWithFilters(null, null, 0, 10, "generationDate", "desc"))
+            .thenReturn(pagedResult);
         when(reportDTOMapper.toDTO(report)).thenReturn(reportDTO);
 
-        List<ReportDTO> results = service.listReports();
+        PageResponseDTO<ReportDTO> results = service.listReports(null, 0, 10, "generationDate", "desc");
 
-        assertEquals(1, results.size());
-        assertEquals(reportDTO, results.get(0));
+        assertEquals(1, results.getContent().size());
+        assertEquals(reportDTO, results.getContent().get(0));
+        verify(requestPortRepository, never()).findRequestIdsBySearch(any());
+    }
+
+    @Test
+    @DisplayName("Should list reports with search param")
+    void testListReports_WithSearchParam() {
+        Report report = new Report();
+        ReportDTO reportDTO = new ReportDTO();
+        PagedResult<Report> pagedResult = new PagedResult<>(List.of(report), 1, 1, 0, 10);
+        List<String> requestIds = List.of("REQ-1", "REQ-2");
+
+        when(requestPortRepository.findRequestIdsBySearch("term")).thenReturn(requestIds);
+        when(reportPortRepository.findWithFilters("term", requestIds, 0, 10, "generationDate", "desc"))
+            .thenReturn(pagedResult);
+        when(reportDTOMapper.toDTO(report)).thenReturn(reportDTO);
+
+        PageResponseDTO<ReportDTO> results = service.listReports("term", 0, 10, "generationDate", "desc");
+
+        assertEquals(1, results.getContent().size());
+        assertEquals(reportDTO, results.getContent().get(0));
+        verify(requestPortRepository).findRequestIdsBySearch("term");
     }
 
     @Test
@@ -108,6 +138,6 @@ class ReportApplicationServiceTest {
     @DisplayName("Should throw IllegalArgumentException when getting report with null ID")
     void getReport_nullId() {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> service.getReport(null));
-        assertEquals("Report ID cannot be null or empty", ex.getMessage());
+        assertEquals(LogMessage.EXCEPTION_INVALID_REPORT_ID, ex.getMessage());
     }
 }

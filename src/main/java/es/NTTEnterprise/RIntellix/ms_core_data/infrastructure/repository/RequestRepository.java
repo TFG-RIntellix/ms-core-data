@@ -6,6 +6,8 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.RequestEntity;
 
@@ -22,7 +24,8 @@ import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.RequestEn
 public interface RequestRepository extends MongoRepository<RequestEntity, ObjectId> {
 
     /**
-     * Finds requests with dynamic filtering based on a generic search term (ID or party name) and request status.
+     * Finds requests with dynamic filtering based on a generic search term (ID or
+     * party name) and request status.
      * The search term applies to the _id (regex) OR party_id (in list of IDs).
      * 
      * @param search   the search term to match against _id (optional)
@@ -32,12 +35,28 @@ public interface RequestRepository extends MongoRepository<RequestEntity, Object
      */
     @Query("{ $and: [ " +
             "{ $or: [ " +
-                "{ $expr: { $eq: [:#{#search}, ''] } }, " +
-                "{ $expr: { $regexMatch: { input: { $toString: '$_id' }, regex: :#{#search}, options: 'i' } } }, " +
-                "{ 'party_id': { $in: :#{#partyIds} } } " +
+            "{ $expr: { $eq: [:#{#search}, ''] } }, " +
+            "{ $expr: { $regexMatch: { input: { $ifNull: [ '$request_code', '' ] }, regex: :#{#search}, options: 'i' } } }, "
+            +
+            "{ 'party_id': { $in: :#{#partyIds} } } " +
             "] }, " +
             "{ $or: [ { $expr: { $eq: [:#{#status}, null] } }, { 'status': :#{#status} } ] } " +
             "] }")
-    List<RequestEntity> findWithFilters(@Param("search") String search, @Param("partyIds") List<ObjectId> partyIds, @Param("status") String status);
+    Page<RequestEntity> findWithFilters(@Param("search") String search, @Param("partyIds") List<ObjectId> partyIds,
+            @Param("status") String status, Pageable pageable);
+
+    /**
+     * Finds request IDs matching a generic search term (request code) to be used as
+     * a filter in other collections.
+     * 
+     * @param search the search term to match against request_code
+     * @return list of request entities (containing only the ID)
+     */
+    @Query(value = "{ $or: [ " +
+            "{ $expr: { $eq: [:#{#search}, ''] } }, " +
+            "{ $expr: { $regexMatch: { input: { $ifNull: [ '$request_code', '' ] }, regex: :#{#search}, options: 'i' } } } "
+            +
+            "] }", fields = "{ '_id': 1 }")
+    List<RequestEntity> findRequestIdsBySearch(@Param("search") String search);
 
 }

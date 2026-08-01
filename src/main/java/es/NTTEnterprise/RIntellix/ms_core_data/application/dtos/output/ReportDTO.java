@@ -22,6 +22,7 @@ public class ReportDTO {
     private String reportId;
     private String partyId;
     private String requestId;
+    private String requestCode;
     private String scoringId;
     private String reportType;
     private String title;
@@ -64,6 +65,14 @@ public class ReportDTO {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public String getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(String requestCode) {
+        this.requestCode = requestCode;
     }
 
     public String getScoringId() {

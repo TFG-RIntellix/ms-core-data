@@ -27,6 +27,7 @@ public class RequestDetailsDTOMapper {
        public RequestDetailsDTO toDTO(Request request) {
               RequestDetailsDTO requestDetailsDTO = new RequestDetailsDTO();
               requestDetailsDTO.setRequestId(request.getId());
+              requestDetailsDTO.setRequestCode(request.getRequestCode());
               requestDetailsDTO.setRequestDate(request.getCreationDate().toInstant().toString());
               requestDetailsDTO.setRequestType(request.getRequestDetails().getRequestType().toString());
               requestDetailsDTO.setStatus(request.getRequestStatus().toString());

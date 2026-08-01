@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestPartyDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestSummaryDTO;
@@ -13,6 +14,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestDetail
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestPartyDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestSummaryDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.PagedResult;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input.RequestPortService;
@@ -62,7 +64,8 @@ public class RequestApplicationService implements RequestPortService {
     }
 
     @Override
-    public List<RequestSummaryDTO> listRequests(String search, String requestStatus) {
+    public PageResponseDTO<RequestSummaryDTO> listRequests(
+            String search, String requestStatus, int page, int size, String sortBy, String sortDir) {
         log.debug(LogMessage.SERVICE_LIST_REQUESTS_START, search, requestStatus);
 
         // 1. Resolve matching party IDs based on the search string
@@ -71,9 +74,12 @@ public class RequestApplicationService implements RequestPortService {
             matchingPartyIds = partyPortRepository.findPartyIdsByNameMatch(search);
         }
 
-        // 2. Retrieve requests applying the generic search and party IDs
+        // 2. Retrieve requests applying the generic search, party IDs, and pagination
         List<String> partyIdsList = matchingPartyIds != null ? matchingPartyIds.stream().toList() : null;
-        List<Request> requests = requestPortRepository.findWithFilters(search, partyIdsList, requestStatus);
+        PagedResult<Request> pageResult = 
+                requestPortRepository.findWithFilters(search, partyIdsList, requestStatus, page, size, sortBy, sortDir);
+        
+        List<Request> requests = pageResult.getContent();
         log.debug(LogMessage.SERVICE_LIST_REQUESTS_RESULT, requests.size());
 
         // Resolve party name for each request at application layer to keep SRP.
@@ -88,9 +94,17 @@ public class RequestApplicationService implements RequestPortService {
         });
 
         log.debug(LogMessage.SERVICE_LIST_REQUESTS_MAPPING, requests.size());
-        return requests.stream()
+        List<RequestSummaryDTO> dtoList = requests.stream()
                 .map(requestSummaryDTOMapper::toDTO)
                 .toList();
+
+        return new PageResponseDTO<>(
+                dtoList,
+                pageResult.getTotalElements(),
+                pageResult.getTotalPages(),
+                pageResult.getNumber(),
+                pageResult.getSize()
+        );
     }
 
     @Override

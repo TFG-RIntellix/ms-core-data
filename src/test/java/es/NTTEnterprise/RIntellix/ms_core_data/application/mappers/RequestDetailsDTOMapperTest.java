@@ -29,6 +29,7 @@ class RequestDetailsDTOMapperTest {
     void toDTO_success() {
         Request request = new Request();
         request.setId("REQ-1");
+        request.setRequestCode("REQ-CODE-1");
         request.setCreationDate(new Date());
         request.setRequestStatus(RequestStatus.PENDIENTE_DE_REVISION);
         request.setLastReviewDate(new Date());
@@ -56,6 +57,7 @@ class RequestDetailsDTOMapperTest {
         RequestDetailsDTO dto = mapper.toDTO(request);
 
         assertEquals("REQ-1", dto.getRequestId());
+        assertEquals("REQ-CODE-1", dto.getRequestCode());
         assertNotNull(dto.getRequestDate());
         assertEquals("PRESTAMO", dto.getRequestType());
         assertEquals("PENDIENTE_DE_REVISION", dto.getStatus());

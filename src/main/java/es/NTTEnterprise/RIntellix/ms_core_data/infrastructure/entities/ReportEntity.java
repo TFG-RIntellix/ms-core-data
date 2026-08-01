@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded.RiskFactorEntity;
 
@@ -31,6 +32,7 @@ public class ReportEntity {
     @Field("party_id")
     private ObjectId partyId;
 
+    @Indexed(unique = true)
     @Field("request_id")
     private ObjectId requestId;
 

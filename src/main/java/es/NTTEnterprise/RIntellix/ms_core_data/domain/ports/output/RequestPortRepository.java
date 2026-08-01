@@ -2,6 +2,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output;
 
 import java.util.List;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.PagedResult;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestStatus;
@@ -53,15 +54,29 @@ public interface RequestPortRepository {
     public Request findById(String requestId) throws EntityNotFoundException, IllegalArgumentException;
 
     /**
-     * Retrieves requests with dynamic filtering.
+     * Retrieves requests with dynamic filtering and pagination.
      * Only non-null parameters are applied as filters.
      *
      * @param search        the generic search term (optional filter)
      * @param partyIds      the list of matching party IDs (optional filter)
      * @param requestStatus the status of the request (optional filter)
-     * @return List of requests matching the specified filters
+     * @param page          the page number (0-indexed)
+     * @param size          the page size
+     * @param sortBy        the field to sort by
+     * @param sortDir       the sort direction ("asc" or "desc")
+     * @return PagedResult of requests matching the specified filters
      */
-    public List<Request> findWithFilters(String search, List<String> partyIds, String requestStatus);
+    public PagedResult<Request> findWithFilters(
+            String search, List<String> partyIds, String requestStatus, 
+            int page, int size, String sortBy, String sortDir);
+
+    /**
+     * Finds request IDs matching a generic search term (request code) to be used as a filter in other collections.
+     * 
+     * @param search the search term to match against request_code
+     * @return list of request IDs
+     */
+    List<String> findRequestIdsBySearch(String search);
 
     /**
      * Updates the status and last review date of a request.
