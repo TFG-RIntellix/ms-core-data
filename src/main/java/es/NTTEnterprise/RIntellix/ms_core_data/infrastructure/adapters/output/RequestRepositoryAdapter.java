@@ -129,7 +129,7 @@ public class RequestRepositoryAdapter implements RequestPortRepository {
     @Override
     public void updateReviewStatus(String requestId, RequestStatus status, Date lastReviewDate)
             throws EntityNotFoundException {
-        log.debug(LogMessage.REPOSITORY_REQUEST_UPDATING_REVIEW_STATUS, requestId);
+        log.debug(LogMessage.REPOSITORY_REQUEST_UPDATING_STATUS, requestId);
         Optional<RequestEntity> requestEntityOpt = requestRepository.findById(new ObjectId(requestId));
         if (requestEntityOpt.isEmpty()) {
             throw new EntityNotFoundException(String.format(LogMessage.EXCEPTION_REQUEST_NOT_FOUND, requestId));

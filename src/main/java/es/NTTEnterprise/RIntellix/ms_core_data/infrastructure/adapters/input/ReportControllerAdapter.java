@@ -95,6 +95,8 @@ public class ReportControllerAdapter {
         return ResponseEntity.ok(reports);
     }
 
+
+    
     /**
      * GET /api/reports?requestId={requestId}
      * Retrieves a stored report by request ID.
@@ -107,14 +109,9 @@ public class ReportControllerAdapter {
             @RequestParam("requestId") String requestId) {
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/reports?requestId=" + requestId);
 
-        try {
-            ReportDTO report = reportPortService.getReportByRequestId(requestId);
-            log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS_SINGLE, 200, report.getReportId());
-            return ResponseEntity.ok(report);
-        } catch (EntityNotFoundException e) {
-            log.warn(LogMessage.CONTROLLER_REPORT_NOT_FOUND_REQ, requestId);
-            return ResponseEntity.notFound().build();
-        }
+        ReportDTO report = reportPortService.getReportByRequestId(requestId);
+        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS_SINGLE, 200, report.getReportId());
+        return ResponseEntity.ok(report);
     }
 
     /**

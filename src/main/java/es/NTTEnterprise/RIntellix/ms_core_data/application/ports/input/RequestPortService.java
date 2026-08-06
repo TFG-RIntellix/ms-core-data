@@ -1,12 +1,11 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input;
 
-import java.util.List;
-
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestPartyDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.InvalidStatusTransitionException;
 
 /**
  * Interface that defines the contract for request service operations.
@@ -62,11 +61,17 @@ public interface RequestPortService {
     RequestPartyDTO getRequestParty(String requestId) throws IllegalArgumentException, EntityNotFoundException;
 
     /**
-     * Marks a request as reviewed if it is currently pending.
-     * 
+     * Updates the status of a request. Validates that the requested
+     * transition is allowed before persisting the change.
+     *
      * @param requestId the unique identifier of the request
-     * @throws EntityNotFoundException if the request is not found
+     * @param newStatus the new status value (must match a valid RequestStatus name)
+     * @return the updated RequestDetailsDTO
+     * @throws EntityNotFoundException           if the request is not found
+     * @throws InvalidStatusTransitionException  if the transition is not allowed
+     * @throws IllegalArgumentException          if the status value is invalid
      */
-    void markRequestAsReviewed(String requestId) throws EntityNotFoundException;
+    RequestDetailsDTO updateRequestStatus(String requestId, String newStatus)
+            throws EntityNotFoundException, InvalidStatusTransitionException;
 
 }

@@ -59,4 +59,32 @@ class ReportControllerAdapterTest {
                 .andExpect(jsonPath("$.content").isArray())
                 .andExpect(jsonPath("$.content.length()").value(1));
     }
+
+    @Test
+    @DisplayName("GET /api/reports?requestId={id} should return 200 with report")
+    void testGetReportByRequestId_Found() throws Exception {
+        ReportDTO report = new ReportDTO();
+        report.setReportId("rep-1");
+        
+        when(reportPortService.getReportByRequestId("req-1")).thenReturn(report);
+
+        mockMvc.perform(get("/api/reports")
+                .param("requestId", "req-1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.reportId").value("rep-1"));
+    }
+
+    @Test
+    @DisplayName("GET /api/reports?requestId={id} should return 404 with JSON error when not found")
+    void testGetReportByRequestId_NotFound() throws Exception {
+        when(reportPortService.getReportByRequestId("req-99"))
+            .thenThrow(new es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException("No report found"));
+
+        mockMvc.perform(get("/api/reports")
+                .param("requestId", "req-99"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.error").value("Not Found"))
+                .andExpect(jsonPath("$.message").value("No report found"));
+    }
 }

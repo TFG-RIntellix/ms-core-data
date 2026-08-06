@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,13 +27,15 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.PagedResult;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.InvalidStatusTransitionException;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestStatus;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.PartyPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRepository;
-import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 
 /**
  * Unit tests for {@link RequestApplicationService}.
- * Covers request listing with filters, detailed fetching, party fetching, and async scoring triggers.
+ * Covers request listing with filters, detailed fetching, party fetching, and
+ * async scoring triggers.
  */
 @DisplayName("RequestApplicationService Tests")
 @ExtendWith(MockitoExtension.class)
@@ -40,19 +43,19 @@ class RequestApplicationServiceTest {
 
     @Mock
     private RequestPortRepository requestPortRepository;
-    
+
     @Mock
     private PartyPortRepository partyPortRepository;
-    
+
     @Mock
     private RequestSummaryDTOMapper requestSummaryDTOMapper;
-    
+
     @Mock
     private RequestDetailsDTOMapper requestDetailsDTOMapper;
-    
+
     @Mock
     private RequestPartyDTOMapper requestPartyDTOMapper;
-    
+
     @Mock
     private ScoringGenerationService scoringGenerationService;
 
@@ -70,24 +73,25 @@ class RequestApplicationServiceTest {
     void listRequests_success() {
         String search = "John";
         String status = "PENDING";
-        
+
         when(partyPortRepository.findPartyIdsByNameMatch(search)).thenReturn(Set.of("P-1"));
-        
+
         Request request = new Request();
         request.setPartyId("P-1");
-        
+
         PagedResult<Request> pagedResult = new PagedResult<>(List.of(request), 1, 1, 0, 10);
-        
+
         when(requestPortRepository.findWithFilters(search, List.of("P-1"), status, 0, 10, "creationDate", "desc"))
                 .thenReturn(pagedResult);
-                
+
         Party party = new Party();
         when(partyPortRepository.findPartyNames(Set.of("P-1"))).thenReturn(Map.of("P-1", party));
-        
+
         RequestSummaryDTO summaryDTO = new RequestSummaryDTO();
         when(requestSummaryDTOMapper.toDTO(request)).thenReturn(summaryDTO);
 
-        PageResponseDTO<RequestSummaryDTO> results = service.listRequests(search, status, 0, 10, "creationDate", "desc");
+        PageResponseDTO<RequestSummaryDTO> results = service.listRequests(search, status, 0, 10, "creationDate",
+                "desc");
 
         assertEquals(1, results.getContent().size());
         assertEquals(summaryDTO, results.getContent().get(0));
@@ -99,7 +103,7 @@ class RequestApplicationServiceTest {
     void getRequestDetails_success() throws EntityNotFoundException {
         Request request = new Request();
         request.setPartyId("P-1");
-        
+
         Party party = new Party();
         RequestDetailsDTO detailsDTO = new RequestDetailsDTO();
 
@@ -126,7 +130,7 @@ class RequestApplicationServiceTest {
     void getRequestParty_success() throws EntityNotFoundException {
         Request request = new Request();
         request.setPartyId("P-1");
-        
+
         Party party = new Party();
         RequestPartyDTO partyDTO = new RequestPartyDTO();
 
@@ -138,5 +142,62 @@ class RequestApplicationServiceTest {
 
         assertEquals(partyDTO, result);
         verify(partyPortRepository).findPartyName("P-1"); // Ensure minimal projection is fetched
+    }
+
+    @Test
+    @DisplayName("Should update request status to REVISADO successfully and return details")
+    void updateRequestStatus_success_returnsDetails() throws Exception {
+        Request request = new Request();
+        request.setPartyId("P-1");
+        request.setRequestStatus(RequestStatus.PENDIENTE_DE_REVISION);
+
+        Party party = new Party();
+        RequestDetailsDTO detailsDTO = new RequestDetailsDTO();
+
+        when(requestPortRepository.findById("REQ-1")).thenReturn(request);
+        when(partyPortRepository.findById("P-1")).thenReturn(party);
+        when(requestDetailsDTOMapper.toDTO(request)).thenReturn(detailsDTO);
+
+        RequestDetailsDTO result = service.updateRequestStatus("REQ-1", "REVISADO");
+
+        assertEquals(detailsDTO, result);
+        verify(requestPortRepository).updateReviewStatus(eq("REQ-1"), eq(RequestStatus.REVISADO), any(Date.class));
+    }
+
+    @Test
+    @DisplayName("Should throw InvalidStatusTransitionException when transition is invalid")
+    void updateRequestStatus_invalidTransition_throwsException() {
+        Request request = new Request();
+        request.setRequestStatus(RequestStatus.REVISADO);
+
+        when(requestPortRepository.findById("REQ-1")).thenReturn(request);
+
+        assertThrows(InvalidStatusTransitionException.class, () -> service.updateRequestStatus("REQ-1", "REVISADO"));
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when status value is invalid")
+    void updateRequestStatus_invalidStatusValue_throwsException() {
+        assertThrows(IllegalArgumentException.class, () -> service.updateRequestStatus("REQ-1", "INVALIDO"));
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when request ID is null")
+    void updateRequestStatus_nullRequestId_throwsException() {
+        assertThrows(IllegalArgumentException.class, () -> service.updateRequestStatus(null, "REVISADO"));
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when request ID is blank")
+    void updateRequestStatus_blankRequestId_throwsException() {
+        assertThrows(IllegalArgumentException.class, () -> service.updateRequestStatus("   ", "REVISADO"));
+    }
+
+    @Test
+    @DisplayName("Should propagate EntityNotFoundException when request is not found")
+    void updateRequestStatus_entityNotFound_throwsException() {
+        when(requestPortRepository.findById("REQ-1")).thenThrow(new EntityNotFoundException("Not found"));
+
+        assertThrows(EntityNotFoundException.class, () -> service.updateRequestStatus("REQ-1", "REVISADO"));
     }
 }

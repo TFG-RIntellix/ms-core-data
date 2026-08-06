@@ -13,6 +13,7 @@ import java.util.List;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.NotArchivedException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.DuplicateSimulationNameException;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.InvalidStatusTransitionException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 /**
@@ -110,6 +111,28 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateSimulationNameException.class)
     public ResponseEntity<ApiErrorResponse> handleDuplicateSimulationNameException(DuplicateSimulationNameException ex, HttpServletRequest request) {
         log.warn(LogMessage.SERVICE_SIMULATION_ALREADY_EXISTS, ex.getMessage());
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.CONFLICT.value())
+                .error(HttpStatus.CONFLICT.getReasonPhrase())
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    /**
+     * Handles InvalidStatusTransitionException thrown when a request status
+     * transition is not allowed.
+     *
+     * @param ex      the exception instance
+     * @param request the HttpServletRequest
+     * @return ResponseEntity with the error details and 409 Conflict status
+     */
+    @ExceptionHandler(InvalidStatusTransitionException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidStatusTransitionException(
+            InvalidStatusTransitionException ex, HttpServletRequest request) {
+        log.warn(LogMessage.EXCEPTION_ILLEGAL_ARGUMENT, ex.getMessage());
         ApiErrorResponse error = ApiErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.CONFLICT.value())

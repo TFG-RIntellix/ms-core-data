@@ -15,12 +15,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestStatus;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.RequestEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.mappers.RequestMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.repository.RequestRepository;
-import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
+
+
+import java.util.Date;
+import java.time.ZoneId;
 
 @DisplayName("RequestRepositoryAdapter Tests")
 @ExtendWith(MockitoExtension.class)
@@ -63,5 +66,49 @@ class RequestRepositoryAdapterTest {
 
         assertTrue(result.isEmpty());
         verify(requestRepository).findRequestIdsBySearch("");
+    }
+
+    @Test
+    @DisplayName("updateReviewStatus should update status and date and save")
+    void testUpdateReviewStatus_success() throws Exception {
+        ObjectId id = new ObjectId();
+        RequestEntity entity = new RequestEntity();
+        entity.setId(id);
+        
+        when(requestRepository.findById(id)).thenReturn(Optional.of(entity));
+        
+        Date date = new Date();
+        adapter.updateReviewStatus(id.toHexString(), RequestStatus.REVISADO, date);
+        
+        assertEquals(RequestStatus.REVISADO, entity.getStatus());
+        assertEquals(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), entity.getLastReviewDate());
+        verify(requestRepository).save(entity);
+    }
+
+    @Test
+    @DisplayName("updateReviewStatus should throw EntityNotFoundException if request does not exist")
+    void testUpdateReviewStatus_notFound() {
+        ObjectId id = new ObjectId();
+        
+        when(requestRepository.findById(id)).thenReturn(Optional.empty());
+        
+        assertThrows(EntityNotFoundException.class, () -> 
+                adapter.updateReviewStatus(id.toHexString(), RequestStatus.REVISADO, new Date()));
+    }
+
+    @Test
+    @DisplayName("updateReviewStatus should only update status when date is null")
+    void testUpdateReviewStatus_nullDate() throws Exception {
+        ObjectId id = new ObjectId();
+        RequestEntity entity = new RequestEntity();
+        entity.setId(id);
+        
+        when(requestRepository.findById(id)).thenReturn(Optional.of(entity));
+        
+        adapter.updateReviewStatus(id.toHexString(), RequestStatus.REVISADO, null);
+        
+        assertEquals(RequestStatus.REVISADO, entity.getStatus());
+        assertNull(entity.getLastReviewDate());
+        verify(requestRepository).save(entity);
     }
 }

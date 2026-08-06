@@ -6,11 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.UpdateRequestStatusDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestPartyDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestSummaryDTO;
@@ -34,7 +37,6 @@ public class RequestControllerAdapter {
     public static final String BASE_PATH = "/api/requests";
     public static final String DETAILS_PATH = "/{requestId}";
     public static final String PARTY_PATH = "/{requestId}/party";
-    public static final String REVIEW_PATH = "/{requestId}/review";
 
     private final RequestPortService requestPortService;
 
@@ -109,19 +111,24 @@ public class RequestControllerAdapter {
     }
 
     /**
-     * Endpoint to mark a request as reviewed.
+     * Endpoint to update the status of a request.
+     * Only valid transitions are allowed (e.g., PENDIENTE_DE_REVISION → REVISADO).
      * 
      * @param requestId the unique identifier of the request
-     * @return a ResponseEntity with no content
+     * @param dto the DTO containing the new status value
+     * @return a ResponseEntity with the updated RequestDetailsDTO
      */
-    @PutMapping(REVIEW_PATH)
-    public ResponseEntity<Void> markRequestAsReviewed(@PathVariable String requestId) {
-        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "PUT", BASE_PATH + REVIEW_PATH);
+    @PutMapping(DETAILS_PATH)
+    public ResponseEntity<RequestDetailsDTO> updateRequestStatus(
+            @PathVariable String requestId,
+            @RequestBody @Valid UpdateRequestStatusDTO dto) {
+        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "PUT", BASE_PATH + DETAILS_PATH);
         log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, requestId);
 
-        requestPortService.markRequestAsReviewed(requestId);
+        RequestDetailsDTO updated = requestPortService.updateRequestStatus(
+                requestId, dto.getRequestStatus());
 
-        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS_SINGLE, 204, requestId);
-        return ResponseEntity.noContent().build();
+        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS_SINGLE, 200, requestId);
+        return ResponseEntity.ok(updated);
     }
 }

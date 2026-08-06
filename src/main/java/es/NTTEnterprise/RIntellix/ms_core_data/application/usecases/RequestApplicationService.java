@@ -22,6 +22,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.PartyPortRepo
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestStatus;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.InvalidStatusTransitionException;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Date;
 
@@ -154,21 +155,37 @@ public class RequestApplicationService implements RequestPortService {
     }
 
     @Override
-    public void markRequestAsReviewed(String requestId) throws EntityNotFoundException {
-        log.debug(LogMessage.SERVICE_MARK_REVIEWED_START, requestId);
+    public RequestDetailsDTO updateRequestStatus(String requestId, String newStatus)
+            throws EntityNotFoundException, InvalidStatusTransitionException {
+        log.debug(LogMessage.SERVICE_UPDATE_STATUS_START, requestId, newStatus);
         validateRequestId(requestId);
-        
-        Request request = requestPortRepository.findById(requestId);
-        if (request.getRequestStatus() == RequestStatus.PENDIENTE_DE_REVISION) {
-            requestPortRepository.updateReviewStatus(
-                requestId, 
-                RequestStatus.REVISADO, 
-                new Date()
-            );
-            log.info(LogMessage.SERVICE_MARK_REVIEWED_SUCCESS, requestId);
-        } else {
-            log.debug(LogMessage.SERVICE_MARK_REVIEWED_SKIPPED, requestId);
+
+        // 1. Parse and validate the new status value
+        RequestStatus targetStatus;
+        try {
+            targetStatus = RequestStatus.valueOf(newStatus);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                String.format(LogMessage.EXCEPTION_INVALID_STATUS_VALUE, newStatus));
         }
+
+        // 2. Fetch and validate transition
+        Request request = requestPortRepository.findById(requestId);
+        if (request.getRequestStatus() != RequestStatus.PENDIENTE_DE_REVISION
+                || targetStatus != RequestStatus.REVISADO) {
+            log.warn(LogMessage.SERVICE_UPDATE_STATUS_INVALID_TRANSITION,
+                    request.getRequestStatus(), targetStatus, requestId);
+            throw new InvalidStatusTransitionException(
+                String.format(LogMessage.EXCEPTION_INVALID_STATUS_TRANSITION,
+                    request.getRequestStatus(), targetStatus));
+        }
+
+        // 3. Persist
+        requestPortRepository.updateReviewStatus(requestId, targetStatus, new Date());
+        log.info(LogMessage.SERVICE_UPDATE_STATUS_SUCCESS, targetStatus, requestId);
+
+        // 4. Return updated details (reuse existing getRequestDetails logic)
+        return getRequestDetails(requestId);
     }
 
     private void validateRequestId(String requestId) {

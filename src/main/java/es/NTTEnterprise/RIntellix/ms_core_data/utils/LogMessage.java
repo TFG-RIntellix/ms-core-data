@@ -55,9 +55,9 @@ public final class LogMessage {
     public static final String SERVICE_GET_PARTY_START = "Starting getRequestParty operation - requestId: [{}]";
     public static final String SERVICE_GET_PARTY_COMPLETE = "getRequestParty operation completed successfully - requestId: [{}]";
     
-    public static final String SERVICE_MARK_REVIEWED_START = "Starting markRequestAsReviewed for requestId: [{}]";
-    public static final String SERVICE_MARK_REVIEWED_SUCCESS = "Request status updated to REVISADO for requestId: [{}]";
-    public static final String SERVICE_MARK_REVIEWED_SKIPPED = "Request status is not PENDIENTE_DE_REVISION for requestId: [{}], no update performed.";
+    public static final String SERVICE_UPDATE_STATUS_START = "Starting updateRequestStatus for requestId: [{}], newStatus: [{}]";
+    public static final String SERVICE_UPDATE_STATUS_SUCCESS = "Request status updated to [{}] for requestId: [{}]";
+    public static final String SERVICE_UPDATE_STATUS_INVALID_TRANSITION = "Invalid status transition from [{}] to [{}] for requestId: [{}]";
 
     public static final String SERVICE_GET_SCORING_START = "Starting getScoringByRequestId operation - requestId: [{}]";
     public static final String SERVICE_GET_SCORING_VALIDATION = "Validating requestId for scoring: [{}]";
@@ -123,7 +123,7 @@ public final class LogMessage {
     public static final String REPOSITORY_FIND_BY_ID_FOUND = "Entity found in database - requestId: [{}]";
     public static final String REPOSITORY_FIND_BY_ID_NOT_FOUND = "Entity not found in database - requestId: [{}]";
     public static final String REPOSITORY_FIND_BY_ID_MAPPING = "Mapping RequestEntity to Request domain - requestId: [{}]";
-    public static final String REPOSITORY_REQUEST_UPDATING_REVIEW_STATUS = "Updating review status for requestId: [{}]";
+    public static final String REPOSITORY_REQUEST_UPDATING_STATUS = "Updating request status for requestId: [{}]";
 
     public static final String REPOSITORY_FIND_WITH_FILTERS_START = "Executing findWithFilters operation - partyName: [{}], requestStatus: [{}]";
     public static final String REPOSITORY_FIND_WITH_FILTERS_RESULT = "findWithFilters operation completed - Retrieved {} entity(ies)";
@@ -293,6 +293,8 @@ public final class LogMessage {
     public static final String EXCEPTION_DUPLICATE_SIMULATION_NAME = "Ya existe una simulación con este nombre.";
     public static final String EXCEPTION_REQUEST_TYPE_NULL = "RequestType value cannot be null";
     public static final String EXCEPTION_REQUEST_TYPE_UNKNOWN = "Unknown RequestType value: %s";
+    public static final String EXCEPTION_INVALID_STATUS_TRANSITION = "Cannot transition request status from %s to %s";
+    public static final String EXCEPTION_INVALID_STATUS_VALUE = "Invalid request status value: %s";
     public static final String EXCEPTION_INVALID_REPORT_TYPE = "Invalid report type: %s";
     public static final String EXCEPTION_INVALID_SEVERITY = "Invalid risk factor severity: %s";
     public static final String EXCEPTION_MONEY_CURRENCY_MISMATCH = "Cannot add Money with different currencies";
