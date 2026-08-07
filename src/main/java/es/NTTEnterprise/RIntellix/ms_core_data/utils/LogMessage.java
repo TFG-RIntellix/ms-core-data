@@ -249,6 +249,7 @@ public final class LogMessage {
 
     public static final String SERVICE_CREATE_REPORT_START = "Starting createReport operation - requestId: [{}], scoringId: [{}]";
     public static final String SERVICE_CREATE_REPORT_COMPLETE = "createReport operation completed successfully - reportId: [{}]";
+    public static final String SERVICE_CREATE_REPORT_DUPLICATE = "Report already exists for requestId [{}], ignoring duplicate generation.";
 
     public static final String SERVICE_LIST_REPORTS_START = "Starting listReports operation";
     public static final String SERVICE_LIST_REPORTS_RESULT = "listReports operation completed - Found {} report(s)";
