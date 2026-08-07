@@ -7,21 +7,23 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output;
  * SHAP contribution.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public class TopFeatureDTO {
 
     private String featureName;
     private String featureValue;
     private Double shapValue;
+    private String description;
 
     public TopFeatureDTO() {
     }
 
-    public TopFeatureDTO(String featureName, String featureValue, Double shapValue) {
+    public TopFeatureDTO(String featureName, String featureValue, Double shapValue, String description) {
         this.featureName = featureName;
         this.featureValue = featureValue;
         this.shapValue = shapValue;
+        this.description = description;
     }
 
     // Getters and Setters
@@ -48,6 +50,14 @@ public class TopFeatureDTO {
 
     public void setShapValue(Double shapValue) {
         this.shapValue = shapValue;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

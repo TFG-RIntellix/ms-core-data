@@ -18,7 +18,7 @@ import jakarta.validation.constraints.NotNull;
  * at deserialization time.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-21-2026
+ * @date 21/03/2026
  */
 public class ScoringResultMessageDTO {
 

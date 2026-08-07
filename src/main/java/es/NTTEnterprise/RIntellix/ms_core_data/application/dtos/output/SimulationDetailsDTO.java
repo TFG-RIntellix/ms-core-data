@@ -8,7 +8,7 @@ import java.util.Map;
  * the original (base) scoring results and the computed deltas for comparison.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public class SimulationDetailsDTO {
 
@@ -16,6 +16,7 @@ public class SimulationDetailsDTO {
     private String scenarioName;
     private String simulationDate;
     private String requestId;
+    private String requestCode;
     private String baseScoringId;
 
     // Modified values applied in the simulation
@@ -40,6 +41,9 @@ public class SimulationDetailsDTO {
     private Double pdChange;
     private Double elChange;
     private String riskGradeChange;
+
+    private SimulatedResults simulatedResults;
+    private Delta delta;
 
     public SimulationDetailsDTO() {
     }
@@ -76,6 +80,14 @@ public class SimulationDetailsDTO {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public String getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(String requestCode) {
+        this.requestCode = requestCode;
     }
 
     public String getBaseScoringId() {
@@ -204,5 +216,103 @@ public class SimulationDetailsDTO {
 
     public void setRiskGradeChange(String riskGradeChange) {
         this.riskGradeChange = riskGradeChange;
+    }
+
+    public SimulatedResults getSimulatedResults() {
+        return simulatedResults;
+    }
+
+    public void setSimulatedResults(SimulatedResults simulatedResults) {
+        this.simulatedResults = simulatedResults;
+    }
+
+    public Delta getDelta() {
+        return delta;
+    }
+
+    public void setDelta(Delta delta) {
+        this.delta = delta;
+    }
+
+    public static class SimulatedResults {
+        private Double pd;
+        private Double lgd;
+        private Double ead;
+        private Double ecl;
+        private String riskGrade;
+        private String decision;
+        private Double monthlyPayment;
+        private Double dti;
+        private Double totalPayment;
+        private Double totalInterest;
+        private Double disposableIncome;
+
+        public Double getPd() { return pd; }
+        public void setPd(Double pd) { this.pd = pd; }
+
+        public Double getLgd() { return lgd; }
+        public void setLgd(Double lgd) { this.lgd = lgd; }
+
+        public Double getEad() { return ead; }
+        public void setEad(Double ead) { this.ead = ead; }
+
+        public Double getEcl() { return ecl; }
+        public void setEcl(Double ecl) { this.ecl = ecl; }
+
+        public String getRiskGrade() { return riskGrade; }
+        public void setRiskGrade(String riskGrade) { this.riskGrade = riskGrade; }
+
+        public String getDecision() { return decision; }
+        public void setDecision(String decision) { this.decision = decision; }
+
+        public Double getMonthlyPayment() { return monthlyPayment; }
+        public void setMonthlyPayment(Double monthlyPayment) { this.monthlyPayment = monthlyPayment; }
+
+        public Double getDti() { return dti; }
+        public void setDti(Double dti) { this.dti = dti; }
+
+        public Double getTotalPayment() { return totalPayment; }
+        public void setTotalPayment(Double totalPayment) { this.totalPayment = totalPayment; }
+
+        public Double getTotalInterest() { return totalInterest; }
+        public void setTotalInterest(Double totalInterest) { this.totalInterest = totalInterest; }
+
+        public Double getDisposableIncome() { return disposableIncome; }
+        public void setDisposableIncome(Double disposableIncome) { this.disposableIncome = disposableIncome; }
+    }
+
+    public static class Delta {
+        private Double pdChange;
+        private Double eclChange;
+        private String riskGradeChange;
+        private Double monthlyPaymentChange;
+        private Double dtiChange;
+        private Double totalPaymentChange;
+        private Double totalInterestChange;
+        private Double monthlyDisposableIncomeChange;
+
+        public Double getPdChange() { return pdChange; }
+        public void setPdChange(Double pdChange) { this.pdChange = pdChange; }
+
+        public Double getEclChange() { return eclChange; }
+        public void setEclChange(Double eclChange) { this.eclChange = eclChange; }
+
+        public String getRiskGradeChange() { return riskGradeChange; }
+        public void setRiskGradeChange(String riskGradeChange) { this.riskGradeChange = riskGradeChange; }
+
+        public Double getMonthlyPaymentChange() { return monthlyPaymentChange; }
+        public void setMonthlyPaymentChange(Double monthlyPaymentChange) { this.monthlyPaymentChange = monthlyPaymentChange; }
+
+        public Double getDtiChange() { return dtiChange; }
+        public void setDtiChange(Double dtiChange) { this.dtiChange = dtiChange; }
+
+        public Double getTotalPaymentChange() { return totalPaymentChange; }
+        public void setTotalPaymentChange(Double totalPaymentChange) { this.totalPaymentChange = totalPaymentChange; }
+
+        public Double getTotalInterestChange() { return totalInterestChange; }
+        public void setTotalInterestChange(Double totalInterestChange) { this.totalInterestChange = totalInterestChange; }
+
+        public Double getMonthlyDisposableIncomeChange() { return monthlyDisposableIncomeChange; }
+        public void setMonthlyDisposableIncomeChange(Double monthlyDisposableIncomeChange) { this.monthlyDisposableIncomeChange = monthlyDisposableIncomeChange; }
     }
 }

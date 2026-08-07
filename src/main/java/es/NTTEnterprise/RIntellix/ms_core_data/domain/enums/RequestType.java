@@ -1,6 +1,7 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 
 /**
  * This enum represents the type of a request, which can be a loan, mortgage or
@@ -8,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * It contains the type of request as a string.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 04-25-2026
+ * @date 25/04/2026
  */
 public enum RequestType {
     PRESTAMO("PRESTAMO"),
@@ -37,7 +38,7 @@ public enum RequestType {
      */
     public static RequestType fromValue(String value) {
         if (value == null) {
-            throw new IllegalArgumentException("RequestType value cannot be null");
+            throw new IllegalArgumentException(LogMessage.EXCEPTION_REQUEST_TYPE_NULL);
         }
 
         for (RequestType type : RequestType.values()) {
@@ -46,6 +47,6 @@ public enum RequestType {
             }
         }
 
-        throw new IllegalArgumentException("Unknown RequestType value: " + value);
+        throw new IllegalArgumentException(String.format(LogMessage.EXCEPTION_REQUEST_TYPE_UNKNOWN, value));
     }
 }

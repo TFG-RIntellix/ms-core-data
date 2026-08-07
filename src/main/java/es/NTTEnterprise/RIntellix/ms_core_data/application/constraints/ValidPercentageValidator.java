@@ -8,7 +8,7 @@ import jakarta.validation.ConstraintValidatorContext;
  * Checks that value (if provided) is between 0 and 1 (inclusive).
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-21-2026
+ * @date 21/03/2026
  */
 public class ValidPercentageValidator implements ConstraintValidator<ValidPercentage, Double> {
 

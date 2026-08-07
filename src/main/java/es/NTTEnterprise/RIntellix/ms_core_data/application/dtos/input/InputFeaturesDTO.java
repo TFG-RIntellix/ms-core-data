@@ -14,7 +14,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.constraints.ValidPerc
  * integrity.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-21-2026
+ * @date 21/03/2026
  */
 public class InputFeaturesDTO {
 
@@ -68,11 +68,11 @@ public class InputFeaturesDTO {
     private Double interestRate;
 
     @JsonProperty("ltv")
-    @ValidPercentage(message = "LTV must be between 0 and 1")
+    @NonNegativeAmount(message = "LTV cannot be negative")
     private Double ltv;
 
     @JsonProperty("dti")
-    @ValidPercentage(message = "DTI must be between 0 and 1")
+    @NonNegativeAmount(message = "DTI cannot be negative")
     private Double dti;
 
     @JsonProperty("previousLoansCount")
@@ -80,6 +80,26 @@ public class InputFeaturesDTO {
 
     @JsonProperty("previousDefaultsCount")
     private Integer previousDefaultsCount;
+
+    @JsonProperty("incomeType")
+    private String incomeType;
+
+    @JsonProperty("employmentSeniorityYears")
+    private Integer employmentSeniorityYears;
+
+    @JsonProperty("lti")
+    @NonNegativeAmount(message = "LTI cannot be negative")
+    private Double lti;
+
+    @JsonProperty("creditLimit")
+    @NonNegativeAmount(message = "Credit limit cannot be negative")
+    private Double creditLimit;
+
+    @JsonProperty("isRevolving")
+    private String isRevolving;
+
+    @JsonProperty("existingObligations")
+    private Double existingObligations;
 
     /**
      * Default constructor for InputFeaturesDTO.
@@ -239,5 +259,53 @@ public class InputFeaturesDTO {
 
     public void setPreviousDefaultsCount(Integer previousDefaultsCount) {
         this.previousDefaultsCount = previousDefaultsCount;
+    }
+
+    public String getIncomeType() {
+        return incomeType;
+    }
+
+    public void setIncomeType(String incomeType) {
+        this.incomeType = incomeType;
+    }
+
+    public Integer getEmploymentSeniorityYears() {
+        return employmentSeniorityYears;
+    }
+
+    public void setEmploymentSeniorityYears(Integer employmentSeniorityYears) {
+        this.employmentSeniorityYears = employmentSeniorityYears;
+    }
+
+    public Double getLti() {
+        return lti;
+    }
+
+    public void setLti(Double lti) {
+        this.lti = lti;
+    }
+
+    public Double getCreditLimit() {
+        return creditLimit;
+    }
+
+    public void setCreditLimit(Double creditLimit) {
+        this.creditLimit = creditLimit;
+    }
+
+    public String getIsRevolving() {
+        return isRevolving;
+    }
+
+    public void setIsRevolving(String isRevolving) {
+        this.isRevolving = isRevolving;
+    }
+
+    public Double getExistingObligations() {
+        return existingObligations;
+    }
+
+    public void setExistingObligations(Double existingObligations) {
+        this.existingObligations = existingObligations;
     }
 }

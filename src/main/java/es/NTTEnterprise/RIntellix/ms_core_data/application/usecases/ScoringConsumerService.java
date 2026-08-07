@@ -2,13 +2,11 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 
 import java.util.Objects;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ScoringResultMessageDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringConsumerMessageMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input.ScoringConsumerPortService;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input.ScoringConsumerPortService;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ScoringPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +18,8 @@ import lombok.extern.slf4j.Slf4j;
  * and persisting them to MongoDB.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-21-2026
+ * @date 21/03/2026
  */
-@Service
-@Transactional
 @Slf4j
 public class ScoringConsumerService implements ScoringConsumerPortService {
 
@@ -58,6 +54,8 @@ public class ScoringConsumerService implements ScoringConsumerPortService {
                 scoring.getResults().getRiskLevel(),
                 scoring.getResults().getProbabilityOfDefault(),
                 scoring.getResults().getLossGivenDefault());
+
+        log.info(scoring.toString());
 
         Scoring persistedScoring = scoringPortRepository.save(scoring);
 

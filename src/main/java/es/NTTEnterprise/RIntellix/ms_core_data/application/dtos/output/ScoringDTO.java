@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Data Transfer Object (DTO) for the scoring result associated with a request.
- * Contains all information displayed in the scoring detail view:
- * model metadata, input features, risk metrics and SHAP explainability.
+ * Data Transfer Object (DTO) designed to encapsulate and transport the comprehensive 
+ * results of a financial scoring evaluation. It aggregates model metadata, input variables, 
+ * advanced risk metrics (PD, LGD, EAD, ECL), and SHAP-based explainability data, 
+ * delivering a complete risk profile to the consumer layer.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public class ScoringDTO {
 

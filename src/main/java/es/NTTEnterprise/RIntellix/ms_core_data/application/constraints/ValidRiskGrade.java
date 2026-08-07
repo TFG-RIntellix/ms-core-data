@@ -14,7 +14,7 @@ import jakarta.validation.Payload;
  * Can be applied to String fields representing risk grades.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-21-2026
+ * @date 21/03/2026
  */
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
@@ -22,7 +22,7 @@ import jakarta.validation.Payload;
 @Constraint(validatedBy = ValidRiskGradeValidator.class)
 public @interface ValidRiskGrade {
 
-    String message() default "Risk grade must be one of the valid values (A, B, C, D, E, F)";
+    String message() default "Risk grade must be one of the valid values (A, B, C, D, E, F, G, H)";
 
     Class<?>[] groups() default {};
 

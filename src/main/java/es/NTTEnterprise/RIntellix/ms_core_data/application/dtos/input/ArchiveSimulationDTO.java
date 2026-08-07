@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
  * Only allows modifying the archived status of the simulation.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-07-2026
+ * @date 07/03/2026
  */
 public class ArchiveSimulationDTO {
 

@@ -11,11 +11,12 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestStatus;
  * the request and the status of the request.
  *
  * @author Lucía Fernández Mancebo
- * @Date 02-28-2026
+ * @date 28/02/2026
  */
 public class Request {
 
     private String id;
+    private String requestCode;
     private String partyId; // Reference to Party by ID (for lazy loading)
     private Date creationDate;
     private Date lastReviewDate;
@@ -61,6 +62,14 @@ public class Request {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(String requestCode) {
+        this.requestCode = requestCode;
     }
 
     public String getPartyId() {
@@ -145,6 +154,32 @@ public class Request {
         }
 
         return requestedAmount.getAmount() / propertyValue.getAmount();
+    }
+
+    /**
+     * Calculates the Limit to Income (LTI) ratio for this request.
+     * LTI = Credit limit requested / Annual Income
+     * 
+     * Only applicable to credit card requests. For other request types or when
+     * credit limit or income is not available, returns null.
+     * 
+     * @return the LTI ratio as a percentage (0-1 range), or null if not applicable
+     */
+    public Double calculateLTI() {
+        if (requestDetails == null) {
+            return null;
+        }
+
+        Money creditLimit = requestDetails.getCreditLimit();
+        if (creditLimit == null || creditLimit.getAmount() == null || creditLimit.getAmount() <= 0) {
+            return null;
+        }
+
+        if (party == null || party.getPersonDetails() == null || party.getPersonDetails().getFinancials() == null) {
+            return null;
+        }
+
+        return creditLimit.getAmount() / party.getPersonDetails().getFinancials().getAnnualIncome().getAmount();
     }
 
     // toString, hashCode and equals methods

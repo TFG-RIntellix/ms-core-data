@@ -1,24 +1,30 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Service;
-
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDetailsDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestPartyDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestDetailsDTOMapper;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestPartyDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.RequestSummaryDTOMapper;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Contract;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.PagedResult;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.input.RequestPortService;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ContractPortRepository;
+import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input.RequestPortService;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.PartyPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestStatus;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.InvalidStatusTransitionException;
 import lombok.extern.slf4j.Slf4j;
+import java.util.Date;
 
 /**
  * Application service implementing business logic for request operations.
@@ -32,54 +38,74 @@ import lombok.extern.slf4j.Slf4j;
  * - Credit Cards: Credit card-specific processing
  *
  * @author Lucía Fernández Mancebo
- * @Date 02-28-2026
+ * @date 28/02/2026
  */
 @Slf4j
-@Service
 public class RequestApplicationService implements RequestPortService {
-
-    private static final String INVALID_REQUEST_ID_MESSAGE = "Request ID cannot be null or empty";
 
     private final RequestPortRepository requestPortRepository;
     private final PartyPortRepository partyPortRepository;
-    private final ContractPortRepository contractPortRepository;
     private final RequestSummaryDTOMapper requestSummaryDTOMapper;
     private final RequestDetailsDTOMapper requestDetailsDTOMapper;
+    private final RequestPartyDTOMapper requestPartyDTOMapper;
     private final ScoringGenerationService scoringGenerationService;
 
     public RequestApplicationService(RequestPortRepository requestPortRepository,
             PartyPortRepository partyPortRepository,
-            ContractPortRepository contractPortRepository,
             RequestSummaryDTOMapper requestSummaryDTOMapper,
             RequestDetailsDTOMapper requestDetailsDTOMapper,
+            RequestPartyDTOMapper requestPartyDTOMapper,
             ScoringGenerationService scoringGenerationService) {
         this.requestPortRepository = Objects.requireNonNull(requestPortRepository);
         this.partyPortRepository = Objects.requireNonNull(partyPortRepository);
-        this.contractPortRepository = Objects.requireNonNull(contractPortRepository);
         this.requestSummaryDTOMapper = Objects.requireNonNull(requestSummaryDTOMapper);
         this.requestDetailsDTOMapper = Objects.requireNonNull(requestDetailsDTOMapper);
+        this.requestPartyDTOMapper = Objects.requireNonNull(requestPartyDTOMapper);
         this.scoringGenerationService = Objects.requireNonNull(scoringGenerationService);
     }
 
     @Override
-    public List<RequestSummaryDTO> listRequests(String partyName, String partyId, String requestStatus) {
-        log.debug(LogMessage.SERVICE_LIST_REQUESTS_START, partyName, partyId, requestStatus);
+    public PageResponseDTO<RequestSummaryDTO> listRequests(
+            String search, String requestStatus, int page, int size, String sortBy, String sortDir) {
+        log.debug(LogMessage.SERVICE_LIST_REQUESTS_START, search, requestStatus);
 
-        List<Request> requests = requestPortRepository.findWithFilters(partyId, requestStatus);
+        // 1. Resolve matching party IDs based on the search string
+        Set<String> matchingPartyIds = null;
+        if (search != null && !search.isBlank()) {
+            matchingPartyIds = partyPortRepository.findPartyIdsByNameMatch(search);
+        }
+
+        // 2. Retrieve requests applying the generic search, party IDs, and pagination
+        List<String> partyIdsList = matchingPartyIds != null ? matchingPartyIds.stream().toList() : null;
+        PagedResult<Request> pageResult = 
+                requestPortRepository.findWithFilters(search, partyIdsList, requestStatus, page, size, sortBy, sortDir);
+        
+        List<Request> requests = pageResult.getContent();
         log.debug(LogMessage.SERVICE_LIST_REQUESTS_RESULT, requests.size());
 
         // Resolve party name for each request at application layer to keep SRP.
+        Set<String> partyIds = requests.stream()
+                .map(Request::getPartyId)
+                .collect(Collectors.toSet());
+
+        Map<String, Party> partyNames = partyPortRepository.findPartyNames(partyIds);
+
         requests.forEach(request -> {
-            request.setParty(partyPortRepository.findPartyName(request.getPartyId()));
+            request.setParty(partyNames.get(request.getPartyId()));
         });
 
-        // Filter by name because repository does not support this direct filtering.
-        requests = filterByPartyName(requests, partyName);
-
         log.debug(LogMessage.SERVICE_LIST_REQUESTS_MAPPING, requests.size());
-        return requests.stream()
+        List<RequestSummaryDTO> dtoList = requests.stream()
                 .map(requestSummaryDTOMapper::toDTO)
                 .toList();
+
+        return new PageResponseDTO<>(
+                dtoList,
+                pageResult.getTotalElements(),
+                pageResult.getTotalPages(),
+                pageResult.getNumber(),
+                pageResult.getSize()
+        );
     }
 
     @Override
@@ -89,22 +115,13 @@ public class RequestApplicationService implements RequestPortService {
         log.debug(LogMessage.SERVICE_GET_DETAILS_START, requestId);
         log.debug(LogMessage.SERVICE_GET_DETAILS_VALIDATION, requestId);
 
-        if (requestId == null || requestId.isBlank()) {
-            log.warn(LogMessage.SERVICE_GET_DETAILS_VALIDATION_ERROR);
-            throw new IllegalArgumentException(INVALID_REQUEST_ID_MESSAGE);
-        }
+        validateRequestId(requestId);
 
         Request request = requestPortRepository.findById(requestId);
         log.debug(LogMessage.SERVICE_GET_DETAILS_FOUND, requestId);
 
         // Resolve full Party for detailed view (orchestration at application layer)
         Party party = partyPortRepository.findById(request.getPartyId());
-
-        // Load active contracts and assign to Party
-        List<Contract> activeContracts = contractPortRepository.findActiveByPartyId(request.getPartyId());
-        log.debug(LogMessage.REPOSITORY_PARTY_CONTRACTS_LOADED, request.getPartyId(), activeContracts.size());
-
-        party.getPersonDetails().setActiveContracts(activeContracts);
 
         request.setParty(party);
 
@@ -118,22 +135,64 @@ public class RequestApplicationService implements RequestPortService {
         return result;
     }
 
-    /**
-     * Helper method to filter requests by party name. This is used when
-     * the repository does not support filtering by party name directly,
-     * so we retrieve all requests and then filter in memory.
-     *
-     * @param requests  the list of requests to filter
-     * @param partyName the party name to filter by
-     * @return the filtered list of requests that match the party name
-     */
-    private List<Request> filterByPartyName(List<Request> requests, String partyName) {
-        if (partyName == null || partyName.isBlank()) {
-            return requests;
+    @Override
+    public RequestPartyDTO getRequestParty(String requestId)
+            throws IllegalArgumentException, EntityNotFoundException {
+
+        log.debug(LogMessage.SERVICE_GET_PARTY_START, requestId);
+
+        validateRequestId(requestId);
+
+        Request request = requestPortRepository.findById(requestId);
+
+        // Resolve only the party name (no full PII) for this internal projection.
+        Party party = partyPortRepository.findPartyName(request.getPartyId());
+
+        RequestPartyDTO result = requestPartyDTOMapper.toDTO(request, party);
+
+        log.debug(LogMessage.SERVICE_GET_PARTY_COMPLETE, requestId);
+        return result;
+    }
+
+    @Override
+    public RequestDetailsDTO updateRequestStatus(String requestId, String newStatus)
+            throws EntityNotFoundException, InvalidStatusTransitionException {
+        log.debug(LogMessage.SERVICE_UPDATE_STATUS_START, requestId, newStatus);
+        validateRequestId(requestId);
+
+        // 1. Parse and validate the new status value
+        RequestStatus targetStatus;
+        try {
+            targetStatus = RequestStatus.valueOf(newStatus);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                String.format(LogMessage.EXCEPTION_INVALID_STATUS_VALUE, newStatus));
         }
-        return requests.stream()
-                .filter(request -> request.getParty().getPersonDetails().getFullName().contains(partyName))
-                .toList();
+
+        // 2. Fetch and validate transition
+        Request request = requestPortRepository.findById(requestId);
+        if (request.getRequestStatus() != RequestStatus.PENDIENTE_DE_REVISION
+                || targetStatus != RequestStatus.REVISADO) {
+            log.warn(LogMessage.SERVICE_UPDATE_STATUS_INVALID_TRANSITION,
+                    request.getRequestStatus(), targetStatus, requestId);
+            throw new InvalidStatusTransitionException(
+                String.format(LogMessage.EXCEPTION_INVALID_STATUS_TRANSITION,
+                    request.getRequestStatus(), targetStatus));
+        }
+
+        // 3. Persist
+        requestPortRepository.updateReviewStatus(requestId, targetStatus, new Date());
+        log.info(LogMessage.SERVICE_UPDATE_STATUS_SUCCESS, targetStatus, requestId);
+
+        // 4. Return updated details (reuse existing getRequestDetails logic)
+        return getRequestDetails(requestId);
+    }
+
+    private void validateRequestId(String requestId) {
+        if (requestId == null || requestId.isBlank()) {
+            log.warn(LogMessage.SERVICE_GET_DETAILS_VALIDATION_ERROR);
+            throw new IllegalArgumentException(LogMessage.EXCEPTION_INVALID_REQUEST_ID);
+        }
     }
 
 }

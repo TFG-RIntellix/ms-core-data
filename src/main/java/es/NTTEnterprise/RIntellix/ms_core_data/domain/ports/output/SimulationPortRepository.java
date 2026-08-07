@@ -2,6 +2,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output;
 
 import java.util.List;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.PagedResult;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Simulation;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.NotArchivedException;
@@ -13,7 +14,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.NotArchivedExce
  * supported.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public interface SimulationPortRepository {
 
@@ -31,20 +32,21 @@ public interface SimulationPortRepository {
     Simulation findById(String simulationId) throws EntityNotFoundException, IllegalArgumentException;
 
     /**
-     * Retrieves simulations with dynamic filtering.
-     * Only non-null parameters are applied as filters.
-     * When both parameters are null, all simulations are returned.
-     *
-     * Note: party name filtering is not possible at the database level because
-     * the simulations collection only stores party_id (ObjectId reference).
-     * Party name filtering is handled at the application layer (post-fetch).
-     *
-     * @param requestId the ID of the associated request (optional filter)
-     * @param partyId   the ID of the associated party (optional filter)
-     * @param archived  flag to filter archived simulations (optional filter)
-     * @return List of simulations matching the specified filters
+     * Finds simulations based on a generic search term, a list of matching party IDs, and archive status with pagination.
+     * 
+     * @param search   the generic search term (optional)
+     * @param partyIds the list of party IDs to filter by (optional)
+     * @param requestIds the list of request IDs to filter by (optional)
+     * @param archived the archive status (optional filter)
+     * @param page     the page number (0-indexed)
+     * @param size     the page size
+     * @param sortBy   the field to sort by
+     * @param sortDir  the sort direction ("asc" or "desc")
+     * @return PagedResult of simulation aggregates matching the provided filters
      */
-    List<Simulation> findWithFilters(String requestId, String partyId, boolean archived);
+    PagedResult<Simulation> findWithFilters(
+            String search, List<String> partyIds, List<String> requestIds, Boolean archived,
+            int page, int size, String sortBy, String sortDir);
 
     /**
      * Persists a simulation aggregate to the database.
@@ -67,5 +69,14 @@ public interface SimulationPortRepository {
      */
     public void delete(String simulationId)
             throws IllegalArgumentException, EntityNotFoundException, NotArchivedException;
+
+    /**
+     * Checks if a simulation with the given scenario name already exists for the given request ID.
+     *
+     * @param requestId the ID of the associated request
+     * @param scenarioName the name of the scenario to check
+     * @return true if a simulation exists, false otherwise
+     */
+    boolean existsByRequestIdAndScenarioName(String requestId, String scenarioName);
 
 }

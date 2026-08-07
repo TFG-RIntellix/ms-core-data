@@ -8,13 +8,14 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output;
  * request without exposing the internal structure of the request entity.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 02-28-2026
+ * @date 28/02/2026
  */
 public class RequestDetailsDTO {
 
     // Amount and income are represented as String to preserve formatting at API
     // boundary.
     public String requestId;
+    public String requestCode;
     public String requestDate;
     public String lastReviewDate;
     public String partyName;
@@ -24,11 +25,11 @@ public class RequestDetailsDTO {
     public String partyEmail;
     public String partyAddress;
     public String partyLaboralSituation;
-    public String partyIncome;
+    public Double partyIncome;
     public String requestType;
     public String status;
     public String currency;
-    public String requestedAmount;
+    public Double requestedAmount;
     public Integer requestTermMonths;
     public Double interestRate;
     public String purpose;
@@ -52,6 +53,14 @@ public class RequestDetailsDTO {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public String getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(String requestCode) {
+        this.requestCode = requestCode;
     }
 
     public String getRequestDate() {
@@ -126,11 +135,11 @@ public class RequestDetailsDTO {
         this.partyLaboralSituation = partyLaboralSituation;
     }
 
-    public String getPartyIncome() {
+    public Double getPartyIncome() {
         return partyIncome;
     }
 
-    public void setPartyIncome(String partyIncome) {
+    public void setPartyIncome(Double partyIncome) {
         this.partyIncome = partyIncome;
     }
 
@@ -158,11 +167,11 @@ public class RequestDetailsDTO {
         this.currency = currency;
     }
 
-    public String getRequestedAmount() {
+    public Double getRequestedAmount() {
         return requestedAmount;
     }
 
-    public void setRequestedAmount(String requestedAmount) {
+    public void setRequestedAmount(Double requestedAmount) {
         this.requestedAmount = requestedAmount;
     }
 

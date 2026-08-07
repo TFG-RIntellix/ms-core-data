@@ -8,7 +8,7 @@ import jakarta.validation.ConstraintValidatorContext;
  * Checks that age (if provided) is at least the minimum age value.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-21-2026
+ * @date 21/03/2026
  */
 public class ValidAgeValidator implements ConstraintValidator<ValidAge, Integer> {
 

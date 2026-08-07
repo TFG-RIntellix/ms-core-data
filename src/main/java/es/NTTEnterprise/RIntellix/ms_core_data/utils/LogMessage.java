@@ -6,12 +6,14 @@ package es.NTTEnterprise.RIntellix.ms_core_data.utils;
  * to ensure uniform logging across all layers of the application.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-01-2026
+ * @date 01/03/2026
  */
 public final class LogMessage {
 
+    public static final String UTILITY_CLASS_NEVER_INSTANTIATE = "Never instantiate";
+
     private LogMessage() {
-        // Private constructor to prevent instantiation
+        throw new UnsupportedOperationException(UTILITY_CLASS_NEVER_INSTANTIATE);
     }
 
     // ============================================================
@@ -27,6 +29,11 @@ public final class LogMessage {
     public static final String CONTROLLER_RESPONSE_ERROR = "Error response sent - Status: {} - Reason: {}";
     public static final String CONTROLLER_VALIDATION_ERROR = "Validation error: {}";
     public static final String CONTROLLER_UNEXPECTED_ERROR = "Unexpected error processing request: {}";
+    
+    public static final String CONTROLLER_REPORT_NOT_FOUND_REQ = "Report not found for requestId: {}";
+    public static final String CONTROLLER_REPORT_NO_FILE = "Report {} has no file path associated";
+    public static final String CONTROLLER_REPORT_FILE_NOT_READABLE = "File {} for report {} does not exist or is not readable";
+    public static final String CONTROLLER_REPORT_URL_ERROR = "Error generating URL for file path: {}";
 
     // ============================================================
     // APPLICATION LAYER - Use Cases / Services
@@ -45,6 +52,13 @@ public final class LogMessage {
     public static final String SERVICE_GET_DETAILS_RETRIEVE_PARTY = "Retrieving associated Party for request - partyId: [{}]";
     public static final String SERVICE_GET_DETAILS_TRIGGER_SCORING = "Triggering asynchronous scoring generation for request - requestId: [{}]";
 
+    public static final String SERVICE_GET_PARTY_START = "Starting getRequestParty operation - requestId: [{}]";
+    public static final String SERVICE_GET_PARTY_COMPLETE = "getRequestParty operation completed successfully - requestId: [{}]";
+    
+    public static final String SERVICE_UPDATE_STATUS_START = "Starting updateRequestStatus for requestId: [{}], newStatus: [{}]";
+    public static final String SERVICE_UPDATE_STATUS_SUCCESS = "Request status updated to [{}] for requestId: [{}]";
+    public static final String SERVICE_UPDATE_STATUS_INVALID_TRANSITION = "Invalid status transition from [{}] to [{}] for requestId: [{}]";
+
     public static final String SERVICE_GET_SCORING_START = "Starting getScoringByRequestId operation - requestId: [{}]";
     public static final String SERVICE_GET_SCORING_VALIDATION = "Validating requestId for scoring: [{}]";
     public static final String SERVICE_GET_SCORING_VALIDATION_ERROR = "Validation failed for scoring requestId - Value is null or blank";
@@ -57,6 +71,7 @@ public final class LogMessage {
     public static final String SERVICE_SCORING_GENERATION_PUBLISHED = "Scoring generation request published for request - requestId: [{}]";
     public static final String SERVICE_SCORING_GENERATION_ENTITY_NOT_FOUND = "Entity not found during scoring generation - requestId: [{}], error: {}";
     public static final String SERVICE_SCORING_GENERATION_UNEXPECTED_ERROR = "Unexpected error during scoring generation - requestId: [{}], error: {}";
+
 
     // Simulation Service
     public static final String SERVICE_LIST_SIMULATIONS_START = "Starting listSimulations operation with filters - requestId: [{}], partyName: [{}], partyId: [{}]";
@@ -89,6 +104,8 @@ public final class LogMessage {
     public static final String SERVICE_ARCHIVE_SIMULATION_VALIDATION_ERROR = "Validation failed for simulationId - Value is null or blank";
     public static final String SERVICE_ARCHIVE_SIMULATION_FOUND = "Simulation found for archiving - simulationId: [{}]";
     public static final String SERVICE_ARCHIVE_SIMULATION_COMPLETE = "archiveSimulation operation completed successfully - simulationId: [{}], isArchived: [{}]";
+    public static final String SERVICE_SIMULATION_DEFAULT_NAME = "No scenario name provided. Generated default name: {}";
+    public static final String SERVICE_SIMULATION_ALREADY_EXISTS = "Simulation with name '{}' already exists for request {}";
 
     // Simulation Delete (DELETE)
     public static final String SERVICE_DELETE_SIMULATION_START = "Starting deleteSimulation operation - simulationId: [{}]";
@@ -100,11 +117,13 @@ public final class LogMessage {
 
     public static final String REPOSITORY_FIND_ALL_START = "Executing findAll operation on database";
     public static final String REPOSITORY_FIND_ALL_RESULT = "findAll operation completed - Retrieved {} entity(ies)";
+    public static final String REPOSITORY_FIND_REQUEST_IDS_BY_SEARCH = "Executing findRequestIdsBySearch - search: [{}]";
 
     public static final String REPOSITORY_FIND_BY_ID_START = "Executing findById operation - requestId: [{}]";
     public static final String REPOSITORY_FIND_BY_ID_FOUND = "Entity found in database - requestId: [{}]";
     public static final String REPOSITORY_FIND_BY_ID_NOT_FOUND = "Entity not found in database - requestId: [{}]";
     public static final String REPOSITORY_FIND_BY_ID_MAPPING = "Mapping RequestEntity to Request domain - requestId: [{}]";
+    public static final String REPOSITORY_REQUEST_UPDATING_STATUS = "Updating request status for requestId: [{}]";
 
     public static final String REPOSITORY_FIND_WITH_FILTERS_START = "Executing findWithFilters operation - partyName: [{}], requestStatus: [{}]";
     public static final String REPOSITORY_FIND_WITH_FILTERS_RESULT = "findWithFilters operation completed - Retrieved {} entity(ies)";
@@ -117,6 +136,9 @@ public final class LogMessage {
     public static final String REPOSITORY_PARTY_FIND_BY_ID_MAPPING = "Mapping PartyEntity to Party domain - partyId: [{}]";
 
     public static final String REPOSITORY_PARTY_FIND_NAME_ONLY_START = "Executing findPartyWithNameOnly operation - partyId: [{}]";
+    public static final String REPOSITORY_PARTY_FIND_NAMES_ONLY_START = "REPOSITORY_PARTY_FIND_NAMES_ONLY_START: {}";
+    public static final String REPOSITORY_PARTY_FIND_IDS_BY_NAME_START = "REPOSITORY_PARTY_FIND_IDS_BY_NAME_START: {}";
+    public static final String REPOSITORY_PARTY_FIND_IDS_BY_NAME_RESULT = "REPOSITORY_PARTY_FIND_IDS_BY_NAME_RESULT: found {} parties";
     public static final String REPOSITORY_PARTY_FIND_NAME_ONLY_NOT_FOUND = "Party not found for name query - partyId: [{}]";
     public static final String REPOSITORY_PARTY_FIND_NAME_ONLY_RESULT = "Partial Party retrieved - partyId: [{}], fullName: [{}]";
 
@@ -154,6 +176,7 @@ public final class LogMessage {
     public static final String REPOSITORY_SIMULATION_DELETE_NOT_FOUND = "Simulation not found for deletion - simulationId: [{}]";
     public static final String REPOSITORY_SIMULATION_DELETE_NOT_ARCHIVED = "Cannot delete simulation - simulation is not archived - simulationId: [{}]";
     public static final String REPOSITORY_SIMULATION_DELETE_COMPLETE = "Delete operation on simulations completed - simulationId: [{}]";
+    public static final String REPOSITORY_SIMULATION_CHECK_EXISTS = "Checking if simulation exists with scenarioName: {} for requestId: {}";
 
     // ============================================================
     // INFRASTRUCTURE LAYER - Mappers
@@ -221,12 +244,61 @@ public final class LogMessage {
     public static final String SERVICE_SCORING_CONSUMER_COMPLETE = "[ScoringConsumerService/Application] - COMPLETE: requestId: {}, scoringId: {}, topFeaturesCount: {}";
 
     // ============================================================
+    // REPORT LAYER - Service / Repository
+    // ============================================================
+
+    public static final String SERVICE_CREATE_REPORT_START = "Starting createReport operation - requestId: [{}], scoringId: [{}]";
+    public static final String SERVICE_CREATE_REPORT_COMPLETE = "createReport operation completed successfully - reportId: [{}]";
+
+    public static final String SERVICE_LIST_REPORTS_START = "Starting listReports operation";
+    public static final String SERVICE_LIST_REPORTS_RESULT = "listReports operation completed - Found {} report(s)";
+    
+    public static final String SERVICE_GET_REPORT_REQ_START = "Starting getReportByRequestId operation - requestId: [{}]";
+    public static final String SERVICE_GET_REPORT_REQ_COMPLETE = "getReportByRequestId operation completed";
+    public static final String SERVICE_GET_REPORT_ID_START = "Starting getReport operation - reportId: [{}]";
+    public static final String SERVICE_GET_REPORT_ID_FAILED = "getReport operation failed - reportId is null or empty";
+    public static final String SERVICE_GET_REPORT_ID_COMPLETE = "getReport operation completed - Retrieved report: [{}]";
+
+    public static final String REPOSITORY_REPORT_FIND_ALL_START = "Executing findAll operation on reports";
+    public static final String REPOSITORY_REPORT_FIND_ALL_COMPLETE = "findAll operation on reports completed - Retrieved {} entity(ies)";
+
+    public static final String REPOSITORY_REPORT_FIND_BY_REQUEST_ID_START = "Executing findByRequestId on reports - requestId: [{}]";
+    public static final String REPOSITORY_REPORT_INVALID_OBJECT_ID = "Invalid ObjectId format for requestId: {}";
+    public static final String REPOSITORY_REPORT_NOT_FOUND_FOR_REQUEST_ID = "No report found for requestId: {}";
+    public static final String REPOSITORY_REPORT_FIND_BY_REQUEST_ID_COMPLETED = "findByRequestId on reports completed - Retrieved entity";
+    public static final String REPOSITORY_REPORT_FIND_BY_ID_START = "Executing findById on reports - id: [{}]";
+    public static final String REPOSITORY_REPORT_NOT_FOUND_FOR_ID = "Report not found for id: [{}]";
+    public static final String REPOSITORY_REPORT_FIND_BY_ID_COMPLETED = "findById on reports completed - Retrieved entity";
+
+    public static final String REPOSITORY_REPORT_SAVE_START = "Executing save operation on reports - requestId: [{}], scoringId: [{}]";
+    public static final String REPOSITORY_REPORT_SAVE_COMPLETE = "Save operation on reports completed - reportId: [{}]";
+
+    // ============================================================
     // EXCEPTION MESSAGES
     // ============================================================
 
     public static final String EXCEPTION_ENTITY_NOT_FOUND = "Entity not found - Type: {} - ID: [{}]";
     public static final String EXCEPTION_ILLEGAL_ARGUMENT = "Illegal argument: {}";
     public static final String EXCEPTION_UNEXPECTED = "Unexpected exception occurred: {}";
+    public static final String API_ERROR_UNEXPECTED_MESSAGE = "An unexpected error occurred. Please try again later.";
+    
+    public static final String EXCEPTION_SIMULATION_NOT_FOUND = "Simulation with ID %s not found";
+    public static final String EXCEPTION_REQUEST_NOT_FOUND = "Request with ID %s not found";
+    public static final String EXCEPTION_PARTY_NOT_FOUND = "Party with ID %s not found";
+    public static final String EXCEPTION_INVALID_REQUEST_ID = "Request ID cannot be null or empty";
+    public static final String EXCEPTION_REPORT_NOT_FOUND_FOR_REQUEST = "Report not found for requestId: %s";
+    public static final String EXCEPTION_REPORT_NOT_FOUND_FOR_ID = "Report not found with id: %s";
+    public static final String EXCEPTION_INVALID_REPORT_ID = "Report ID cannot be null or empty";
+    public static final String EXCEPTION_REQUEST_PARTY_MISMATCH = "Request %s belongs to party %s, not to %s";
+    public static final String EXCEPTION_DUPLICATE_SIMULATION_NAME = "Ya existe una simulación con este nombre.";
+    public static final String EXCEPTION_REQUEST_TYPE_NULL = "RequestType value cannot be null";
+    public static final String EXCEPTION_REQUEST_TYPE_UNKNOWN = "Unknown RequestType value: %s";
+    public static final String EXCEPTION_INVALID_STATUS_TRANSITION = "Cannot transition request status from %s to %s";
+    public static final String EXCEPTION_INVALID_STATUS_VALUE = "Invalid request status value: %s";
+    public static final String EXCEPTION_INVALID_REPORT_TYPE = "Invalid report type: %s";
+    public static final String EXCEPTION_INVALID_SEVERITY = "Invalid risk factor severity: %s";
+    public static final String EXCEPTION_MONEY_CURRENCY_MISMATCH = "Cannot add Money with different currencies";
+    public static final String EXCEPTION_MAPPER_NEVER_INSTANTIATE = "Never instantiate";
 
     // ============================================================
     // APPLICATION LIFECYCLE

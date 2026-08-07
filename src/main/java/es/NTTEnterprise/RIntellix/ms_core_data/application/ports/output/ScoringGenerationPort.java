@@ -14,8 +14,8 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringGe
  * (loans, mortgages, credit cards) may require type-specific payloads.
  * The request type information is contained within ScoringGenerationRequest.
  *
- * @author Lucia Fernandez Mancebo
- * @Date 03-22-2026
+ * @author Lucía Fernández Mancebo
+ * @date 22/03/2026
  */
 public interface ScoringGenerationPort {
 

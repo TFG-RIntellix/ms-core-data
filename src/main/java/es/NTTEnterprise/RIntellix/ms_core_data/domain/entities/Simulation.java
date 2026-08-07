@@ -20,6 +20,7 @@ import java.util.HashMap;
 public class Simulation {
 
     private String id;
+    private String requestCode;
     private String requestId; // Reference to the associated scoring request
     private String partyId; // Reference to the associated party (customer)
     private String baseScoringId;
@@ -32,8 +33,13 @@ public class Simulation {
 
     // Delta fields (comparison with base scoring)
     private Double pdChange;
-    private Double elChange;
+    private Double eclChange;
     private String riskGradeChange;
+    private Double monthlyPaymentChange;
+    private Double dtiChange;
+    private Double totalPaymentChange;
+    private Double totalInterestChange;
+    private Double monthlyDisposableIncomeChange;
 
     // Soft delete flag
     private boolean isArchived;
@@ -66,6 +72,14 @@ public class Simulation {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(String requestCode) {
+        this.requestCode = requestCode;
     }
 
     public String getRequestId() {
@@ -140,12 +154,12 @@ public class Simulation {
         this.pdChange = pdChange;
     }
 
-    public Double getElChange() {
-        return elChange;
+    public Double getEclChange() {
+        return eclChange;
     }
 
-    public void setElChange(Double elChange) {
-        this.elChange = elChange;
+    public void setEclChange(Double eclChange) {
+        this.eclChange = eclChange;
     }
 
     public String getRiskGradeChange() {
@@ -154,6 +168,46 @@ public class Simulation {
 
     public void setRiskGradeChange(String riskGradeChange) {
         this.riskGradeChange = riskGradeChange;
+    }
+
+    public Double getMonthlyPaymentChange() {
+        return monthlyPaymentChange;
+    }
+
+    public void setMonthlyPaymentChange(Double monthlyPaymentChange) {
+        this.monthlyPaymentChange = monthlyPaymentChange;
+    }
+
+    public Double getDtiChange() {
+        return dtiChange;
+    }
+
+    public void setDtiChange(Double dtiChange) {
+        this.dtiChange = dtiChange;
+    }
+
+    public Double getTotalPaymentChange() {
+        return totalPaymentChange;
+    }
+
+    public void setTotalPaymentChange(Double totalPaymentChange) {
+        this.totalPaymentChange = totalPaymentChange;
+    }
+
+    public Double getTotalInterestChange() {
+        return totalInterestChange;
+    }
+
+    public void setTotalInterestChange(Double totalInterestChange) {
+        this.totalInterestChange = totalInterestChange;
+    }
+
+    public Double getMonthlyDisposableIncomeChange() {
+        return monthlyDisposableIncomeChange;
+    }
+
+    public void setMonthlyDisposableIncomeChange(Double monthlyDisposableIncomeChange) {
+        this.monthlyDisposableIncomeChange = monthlyDisposableIncomeChange;
     }
 
     public boolean isArchived() {
@@ -178,8 +232,10 @@ public class Simulation {
         return "Simulation [id=" + id + ", requestId=" + requestId + ", partyId=" + partyId + ", baseScoringId="
                 + baseScoringId + ", scenarioName=" + scenarioName + ", simulationDate=" + simulationDate
                 + ", formChanges=" + formChanges + ", simulatedResults=" + simulatedResults + ", simulatedDecision="
-                + simulatedDecision + ", pdChange=" + pdChange + ", elChange=" + elChange + ", riskGradeChange="
-                + riskGradeChange + ", party=" + party + "]";
+                + simulatedDecision + ", pdChange=" + pdChange + ", eclChange=" + eclChange + ", riskGradeChange="
+                + riskGradeChange + ", monthlyPaymentChange=" + monthlyPaymentChange + ", dtiChange=" + dtiChange
+                + ", totalPaymentChange=" + totalPaymentChange + ", totalInterestChange=" + totalInterestChange
+                + ", monthlyDisposableIncomeChange=" + monthlyDisposableIncomeChange + ", party=" + party + "]";
     }
 
     @Override
@@ -196,8 +252,13 @@ public class Simulation {
         result = prime * result + ((simulatedResults == null) ? 0 : simulatedResults.hashCode());
         result = prime * result + ((simulatedDecision == null) ? 0 : simulatedDecision.hashCode());
         result = prime * result + ((pdChange == null) ? 0 : pdChange.hashCode());
-        result = prime * result + ((elChange == null) ? 0 : elChange.hashCode());
+        result = prime * result + ((eclChange == null) ? 0 : eclChange.hashCode());
         result = prime * result + ((riskGradeChange == null) ? 0 : riskGradeChange.hashCode());
+        result = prime * result + ((monthlyPaymentChange == null) ? 0 : monthlyPaymentChange.hashCode());
+        result = prime * result + ((dtiChange == null) ? 0 : dtiChange.hashCode());
+        result = prime * result + ((totalPaymentChange == null) ? 0 : totalPaymentChange.hashCode());
+        result = prime * result + ((totalInterestChange == null) ? 0 : totalInterestChange.hashCode());
+        result = prime * result + ((monthlyDisposableIncomeChange == null) ? 0 : monthlyDisposableIncomeChange.hashCode());
         result = prime * result + ((party == null) ? 0 : party.hashCode());
         return result;
     }
@@ -261,15 +322,40 @@ public class Simulation {
                 return false;
         } else if (!pdChange.equals(other.pdChange))
             return false;
-        if (elChange == null) {
-            if (other.elChange != null)
+        if (eclChange == null) {
+            if (other.eclChange != null)
                 return false;
-        } else if (!elChange.equals(other.elChange))
+        } else if (!eclChange.equals(other.eclChange))
             return false;
         if (riskGradeChange == null) {
             if (other.riskGradeChange != null)
                 return false;
         } else if (!riskGradeChange.equals(other.riskGradeChange))
+            return false;
+        if (monthlyPaymentChange == null) {
+            if (other.monthlyPaymentChange != null)
+                return false;
+        } else if (!monthlyPaymentChange.equals(other.monthlyPaymentChange))
+            return false;
+        if (dtiChange == null) {
+            if (other.dtiChange != null)
+                return false;
+        } else if (!dtiChange.equals(other.dtiChange))
+            return false;
+        if (totalPaymentChange == null) {
+            if (other.totalPaymentChange != null)
+                return false;
+        } else if (!totalPaymentChange.equals(other.totalPaymentChange))
+            return false;
+        if (totalInterestChange == null) {
+            if (other.totalInterestChange != null)
+                return false;
+        } else if (!totalInterestChange.equals(other.totalInterestChange))
+            return false;
+        if (monthlyDisposableIncomeChange == null) {
+            if (other.monthlyDisposableIncomeChange != null)
+                return false;
+        } else if (!monthlyDisposableIncomeChange.equals(other.monthlyDisposableIncomeChange))
             return false;
         if (party == null) {
             if (other.party != null)

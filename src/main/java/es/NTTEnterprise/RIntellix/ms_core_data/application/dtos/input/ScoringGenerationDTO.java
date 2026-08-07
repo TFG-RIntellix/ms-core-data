@@ -11,7 +11,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input;
  * project.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-15-2026
+ * @date 15/03/2026
  */
 public class ScoringGenerationDTO {
 
@@ -33,6 +33,7 @@ public class ScoringGenerationDTO {
 
     // Financial features
     private Double annualIncome;
+    private Double existingObligations;
 
     // Loan/Request features
     private String requestType;
@@ -147,6 +148,14 @@ public class ScoringGenerationDTO {
         this.annualIncome = annualIncome;
     }
 
+    public Double getExistingObligations() {
+        return existingObligations;
+    }
+
+    public void setExistingObligations(Double existingObligations) {
+        this.existingObligations = existingObligations;
+    }
+
     public String getRequestType() {
         return requestType;
     }
@@ -242,6 +251,7 @@ public class ScoringGenerationDTO {
                 ", employmentStatus='" + employmentStatus + '\'' +
                 ", occupationSector='" + occupationSector + '\'' +
                 ", annualIncome=" + annualIncome +
+                ", existingObligations=" + existingObligations +
                 ", requestType='" + requestType + '\'' +
                 ", purpose='" + purpose + '\'' +
                 ", loanAmount=" + loanAmount +

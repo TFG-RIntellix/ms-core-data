@@ -9,7 +9,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.PartyType;
  * A party can be an individual (Person) or a company.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-01-2026
+ * @date 01/03/2026
  */
 public class Party {
 

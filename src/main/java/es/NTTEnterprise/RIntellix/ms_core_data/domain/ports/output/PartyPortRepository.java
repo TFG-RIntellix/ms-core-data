@@ -1,5 +1,8 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output;
 
+import java.util.Map;
+import java.util.Set;
+
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 
@@ -11,7 +14,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundE
  * here.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-01-2026
+ * @date 01/03/2026
  */
 public interface PartyPortRepository {
 
@@ -39,5 +42,23 @@ public interface PartyPortRepository {
      * @return partial Party with name fields only, or null if not found
      */
     Party findPartyName(String partyId);
+
+    /**
+     * Retrieves partial Party aggregates containing only the name information
+     * for a set of party IDs. Efficiently queries multiple parties at once
+     * to avoid N+1 queries.
+     * 
+     * @param partyIds a set of party unique identifiers
+     * @return a Map containing the party ID as key and the partial Party as value
+     */
+    Map<String, Party> findPartyNames(Set<String> partyIds);
+
+    /**
+     * Searches for parties whose first or last name partially matches the search term.
+     * 
+     * @param searchTerm the string to search for (case-insensitive)
+     * @return a Set of unique party identifiers that match the search term
+     */
+    Set<String> findPartyIdsByNameMatch(String searchTerm);
 
 }

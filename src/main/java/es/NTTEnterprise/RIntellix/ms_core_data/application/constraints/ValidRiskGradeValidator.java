@@ -9,7 +9,7 @@ import jakarta.validation.ConstraintValidatorContext;
  * Checks that the risk grade string is a valid enum value.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-21-2026
+ * @date 21/03/2026
  */
 public class ValidRiskGradeValidator implements ConstraintValidator<ValidRiskGrade, String> {
 

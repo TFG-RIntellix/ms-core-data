@@ -1,8 +1,9 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.mappers;
 
-import org.springframework.stereotype.Component;
+
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestDetailsDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Money;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 
 /**
@@ -13,9 +14,8 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
  * without exposing internal domain structure.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 02-28-2026
+ * @date 28/02/2026
  */
-@Component
 public class RequestDetailsDTOMapper {
 
        /**
@@ -27,11 +27,13 @@ public class RequestDetailsDTOMapper {
        public RequestDetailsDTO toDTO(Request request) {
               RequestDetailsDTO requestDetailsDTO = new RequestDetailsDTO();
               requestDetailsDTO.setRequestId(request.getId());
-              requestDetailsDTO.setRequestDate(request.getCreationDate().toString());
+              requestDetailsDTO.setRequestCode(request.getRequestCode());
+              requestDetailsDTO.setRequestDate(request.getCreationDate().toInstant().toString());
               requestDetailsDTO.setRequestType(request.getRequestDetails().getRequestType().toString());
               requestDetailsDTO.setStatus(request.getRequestStatus().toString());
+
               requestDetailsDTO.setRequestedAmount(request.getRequestDetails().getRequestedAmount() != null
-                            ? request.getRequestDetails().getRequestedAmount().toString()
+                            ? request.getRequestDetails().getRequestedAmount().getAmount()
                             : null);
               requestDetailsDTO.setRequestTermMonths(request.getRequestDetails().getTermMonths());
               requestDetailsDTO.setInterestRate(request.getRequestDetails().getInterestRate());
@@ -47,14 +49,26 @@ public class RequestDetailsDTOMapper {
               requestDetailsDTO.setPartyLaboralSituation(
                             request.getParty().getPersonDetails().getFinancials().getEmploymentStatus().toString());
               requestDetailsDTO.setPartyIncome(
-                            request.getParty().getPersonDetails().getFinancials().getAnnualIncome().toString());
+                            request.getParty().getPersonDetails().getFinancials().getAnnualIncome().getAmount());
 
-              // Map common fields (aligned with MongoDB schema)
-              requestDetailsDTO.setCurrency(request.getRequestDetails().getRequestedAmount() != null
-                            ? request.getRequestDetails().getRequestedAmount().getCurrency()
+              // Map creditCard fields
+              requestDetailsDTO.setRequestedCreditLimit(request.getRequestDetails().getCreditLimit() != null
+                            ? request.getRequestDetails().getCreditLimit().getAmount()
                             : null);
+              requestDetailsDTO.setIsRevolving(request.getRequestDetails().isRevolving());
+
+              // Map common fields
+              if (request.getCollateral() != null) {
+                     requestDetailsDTO.setPropertyValue(request.getCollateral().getPropertyValue().getAmount());
+                     requestDetailsDTO.setIsFirstHome(request.getCollateral().isFirstHome());
+              }
+
+              Money money = request.getRequestDetails().getRequestedAmount() != null
+                            ? request.getRequestDetails().getRequestedAmount()
+                            : request.getRequestDetails().getCreditLimit();
+              requestDetailsDTO.setCurrency(money != null ? money.getCurrency() : null);
               requestDetailsDTO.setLastReviewDate(request.getLastReviewDate() != null
-                            ? request.getLastReviewDate().toString()
+                            ? request.getLastReviewDate().toInstant().toString()
                             : null);
 
               return requestDetailsDTO;

@@ -2,7 +2,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.mappers;
 
 import java.text.SimpleDateFormat;
 
-import org.springframework.stereotype.Component;
+
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationSummaryDTO;
@@ -15,9 +15,8 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Simulation;
  * Handles both summary and detail conversions for the two simulation endpoints.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
-@Component
 public class SimulationDTOMapper {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -39,10 +38,18 @@ public class SimulationDTOMapper {
         dto.setSimulationId(simulation.getId());
         dto.setScenarioName(simulation.getScenarioName());
         dto.setRequestId(simulation.getRequestId());
+        dto.setRequestCode(simulation.getRequestCode());
         dto.setSimulationDate(DATE_FORMAT.format(simulation.getSimulationDate()));
 
         // Party name (resolved at application layer)
-        dto.setPartyName(simulation.getParty().getPersonDetails().getFullName());
+        if (simulation.getParty() != null && simulation.getParty().getPersonDetails() != null) {
+            dto.setPartyName(simulation.getParty().getPersonDetails().getFullName());
+        } else {
+            dto.setPartyName(simulation.getParty() != null ? "" : null);
+        }
+
+        // Archived flag
+        dto.setIsArchived(simulation.isArchived());
 
         return dto;
     }
@@ -68,21 +75,24 @@ public class SimulationDTOMapper {
         dto.setScenarioName(simulation.getScenarioName());
         dto.setSimulationDate(DATE_FORMAT.format(simulation.getSimulationDate()));
         dto.setRequestId(simulation.getRequestId());
+        dto.setRequestCode(simulation.getRequestCode());
         dto.setBaseScoringId(simulation.getBaseScoringId());
 
         // Modified values
         dto.setFormChanges(simulation.getFormChanges());
 
         // Simulated results
-        dto.setSimulatedPd(simulation.getSimulatedResults().getProbabilityOfDefault());
-        dto.setSimulatedLgd(simulation.getSimulatedResults().getLossGivenDefault());
-        dto.setSimulatedEad(simulation.getSimulatedResults().getExposureAtDefault());
-        dto.setSimulatedEcl(simulation.getSimulatedResults().getExpectedCalculatedLoss());
-        dto.setSimulatedRiskGrade(simulation.getSimulatedResults().getRiskLevel());
+        if (simulation.getSimulatedResults() != null) {
+            dto.setSimulatedPd(simulation.getSimulatedResults().getProbabilityOfDefault());
+            dto.setSimulatedLgd(simulation.getSimulatedResults().getLossGivenDefault());
+            dto.setSimulatedEad(simulation.getSimulatedResults().getExposureAtDefault());
+            dto.setSimulatedEcl(simulation.getSimulatedResults().getExpectedCalculatedLoss());
+            dto.setSimulatedRiskGrade(simulation.getSimulatedResults().getRiskLevel());
+        }
         dto.setSimulatedDecision(simulation.getSimulatedDecision());
 
         // Base scoring results (original scenario for comparison)
-        if (baseScoring != null) {
+        if (baseScoring != null && baseScoring.getResults() != null) {
             dto.setBasePd(baseScoring.getResults().getProbabilityOfDefault());
             dto.setBaseLgd(baseScoring.getResults().getLossGivenDefault());
             dto.setBaseEad(baseScoring.getResults().getExposureAtDefault());
@@ -90,10 +100,41 @@ public class SimulationDTOMapper {
             dto.setBaseRiskGrade(baseScoring.getResults().getRiskLevel());
         }
 
-        // Delta (comparison)
+        // Flat Delta (comparison)
         dto.setPdChange(simulation.getPdChange());
-        dto.setElChange(simulation.getElChange());
+        dto.setElChange(simulation.getEclChange());
         dto.setRiskGradeChange(simulation.getRiskGradeChange());
+
+        // Nested simulated results
+        if (simulation.getSimulatedResults() != null) {
+            SimulationDetailsDTO.SimulatedResults sr = new SimulationDetailsDTO.SimulatedResults();
+            sr.setPd(simulation.getSimulatedResults().getProbabilityOfDefault());
+            sr.setLgd(simulation.getSimulatedResults().getLossGivenDefault());
+            sr.setEad(simulation.getSimulatedResults().getExposureAtDefault());
+            sr.setEcl(simulation.getSimulatedResults().getExpectedCalculatedLoss());
+            sr.setRiskGrade(simulation.getSimulatedResults().getRiskLevel());
+            sr.setDecision(simulation.getSimulatedDecision());
+            if (simulation.getSimulatedResults().getFinancialMetrics() != null) {
+                sr.setMonthlyPayment(simulation.getSimulatedResults().getFinancialMetrics().getMonthlyPayment());
+                sr.setDti(simulation.getSimulatedResults().getFinancialMetrics().getDebtToIncomeRatio());
+                sr.setTotalPayment(simulation.getSimulatedResults().getFinancialMetrics().getTotalPayment());
+                sr.setTotalInterest(simulation.getSimulatedResults().getFinancialMetrics().getTotalInterest());
+                sr.setDisposableIncome(simulation.getSimulatedResults().getFinancialMetrics().getMonthlyDisposableIncome());
+            }
+            dto.setSimulatedResults(sr);
+        }
+
+        // Nested delta
+        SimulationDetailsDTO.Delta d = new SimulationDetailsDTO.Delta();
+        d.setPdChange(simulation.getPdChange());
+        d.setEclChange(simulation.getEclChange());
+        d.setRiskGradeChange(simulation.getRiskGradeChange());
+        d.setMonthlyPaymentChange(simulation.getMonthlyPaymentChange());
+        d.setDtiChange(simulation.getDtiChange());
+        d.setTotalPaymentChange(simulation.getTotalPaymentChange());
+        d.setTotalInterestChange(simulation.getTotalInterestChange());
+        d.setMonthlyDisposableIncomeChange(simulation.getMonthlyDisposableIncomeChange());
+        dto.setDelta(d);
 
         return dto;
     }

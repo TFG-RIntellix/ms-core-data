@@ -1,8 +1,5 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.domain.entities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
  * information.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 03-01-2026
+ * @date 01/03/2026
  */
 @Slf4j
 public class Person {
@@ -26,17 +23,14 @@ public class Person {
     private SocioDemographicProfile demographics;
     private FinancialProfile financials;
     private ContactInfo contactInfo;
-    private List<Contract> activeContracts;
 
     public Person() {
-        this.activeContracts = new ArrayList<>();
     }
 
     public Person(String firstName, String lastName, String nif) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.nif = nif;
-        this.activeContracts = new ArrayList<>();
     }
 
     /**
@@ -61,41 +55,6 @@ public class Person {
     }
 
     /**
-     * Adds a contract to the list of active contracts.
-     * 
-     * @param contract the contract to add
-     */
-    public void addContract(Contract contract) {
-        if (this.activeContracts == null) {
-            this.activeContracts = new ArrayList<>();
-        }
-        this.activeContracts.add(contract);
-    }
-
-    /**
-     * Calculates the total outstanding debt from all active contracts.
-     * Each contract subtype provides its outstanding debt via getOutstandingDebt().
-     * If there are no active contracts, returns a Money object with zero amount.
-     *
-     * @return the total debt as a Money object
-     */
-    public Money getTotalDebt() {
-        if (activeContracts == null || activeContracts.isEmpty()) {
-            return new Money(0.0, "EUR");
-        }
-
-        Money totalDebt = new Money(0.0, "EUR");
-        for (Contract contract : activeContracts) {
-            Money debt = contract.getOutstandingDebt();
-            if (debt != null) {
-                totalDebt = totalDebt.add(debt);
-            }
-        }
-        log.debug(LogMessage.DOMAIN_TOTAL_DEBT_RESULT, totalDebt);
-        return totalDebt;
-    }
-
-    /**
      * Calculates the sum of all monthly payment contributions from active
      * contracts.
      * Each contract subtype calculates its own monthly payment using the
@@ -104,17 +63,11 @@ public class Person {
      * @return the total monthly debt payment as a Money object
      */
     public Money getTotalMonthlyDebtPayment() {
-        if (activeContracts == null || activeContracts.isEmpty()) {
+        if (financials == null || financials.getExistingObligations() == null) {
             return new Money(0.0, "EUR");
         }
 
-        Money totalMonthly = new Money(0.0, "EUR");
-        for (Contract contract : activeContracts) {
-            Money monthly = contract.calculateMonthlyPayment();
-            if (monthly != null) {
-                totalMonthly = totalMonthly.add(monthly);
-            }
-        }
+        Money totalMonthly = new Money(financials.getExistingObligations() / 12.0, "EUR");
         log.debug(LogMessage.DOMAIN_TOTAL_MONTHLY_PAYMENT_RESULT, totalMonthly);
         return totalMonthly;
     }
@@ -201,19 +154,10 @@ public class Person {
         this.contactInfo = contactInfo;
     }
 
-    public List<Contract> getActiveContracts() {
-        return activeContracts;
-    }
-
-    public void setActiveContracts(List<Contract> activeContracts) {
-        this.activeContracts = activeContracts;
-    }
-
     @Override
     public String toString() {
         return "Person [firstName=" + firstName + ", lastName=" + lastName + ", nif=" + nif + ", demographics="
-                + demographics + ", financials=" + financials + ", contactInfo=" + contactInfo + ", activeContracts="
-                + activeContracts + "]";
+                + demographics + ", financials=" + financials + ", contactInfo=" + contactInfo + "]";
     }
 
     @Override
@@ -226,7 +170,6 @@ public class Person {
         result = prime * result + ((demographics == null) ? 0 : demographics.hashCode());
         result = prime * result + ((financials == null) ? 0 : financials.hashCode());
         result = prime * result + ((contactInfo == null) ? 0 : contactInfo.hashCode());
-        result = prime * result + ((activeContracts == null) ? 0 : activeContracts.hashCode());
         return result;
     }
 
@@ -268,11 +211,6 @@ public class Person {
             if (other.contactInfo != null)
                 return false;
         } else if (!contactInfo.equals(other.contactInfo))
-            return false;
-        if (activeContracts == null) {
-            if (other.activeContracts != null)
-                return false;
-        } else if (!activeContracts.equals(other.activeContracts))
             return false;
         return true;
     }

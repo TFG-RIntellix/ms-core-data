@@ -1,14 +1,13 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.mappers;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.springframework.stereotype.Component;
+
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringGenerationRequest;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Contract;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.FinancialProfile;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Money;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.MortgageContract;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Person;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
@@ -27,11 +26,20 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.SocioDemographicP
  * - Person details structure is complete when present
  * - Only optional Money and numeric values are checked for null
  *
- * @author Lucia Fernandez Mancebo
- * @Date 03-22-2026
+ * @author Lucía Fernández Mancebo
+ * @date 22/03/2026
  */
-@Component
 public class ScoringGenerationDTOMapper {
+
+    private static final Map<String, String> INCOME_TYPE_MAPPING = new HashMap<>();
+    static {
+        INCOME_TYPE_MAPPING.put("INDEFINIDO", "Salario");
+        INCOME_TYPE_MAPPING.put("TEMPORAL", "Salario");
+        INCOME_TYPE_MAPPING.put("FUNCIONARIO", "Salario");
+        INCOME_TYPE_MAPPING.put("AUTONOMO", "Autonomo");
+        INCOME_TYPE_MAPPING.put("DESEMPLEADO", "Ayudas");
+        INCOME_TYPE_MAPPING.put("INACTIVO", "Pension");
+    }
 
     /**
      * Maps a Request and Party to a ScoringGenerationRequest with all scoring
@@ -70,7 +78,7 @@ public class ScoringGenerationDTOMapper {
         scoringGenerationRequest.setEducation(demographics.getEducation().toString());
         scoringGenerationRequest.setDependents(demographics.getNrDependants());
         scoringGenerationRequest.setHomeOwnership(demographics.getHomeOwnership().toString());
-        scoringGenerationRequest.setHasMortgage(hasMortgageInContracts(person.getActiveContracts()));
+        scoringGenerationRequest.setHasMortgage(person.getFinancials() != null && Boolean.TRUE.equals(person.getFinancials().getHasMortage()));
     }
 
     private void mapFinancialFeatures(Person person, ScoringGenerationRequest scoringGenerationRequest) {
@@ -78,6 +86,8 @@ public class ScoringGenerationDTOMapper {
 
         scoringGenerationRequest.setEmploymentStatus(financials.getEmploymentStatus().toString());
         scoringGenerationRequest.setOccupationSector(financials.getOccupationSector());
+        scoringGenerationRequest.setEmploymentSeniorityYears(financials.getSeniorityYears());
+        scoringGenerationRequest.setIncomeType(calculateIncomeType(financials.getEmploymentStatus().toString()));
 
         Money annualIncome = financials.getAnnualIncome();
         if (annualIncome != null) {
@@ -86,6 +96,10 @@ public class ScoringGenerationDTOMapper {
 
         scoringGenerationRequest.setPreviousLoansCount(financials.getPreviousLoansCount());
         scoringGenerationRequest.setPreviousDefaultsCount(financials.getPreviousDefaultsCount());
+
+        if (financials != null) {
+            scoringGenerationRequest.setExistingObligations(financials.getExistingObligations());
+        }
 
         // DTI calculated from all active contracts and income
         scoringGenerationRequest.setDti(person.getGlobalDTI());
@@ -118,12 +132,17 @@ public class ScoringGenerationDTOMapper {
         if (ltv != null) {
             scoringGenerationRequest.setLtv(ltv);
         }
+
+        // LTI calculated by domain logic
+        Double lti = request.calculateLTI();
+        if (lti != null) {
+            scoringGenerationRequest.setLti(lti);
+        }
+
     }
 
-    private boolean hasMortgageInContracts(List<Contract> contracts) {
-        if (contracts == null || contracts.isEmpty()) {
-            return false;
-        }
-        return contracts.stream().anyMatch(contract -> contract instanceof MortgageContract);
+    public String calculateIncomeType(String employmentStatus) {
+
+        return INCOME_TYPE_MAPPING.getOrDefault(employmentStatus, "Otro");
     }
 }

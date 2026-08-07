@@ -1,5 +1,7 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.domain.entities;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
+
 /**
  * This class represents a monetary amount with its currency. It contains the
  * amount as a double and the currency as a string.
@@ -7,7 +9,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.domain.entities;
  * the same currency.
  * 
  * @author Lucía Fernández Mancebo
- * @Date 02-28-2026
+ * @date 28/02/2026
  */
 public class Money {
 
@@ -36,7 +38,7 @@ public class Money {
      */
     public Money add(Money other) {
         if (!this.currency.equals(other.currency)) {
-            throw new IllegalArgumentException("Cannot add Money with different currencies");
+            throw new IllegalArgumentException(LogMessage.EXCEPTION_MONEY_CURRENCY_MISMATCH);
         }
         return new Money(this.amount + other.amount, this.currency);
     }

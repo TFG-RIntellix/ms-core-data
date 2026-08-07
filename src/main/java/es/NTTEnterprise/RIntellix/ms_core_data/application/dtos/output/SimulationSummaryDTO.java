@@ -6,15 +6,17 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output;
  * scenario name, associated client, linked request and creation date.
  *
  * @author Lucía Fernández Mancebo
- * @Date 03-03-2026
+ * @date 03/03/2026
  */
 public class SimulationSummaryDTO {
 
     private String simulationId;
     private String scenarioName;
     private String partyName;
+    private String requestCode;
     private String requestId;
     private String simulationDate;
+    private Boolean isArchived;
 
     public SimulationSummaryDTO() {
     }
@@ -27,14 +29,16 @@ public class SimulationSummaryDTO {
      * @param partyName      the full name of the associated client
      * @param requestId      the ID of the associated request
      * @param simulationDate the date when the simulation was created
+     * @param isArchived     whether the simulation is archived
      */
     public SimulationSummaryDTO(String simulationId, String scenarioName, String partyName,
-            String requestId, String simulationDate) {
+            String requestId, String simulationDate, Boolean isArchived) {
         this.simulationId = simulationId;
         this.scenarioName = scenarioName;
         this.partyName = partyName;
         this.requestId = requestId;
         this.simulationDate = simulationDate;
+        this.isArchived = isArchived;
     }
 
     // Getters and Setters
@@ -63,6 +67,14 @@ public class SimulationSummaryDTO {
         this.partyName = partyName;
     }
 
+    public String getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(String requestCode) {
+        this.requestCode = requestCode;
+    }
+
     public String getRequestId() {
         return requestId;
     }
@@ -77,5 +89,13 @@ public class SimulationSummaryDTO {
 
     public void setSimulationDate(String simulationDate) {
         this.simulationDate = simulationDate;
+    }
+
+    public Boolean getIsArchived() {
+        return isArchived;
+    }
+
+    public void setIsArchived(Boolean isArchived) {
+        this.isArchived = isArchived;
     }
 }
