@@ -49,6 +49,16 @@ public class ReportApplicationService implements ReportPortService {
     public String createReport(CreateReportDTO dto) throws IllegalArgumentException {
         log.debug(LogMessage.SERVICE_CREATE_REPORT_START, dto.getRequestId(), dto.getScoringId());
 
+        try {
+            Report existingReport = reportPortRepository.findByRequestId(dto.getRequestId());
+            if (existingReport != null) {
+                log.info(LogMessage.SERVICE_CREATE_REPORT_DUPLICATE, dto.getRequestId());
+                return existingReport.getId();
+            }
+        } catch (EntityNotFoundException e) {
+            // Normal flow, report does not exist
+        }
+
         Report report = createReportDTOMapper.toDomain(dto);
 
         Report saved = reportPortRepository.save(report);
