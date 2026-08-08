@@ -19,11 +19,17 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestPa
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.RequestSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input.RequestPortService;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping(RequestControllerAdapter.BASE_PATH)
+@Tag(name = "Requests", description = "Management of client credit and rating requests")
 /**
  * Core component: RequestControllerAdapter.
  * Encapsulates the logic and responsibilities assigned to this element
@@ -60,13 +66,15 @@ public class RequestControllerAdapter {
      *         is invalid or an unexpected error occurs.
      */
     @GetMapping
+    @Operation(summary = "List all requests", description = "Endpoint to retrieve a list of requests with optional filtering by party name and request status.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved the page of requests")
     public ResponseEntity<PageResponseDTO<RequestSummaryDTO>> listRequests(
-            @RequestParam(required = false) String search,
-            @RequestParam(required = false) String requestStatus,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "creationDate") String sortBy,
-            @RequestParam(defaultValue = "desc") String sortDir) {
+            @Parameter(description = "Generic search term for filtering requests") @RequestParam(required = false) String search,
+            @Parameter(description = "The status of the request to filter by") @RequestParam(required = false) String requestStatus,
+            @Parameter(description = "Page number (0-indexed)", example = "0") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Number of elements per page", example = "10") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Field to sort by", example = "creationDate") @RequestParam(defaultValue = "creationDate") String sortBy,
+            @Parameter(description = "Sort direction (asc or desc)", example = "desc") @RequestParam(defaultValue = "desc") String sortDir) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", BASE_PATH);
         log.debug(LogMessage.CONTROLLER_REQUEST_PARAMS, search, requestStatus);
@@ -78,7 +86,14 @@ public class RequestControllerAdapter {
     }
 
     @GetMapping(DETAILS_PATH)
-    public ResponseEntity<RequestDetailsDTO> getRequestDetails(@PathVariable String requestId) {
+    @Operation(summary = "Get request details", description = "Retrieves the full details of a specific request.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved request details"),
+            @ApiResponse(responseCode = "404", description = "Request not found")
+    })
+    public ResponseEntity<RequestDetailsDTO> getRequestDetails(
+            @Parameter(description = "The unique identifier of the request", required = true)
+            @PathVariable String requestId) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", BASE_PATH + DETAILS_PATH);
         log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, requestId);
@@ -99,7 +114,14 @@ public class RequestControllerAdapter {
      * @return a ResponseEntity with the associated RequestPartyDTO
      */
     @GetMapping(PARTY_PATH)
-    public ResponseEntity<RequestPartyDTO> getRequestParty(@PathVariable String requestId) {
+    @Operation(summary = "Get request party", description = "Internal endpoint exposing only the party reference associated with a request.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved request party"),
+            @ApiResponse(responseCode = "404", description = "Request not found")
+    })
+    public ResponseEntity<RequestPartyDTO> getRequestParty(
+            @Parameter(description = "The unique identifier of the request", required = true)
+            @PathVariable String requestId) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", BASE_PATH + PARTY_PATH);
         log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, requestId);
@@ -119,8 +141,16 @@ public class RequestControllerAdapter {
      * @return a ResponseEntity with the updated RequestDetailsDTO
      */
     @PutMapping(DETAILS_PATH)
+    @Operation(summary = "Update request status", description = "Endpoint to update the status of a request. Only valid transitions are allowed.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated request status"),
+            @ApiResponse(responseCode = "400", description = "Invalid status transition or validation error"),
+            @ApiResponse(responseCode = "404", description = "Request not found")
+    })
     public ResponseEntity<RequestDetailsDTO> updateRequestStatus(
+            @Parameter(description = "The unique identifier of the request", required = true)
             @PathVariable String requestId,
+            @Parameter(description = "The new status value", required = true)
             @RequestBody @Valid UpdateRequestStatusDTO dto) {
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "PUT", BASE_PATH + DETAILS_PATH);
         log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, requestId);
