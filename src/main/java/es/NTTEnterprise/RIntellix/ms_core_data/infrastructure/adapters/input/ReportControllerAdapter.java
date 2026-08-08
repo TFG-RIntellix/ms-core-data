@@ -26,6 +26,11 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ReportDTO
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Report;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input.ReportPortService;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/reports")
+@Tag(name = "Reports", description = "Endpoints for AI-generated risk reports management")
 public class ReportControllerAdapter {
 
     private final ReportPortService reportPortService;
@@ -56,7 +62,14 @@ public class ReportControllerAdapter {
      * @return 201 Created with the location of the new report
      */
     @PostMapping
-    public ResponseEntity<Void> createReport(@Valid @RequestBody CreateReportDTO dto) {
+    @Operation(summary = "Create a new report", description = "Persists a new AI-generated risk report produced by ms-reporting.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Report successfully created"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data")
+    })
+    public ResponseEntity<Void> createReport(
+            @Parameter(description = "The complete report data to create", required = true)
+            @Valid @RequestBody CreateReportDTO dto) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "POST", "/api/reports");
 
@@ -80,12 +93,14 @@ public class ReportControllerAdapter {
      * @return 200 OK with the page of reports
      */
     @GetMapping
+    @Operation(summary = "List all reports", description = "Retrieves all stored reports with dynamic filtering and pagination.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved the page of reports")
     public ResponseEntity<PageResponseDTO<ReportDTO>> listReports(
-            @RequestParam(required = false) String search,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "generationDate") String sortBy,
-            @RequestParam(defaultValue = "desc") String sortDir) {
+            @Parameter(description = "Generic search term for filtering reports") @RequestParam(required = false) String search,
+            @Parameter(description = "Page number (0-indexed)", example = "0") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Number of elements per page", example = "10") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Field to sort by", example = "generationDate") @RequestParam(defaultValue = "generationDate") String sortBy,
+            @Parameter(description = "Sort direction (asc or desc)", example = "desc") @RequestParam(defaultValue = "desc") String sortDir) {
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/reports");
 
         PageResponseDTO<ReportDTO> reports = 
@@ -105,7 +120,13 @@ public class ReportControllerAdapter {
      * @return 200 OK with the report
      */
     @GetMapping(params = "requestId")
+    @Operation(summary = "Get report by request ID", description = "Retrieves a single stored report based on its associated request ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the report"),
+            @ApiResponse(responseCode = "404", description = "Report not found for the given request ID")
+    })
     public ResponseEntity<ReportDTO> getReportByRequestId(
+            @Parameter(description = "The unique identifier of the request", required = true)
             @RequestParam("requestId") String requestId) {
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/reports?requestId=" + requestId);
 
@@ -122,7 +143,15 @@ public class ReportControllerAdapter {
      * @return the report file as a Resource
      */
     @GetMapping("/{reportId}/file")
-    public ResponseEntity<Resource> getReportFile(@PathVariable String reportId) {
+    @Operation(summary = "Download report file", description = "Retrieves the generated report PDF file by its ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the PDF file"),
+            @ApiResponse(responseCode = "404", description = "Report or file not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error reading the file")
+    })
+    public ResponseEntity<Resource> getReportFile(
+            @Parameter(description = "The unique identifier of the report", required = true)
+            @PathVariable String reportId) {
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/reports/" + reportId + "/file");
 
         Report report = reportPortService.getReport(reportId);
