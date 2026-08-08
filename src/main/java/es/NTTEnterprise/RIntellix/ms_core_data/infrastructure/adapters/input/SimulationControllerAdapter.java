@@ -23,6 +23,11 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.Simulatio
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationSummaryDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input.SimulationPortService;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/simulations")
+@Tag(name = "Simulations", description = "Endpoints for managing persistent risk simulations")
 public class SimulationControllerAdapter {
 
     private final SimulationPortService simulationPortService;
@@ -57,14 +63,28 @@ public class SimulationControllerAdapter {
      * @return 200 OK with list of SimulationSummaryDTO, or appropriate error
      *         response.
      */
+    /**
+     * GET /api/simulations
+     * Retrieves a list of simulations with optional filtering by request ID, party
+     * name or party ID, or all the archived simulations.
+     * Example: GET /api/simulations?requestId=abc123&partyName=John%20Doe
+     *
+     * @param requestId the ID of the associated request (optional filter)
+     * @param partyName the name of the client (optional filter)
+     * @param partyId   the ID of the client (optional filter)
+     * @return 200 OK with list of SimulationSummaryDTO, or appropriate error
+     *         response.
+     */
     @GetMapping
+    @Operation(summary = "List all simulations", description = "Retrieves a list of simulations with optional filtering and pagination.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved the page of simulations")
     public ResponseEntity<PageResponseDTO<SimulationSummaryDTO>> listSimulations(
-            @RequestParam(required = false) String search,
-            @RequestParam(required = false) Boolean archived,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "simulationDate") String sortBy,
-            @RequestParam(defaultValue = "desc") String sortDir) {
+            @Parameter(description = "Generic search term for filtering simulations") @RequestParam(required = false) String search,
+            @Parameter(description = "Filter by archived status") @RequestParam(required = false) Boolean archived,
+            @Parameter(description = "Page number (0-indexed)", example = "0") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Number of elements per page", example = "10") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Field to sort by", example = "simulationDate") @RequestParam(defaultValue = "simulationDate") String sortBy,
+            @Parameter(description = "Sort direction (asc or desc)", example = "desc") @RequestParam(defaultValue = "desc") String sortDir) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/simulations");
         log.debug(LogMessage.CONTROLLER_SIMULATION_REQUEST_PARAMS, search, "", "", archived);
@@ -87,7 +107,15 @@ public class SimulationControllerAdapter {
      *         ID.
      */
     @GetMapping("/{simulationId}")
-    public ResponseEntity<SimulationDetailsDTO> getSimulationDetails(@PathVariable String simulationId) {
+    @Operation(summary = "Get simulation details", description = "Retrieves the detailed information of a specific simulation, including modified values, simulated results, and deltas.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved simulation details"),
+            @ApiResponse(responseCode = "400", description = "Invalid simulation ID format"),
+            @ApiResponse(responseCode = "404", description = "Simulation not found")
+    })
+    public ResponseEntity<SimulationDetailsDTO> getSimulationDetails(
+            @Parameter(description = "The unique identifier of the simulation", required = true)
+            @PathVariable String simulationId) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/simulations/" + simulationId);
         log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, simulationId);
@@ -109,7 +137,16 @@ public class SimulationControllerAdapter {
      * @return 200 OK on success, 404 if not found, 400 if invalid input.
      */
     @PutMapping("/{simulationId}")
-    public ResponseEntity<Void> updateSimulationTemplate(@PathVariable String simulationId,
+    @Operation(summary = "Update simulation template", description = "Replaces the simulation template with the provided data. Updates form changes, simulated results, and deltas.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated the simulation template"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data or format"),
+            @ApiResponse(responseCode = "404", description = "Simulation not found")
+    })
+    public ResponseEntity<Void> updateSimulationTemplate(
+            @Parameter(description = "The unique identifier of the simulation template", required = true)
+            @PathVariable String simulationId,
+            @Parameter(description = "The complete replacement data for the simulation", required = true)
             @Valid @RequestBody CalculatedSimulationDTO dto) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "PUT", "/api/simulations/" + simulationId);
@@ -131,7 +168,16 @@ public class SimulationControllerAdapter {
      * @return 200 OK on success, 404 if not found, 400 if invalid input.
      */
     @PatchMapping("/{simulationId}")
-    public ResponseEntity<Void> archiveSimulation(@PathVariable String simulationId,
+    @Operation(summary = "Archive simulation", description = "Performs a soft delete (archive) on a simulation. Only the isArchived field can be modified.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully archived or restored the simulation"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "404", description = "Simulation not found")
+    })
+    public ResponseEntity<Void> archiveSimulation(
+            @Parameter(description = "The unique identifier of the simulation to archive", required = true)
+            @PathVariable String simulationId,
+            @Parameter(description = "The patch data containing the new isArchived flag", required = true)
             @Valid @RequestBody ArchiveSimulationDTO dto) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "PATCH", "/api/simulations/" + simulationId);
@@ -153,7 +199,14 @@ public class SimulationControllerAdapter {
      * @return 201 Created with the location of the new simulation
      */
     @PostMapping
-    public ResponseEntity<Void> createSimulation(@Valid @RequestBody CreateSimulationDTO dto) {
+    @Operation(summary = "Create a new simulation", description = "Creates and persists a new simulation with the complete data provided by the frontend.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Successfully created the new simulation"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data")
+    })
+    public ResponseEntity<Void> createSimulation(
+            @Parameter(description = "The complete simulation data including scenario name", required = true)
+            @Valid @RequestBody CreateSimulationDTO dto) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "POST", "/api/simulations");
 
@@ -175,7 +228,15 @@ public class SimulationControllerAdapter {
      * 
      */
     @DeleteMapping("/{simulationId}")
-    public ResponseEntity<String> deleteSimulation(@PathVariable String simulationId) {
+    @Operation(summary = "Delete simulation", description = "Permanently deletes a simulation if it was previously archived (soft deleted).")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully deleted the simulation"),
+            @ApiResponse(responseCode = "400", description = "Simulation is not archived and cannot be deleted"),
+            @ApiResponse(responseCode = "404", description = "Simulation not found")
+    })
+    public ResponseEntity<String> deleteSimulation(
+            @Parameter(description = "The unique identifier of the simulation to delete", required = true)
+            @PathVariable String simulationId) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "DELETE", "/api/simulations/" + simulationId);
         log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, simulationId);
