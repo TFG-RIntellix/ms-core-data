@@ -3,13 +3,15 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input;
 import java.util.List;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ArchiveSimulationDTO;
-import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CalculatedSimulationDTO;
+
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationSummaryDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.DuplicateSimulationNameException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.NotArchivedException;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.RequestPartyMismatchException;
 
 /**
  * Input port for simulation operations.
@@ -23,16 +25,18 @@ public interface SimulationPortService {
         /**
          * Lists simulations based on optional filters and pagination.
          * 
-         * @param search    a generic search term to match against request ID or party name (optional)
-         * @param archived  the archive status of the simulations (optional)
-         * @param page      the page number (0-indexed)
-         * @param size      the page size
-         * @param sortBy    the field to sort by
-         * @param sortDir   the sort direction ("asc" or "desc")
-         * @return a PageResponseDTO of SimulationSummaryDTO objects matching the given criteria
+         * @param search   a generic search term to match against request ID or party
+         *                 name (optional)
+         * @param archived the archive status of the simulations (optional)
+         * @param page     the page number (0-indexed)
+         * @param size     the page size
+         * @param sortBy   the field to sort by
+         * @param sortDir  the sort direction ("asc" or "desc")
+         * @return a PageResponseDTO of SimulationSummaryDTO objects matching the given
+         *         criteria
          */
         PageResponseDTO<SimulationSummaryDTO> listSimulations(
-                String search, Boolean archived, int page, int size, String sortBy, String sortDir);
+                        String search, Boolean archived, int page, int size, String sortBy, String sortDir);
 
         /**
          * Retrieves the detailed information of a specific simulation, including
@@ -47,19 +51,7 @@ public interface SimulationPortService {
         SimulationDetailsDTO getSimulationDetails(String simulationId)
                         throws IllegalArgumentException, EntityNotFoundException;
 
-        /**
-         * Replaces the data of an existing persisted simulation with new calculated
-         * data.
-         * Updates form changes, simulated results, deltas, and associated
-         * scoring/party references.
-         *
-         * @param simulationId the unique identifier of the simulation to update
-         * @param dto          the complete replacement data
-         * @throws IllegalArgumentException if the simulationId is null or empty
-         * @throws EntityNotFoundException  if no simulation is found with the given ID
-         */
-        void updateSimulationTemplate(String simulationId, CalculatedSimulationDTO dto)
-                        throws IllegalArgumentException, EntityNotFoundException;
+
 
         /**
          * Performs a soft delete (archive) on a simulation.
@@ -85,7 +77,8 @@ public interface SimulationPortService {
          * @throws IllegalArgumentException if required fields are missing
          */
         String createSimulation(CreateSimulationDTO dto)
-                        throws IllegalArgumentException;
+                        throws IllegalArgumentException, RequestPartyMismatchException,
+                        DuplicateSimulationNameException;
 
         /**
          * Performs a hard delete on a simulation, removing it permanently from the

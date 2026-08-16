@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.FileStorageException;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
@@ -30,6 +32,27 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleEntityNotFoundException(EntityNotFoundException ex, HttpServletRequest request) {
+        log.warn(LogMessage.EXCEPTION_UNEXPECTED, ex.getMessage());
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND.value())
+                .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Handles FileStorageException thrown when a report file cannot be
+     * retrieved from the storage system.
+     *
+     * @param ex      the exception instance
+     * @param request the HttpServletRequest
+     * @return ResponseEntity with the error details and 404 Not Found status
+     */
+    @ExceptionHandler(FileStorageException.class)
+    public ResponseEntity<ApiErrorResponse> handleFileStorageException(FileStorageException ex, HttpServletRequest request) {
         log.warn(LogMessage.EXCEPTION_UNEXPECTED, ex.getMessage());
         ApiErrorResponse error = ApiErrorResponse.builder()
                 .timestamp(LocalDateTime.now())

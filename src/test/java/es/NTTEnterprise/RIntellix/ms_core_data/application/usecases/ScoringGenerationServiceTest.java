@@ -24,7 +24,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RequestDetails;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestType;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.PartyPortRepository;
+
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ScoringPortRepository;
 
 /**
@@ -38,8 +38,7 @@ class ScoringGenerationServiceTest {
     @Mock
     private ScoringPortRepository scoringPortRepository;
     
-    @Mock
-    private PartyPortRepository partyPortRepository;
+
     
     @Mock
     private ScoringGenerationDTOMapper scoringGenerationMapper;
@@ -54,8 +53,7 @@ class ScoringGenerationServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new ScoringGenerationService(
-            scoringPortRepository, partyPortRepository, scoringGenerationMapper, scoringGenerationPort);
+        service = new ScoringGenerationService(scoringPortRepository, scoringGenerationMapper, scoringGenerationPort);
     }
 
     @Test

@@ -29,7 +29,7 @@ public final class LogMessage {
     public static final String CONTROLLER_RESPONSE_ERROR = "Error response sent - Status: {} - Reason: {}";
     public static final String CONTROLLER_VALIDATION_ERROR = "Validation error: {}";
     public static final String CONTROLLER_UNEXPECTED_ERROR = "Unexpected error processing request: {}";
-    
+
     public static final String CONTROLLER_REPORT_NOT_FOUND_REQ = "Report not found for requestId: {}";
     public static final String CONTROLLER_REPORT_NO_FILE = "Report {} has no file path associated";
     public static final String CONTROLLER_REPORT_FILE_NOT_READABLE = "File {} for report {} does not exist or is not readable";
@@ -54,7 +54,7 @@ public final class LogMessage {
 
     public static final String SERVICE_GET_PARTY_START = "Starting getRequestParty operation - requestId: [{}]";
     public static final String SERVICE_GET_PARTY_COMPLETE = "getRequestParty operation completed successfully - requestId: [{}]";
-    
+
     public static final String SERVICE_UPDATE_STATUS_START = "Starting updateRequestStatus for requestId: [{}], newStatus: [{}]";
     public static final String SERVICE_UPDATE_STATUS_SUCCESS = "Request status updated to [{}] for requestId: [{}]";
     public static final String SERVICE_UPDATE_STATUS_INVALID_TRANSITION = "Invalid status transition from [{}] to [{}] for requestId: [{}]";
@@ -71,7 +71,7 @@ public final class LogMessage {
     public static final String SERVICE_SCORING_GENERATION_PUBLISHED = "Scoring generation request published for request - requestId: [{}]";
     public static final String SERVICE_SCORING_GENERATION_ENTITY_NOT_FOUND = "Entity not found during scoring generation - requestId: [{}], error: {}";
     public static final String SERVICE_SCORING_GENERATION_UNEXPECTED_ERROR = "Unexpected error during scoring generation - requestId: [{}], error: {}";
-
+    public static final String INVALID_REQUEST_ID_MESSAGE = "Request ID cannot be null or empty";
 
     // Simulation Service
     public static final String SERVICE_LIST_SIMULATIONS_START = "Starting listSimulations operation with filters - requestId: [{}], partyName: [{}], partyId: [{}]";
@@ -79,6 +79,7 @@ public final class LogMessage {
     public static final String SERVICE_LIST_SIMULATIONS_MAPPING = "Mapping {} simulation(s) to SimulationSummaryDTO";
     public static final String SERVICE_LIST_SIMULATIONS_FILTERING_BY_NAME = "Applying post-fetch partyName filter: [{}]";
     public static final String SERVICE_LIST_SIMULATIONS_AFTER_FILTER = "After partyName filter - {} simulation(s) remaining";
+    public static final String INVALID_SIMULATION_ID_MESSAGE = "Simulation ID cannot be null or empty";
 
     public static final String SERVICE_GET_SIMULATION_DETAILS_START = "Starting getSimulationDetails operation - simulationId: [{}]";
     public static final String SERVICE_GET_SIMULATION_DETAILS_VALIDATION = "Validating simulationId: [{}]";
@@ -87,12 +88,6 @@ public final class LogMessage {
     public static final String SERVICE_GET_SIMULATION_DETAILS_SCORING_FOUND = "Base scoring resolved for simulation comparison - scoringId: [{}]";
     public static final String SERVICE_GET_SIMULATION_DETAILS_SCORING_NOT_FOUND = "Base scoring not found for simulation comparison - scoringId: [{}]";
     public static final String SERVICE_GET_SIMULATION_DETAILS_COMPLETE = "getSimulationDetails operation completed successfully - simulationId: [{}]";
-
-    // Simulation Update (PUT - Template)
-    public static final String SERVICE_UPDATE_SIMULATION_TEMPLATE_START = "Starting updateSimulationTemplate operation - simulationId: [{}]";
-    public static final String SERVICE_UPDATE_SIMULATION_TEMPLATE_VALIDATION_ERROR = "Validation failed for simulationId - Value is null or blank";
-    public static final String SERVICE_UPDATE_SIMULATION_TEMPLATE_FOUND = "Simulation template found - simulationId: [{}]";
-    public static final String SERVICE_UPDATE_SIMULATION_TEMPLATE_COMPLETE = "updateSimulationTemplate operation completed successfully - simulationId: [{}]";
 
     // Simulation Create (POST)
     public static final String SERVICE_CREATE_SIMULATION_START = "Starting createSimulation operation - requestId: [{}], scenarioName: [{}]";
@@ -253,12 +248,21 @@ public final class LogMessage {
 
     public static final String SERVICE_LIST_REPORTS_START = "Starting listReports operation";
     public static final String SERVICE_LIST_REPORTS_RESULT = "listReports operation completed - Found {} report(s)";
-    
+
     public static final String SERVICE_GET_REPORT_REQ_START = "Starting getReportByRequestId operation - requestId: [{}]";
     public static final String SERVICE_GET_REPORT_REQ_COMPLETE = "getReportByRequestId operation completed";
     public static final String SERVICE_GET_REPORT_ID_START = "Starting getReport operation - reportId: [{}]";
     public static final String SERVICE_GET_REPORT_ID_FAILED = "getReport operation failed - reportId is null or empty";
     public static final String SERVICE_GET_REPORT_ID_COMPLETE = "getReport operation completed - Retrieved report: [{}]";
+
+    public static final String SERVICE_GET_REPORT_FILE_START = "Starting getReportFileStream operation - reportId: [{}]";
+    public static final String SERVICE_GET_REPORT_FILE_NO_PATH = "Report has no file path associated - reportId: [{}]";
+    public static final String SERVICE_GET_REPORT_FILE_COMPLETE = "getReportFileStream operation completed - reportId: [{}]";
+
+    public static final String FILE_STORAGE_GET_START = "Retrieving file from storage - filePath: [{}]";
+    public static final String FILE_STORAGE_GET_NOT_FOUND = "File not found or not readable at path: [{}]";
+    public static final String FILE_STORAGE_GET_COMPLETE = "File successfully retrieved from storage - filePath: [{}]";
+    public static final String FILE_STORAGE_URL_ERROR = "Malformed URL for file path: [{}]";
 
     public static final String REPOSITORY_REPORT_FIND_ALL_START = "Executing findAll operation on reports";
     public static final String REPOSITORY_REPORT_FIND_ALL_COMPLETE = "findAll operation on reports completed - Retrieved {} entity(ies)";
@@ -282,7 +286,7 @@ public final class LogMessage {
     public static final String EXCEPTION_ILLEGAL_ARGUMENT = "Illegal argument: {}";
     public static final String EXCEPTION_UNEXPECTED = "Unexpected exception occurred: {}";
     public static final String API_ERROR_UNEXPECTED_MESSAGE = "An unexpected error occurred. Please try again later.";
-    
+
     public static final String EXCEPTION_SIMULATION_NOT_FOUND = "Simulation with ID %s not found";
     public static final String EXCEPTION_REQUEST_NOT_FOUND = "Request with ID %s not found";
     public static final String EXCEPTION_PARTY_NOT_FOUND = "Party with ID %s not found";
@@ -290,6 +294,7 @@ public final class LogMessage {
     public static final String EXCEPTION_REPORT_NOT_FOUND_FOR_REQUEST = "Report not found for requestId: %s";
     public static final String EXCEPTION_REPORT_NOT_FOUND_FOR_ID = "Report not found with id: %s";
     public static final String EXCEPTION_INVALID_REPORT_ID = "Report ID cannot be null or empty";
+    public static final String EXCEPTION_REPORT_FILE_PATH_MISSING = "Report file path is missing for report ID: ";
     public static final String EXCEPTION_REQUEST_PARTY_MISMATCH = "Request %s belongs to party %s, not to %s";
     public static final String EXCEPTION_DUPLICATE_SIMULATION_NAME = "Ya existe una simulación con este nombre.";
     public static final String EXCEPTION_REQUEST_TYPE_NULL = "RequestType value cannot be null";
@@ -300,6 +305,9 @@ public final class LogMessage {
     public static final String EXCEPTION_INVALID_SEVERITY = "Invalid risk factor severity: %s";
     public static final String EXCEPTION_MONEY_CURRENCY_MISMATCH = "Cannot add Money with different currencies";
     public static final String EXCEPTION_MAPPER_NEVER_INSTANTIATE = "Never instantiate";
+    public static final String EXCEPTION_FILE_NOT_FOUND = "File not found or not readable at path: %s";
+    public static final String EXCEPTION_FILE_MALFORMED_URL = "Malformed URL for file path: %s";
+    public static final String EXCEPTION_FILE_READ_ERROR = "Error reading file at path: %s";
 
     // ============================================================
     // APPLICATION LIFECYCLE

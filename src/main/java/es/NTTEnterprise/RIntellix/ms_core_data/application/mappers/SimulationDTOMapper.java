@@ -1,13 +1,15 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.mappers;
 
 import java.text.SimpleDateFormat;
-
-
-
+import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationDetailsDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationSummaryDTO;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.FinancialMetrics;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskMetrics;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Simulation;
+import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Mapper class to convert between Simulation (domain) and Simulation DTOs
@@ -119,7 +121,8 @@ public class SimulationDTOMapper {
                 sr.setDti(simulation.getSimulatedResults().getFinancialMetrics().getDebtToIncomeRatio());
                 sr.setTotalPayment(simulation.getSimulatedResults().getFinancialMetrics().getTotalPayment());
                 sr.setTotalInterest(simulation.getSimulatedResults().getFinancialMetrics().getTotalInterest());
-                sr.setDisposableIncome(simulation.getSimulatedResults().getFinancialMetrics().getMonthlyDisposableIncome());
+                sr.setDisposableIncome(
+                        simulation.getSimulatedResults().getFinancialMetrics().getMonthlyDisposableIncome());
             }
             dto.setSimulatedResults(sr);
         }
@@ -137,5 +140,73 @@ public class SimulationDTOMapper {
         dto.setDelta(d);
 
         return dto;
+    }
+
+    /**
+     * Builds a new Simulation domain entity from the CreateSimulationDTO.
+     * Maps all DTO fields to the domain model, setting the simulation date
+     * to the current timestamp and initializing the archived flag to false.
+     *
+     * @param dto the creation DTO with all simulation data
+     * @return a fully populated Simulation domain entity ready for persistence
+     */
+    public Simulation toDomain(CreateSimulationDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        Simulation simulation = new Simulation();
+
+        simulation.setScenarioName(dto.getScenarioName());
+        simulation.setRequestId(dto.getRequestId());
+        simulation.setPartyId(dto.getPartyId());
+        simulation.setBaseScoringId(dto.getBaseScoringId());
+        simulation.setSimulationDate(new Date());
+
+        simulation.setFormChanges(dto.getFormChanges() != null
+                ? new HashMap<>(dto.getFormChanges())
+                : new HashMap<>());
+
+        // Simulated results and decision
+        if (dto.getSimulatedResults() != null) {
+            FinancialMetrics fm = null;
+            if (dto.getSimulatedResults().getMonthlyPayment() != null
+                    || dto.getSimulatedResults().getDti() != null
+                    || dto.getSimulatedResults().getTotalPayment() != null
+                    || dto.getSimulatedResults().getTotalInterest() != null
+                    || dto.getSimulatedResults().getDisposableIncome() != null) {
+                fm = new FinancialMetrics(
+                        dto.getSimulatedResults().getMonthlyPayment(),
+                        dto.getSimulatedResults().getDti(),
+                        dto.getSimulatedResults().getTotalPayment(),
+                        dto.getSimulatedResults().getTotalInterest(),
+                        dto.getSimulatedResults().getDisposableIncome());
+            }
+            RiskMetrics simulatedResults = new RiskMetrics(
+                    dto.getSimulatedResults().getPd(),
+                    dto.getSimulatedResults().getLgd(),
+                    dto.getSimulatedResults().getEad(),
+                    dto.getSimulatedResults().getEcl(),
+                    dto.getSimulatedResults().getRiskGrade(),
+                    fm);
+            simulation.setSimulatedResults(simulatedResults);
+            simulation.setSimulatedDecision(dto.getSimulatedResults().getDecision());
+        }
+
+        // Deltas
+        if (dto.getDelta() != null) {
+            simulation.setPdChange(dto.getDelta().getPdChange());
+            simulation.setEclChange(dto.getDelta().getEclChange());
+            simulation.setRiskGradeChange(dto.getDelta().getRiskGradeChange());
+            simulation.setMonthlyPaymentChange(dto.getDelta().getMonthlyPaymentChange());
+            simulation.setDtiChange(dto.getDelta().getDtiChange());
+            simulation.setTotalPaymentChange(dto.getDelta().getTotalPaymentChange());
+            simulation.setTotalInterestChange(dto.getDelta().getTotalInterestChange());
+            simulation.setMonthlyDisposableIncomeChange(dto.getDelta().getMonthlyDisposableIncomeChange());
+        }
+
+        simulation.setArchived(false);
+
+        return simulation;
     }
 }

@@ -2,8 +2,6 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 
 import java.util.Objects;
 
-
-
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
@@ -23,8 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ScoringApplicationService implements ScoringPortService {
 
-    private static final String INVALID_REQUEST_ID_MESSAGE = "Request ID cannot be null or empty";
-
     private final ScoringPortRepository scoringPortRepository;
     private final ScoringDTOMapper scoringDTOMapper;
 
@@ -43,7 +39,7 @@ public class ScoringApplicationService implements ScoringPortService {
 
         if (requestId == null || requestId.isBlank()) {
             log.warn(LogMessage.SERVICE_GET_SCORING_VALIDATION_ERROR);
-            throw new IllegalArgumentException(INVALID_REQUEST_ID_MESSAGE);
+            throw new IllegalArgumentException(LogMessage.INVALID_REQUEST_ID_MESSAGE);
         }
 
         Scoring scoring = scoringPortRepository.findByRequestId(requestId);

@@ -9,14 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ArchiveSimulationDTO;
-import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CalculatedSimulationDTO;
+
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.SimulationDetailsDTO;
@@ -89,8 +88,8 @@ public class SimulationControllerAdapter {
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/simulations");
         log.debug(LogMessage.CONTROLLER_SIMULATION_REQUEST_PARAMS, search, "", "", archived);
 
-        PageResponseDTO<SimulationSummaryDTO> simulations = 
-            simulationPortService.listSimulations(search, archived, page, size, sortBy, sortDir);
+        PageResponseDTO<SimulationSummaryDTO> simulations = simulationPortService.listSimulations(search, archived,
+                page, size, sortBy, sortDir);
 
         log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS, 200, simulations.getContent().size());
         return ResponseEntity.ok(simulations);
@@ -114,8 +113,7 @@ public class SimulationControllerAdapter {
             @ApiResponse(responseCode = "404", description = "Simulation not found")
     })
     public ResponseEntity<SimulationDetailsDTO> getSimulationDetails(
-            @Parameter(description = "The unique identifier of the simulation", required = true)
-            @PathVariable String simulationId) {
+            @Parameter(description = "The unique identifier of the simulation", required = true) @PathVariable String simulationId) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/simulations/" + simulationId);
         log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, simulationId);
@@ -124,38 +122,6 @@ public class SimulationControllerAdapter {
 
         log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS_SINGLE, 200, simulationId);
         return ResponseEntity.ok(details);
-    }
-
-    /**
-     * PUT /api/simulations/{simulationId}
-     * Replaces the simulation template with the provided data.
-     * Updates form changes, simulated results, deltas, and associated
-     * scoring/party references.
-     *
-     * @param simulationId the unique identifier of the simulation template
-     * @param dto          the complete replacement data
-     * @return 200 OK on success, 404 if not found, 400 if invalid input.
-     */
-    @PutMapping("/{simulationId}")
-    @Operation(summary = "Update simulation template", description = "Replaces the simulation template with the provided data. Updates form changes, simulated results, and deltas.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully updated the simulation template"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data or format"),
-            @ApiResponse(responseCode = "404", description = "Simulation not found")
-    })
-    public ResponseEntity<Void> updateSimulationTemplate(
-            @Parameter(description = "The unique identifier of the simulation template", required = true)
-            @PathVariable String simulationId,
-            @Parameter(description = "The complete replacement data for the simulation", required = true)
-            @Valid @RequestBody CalculatedSimulationDTO dto) {
-
-        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "PUT", "/api/simulations/" + simulationId);
-        log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, simulationId);
-
-        simulationPortService.updateSimulationTemplate(simulationId, dto);
-
-        log.info(LogMessage.CONTROLLER_RESPONSE_SUCCESS_SINGLE, 200, simulationId);
-        return ResponseEntity.ok().build();
     }
 
     /**
@@ -175,10 +141,8 @@ public class SimulationControllerAdapter {
             @ApiResponse(responseCode = "404", description = "Simulation not found")
     })
     public ResponseEntity<Void> archiveSimulation(
-            @Parameter(description = "The unique identifier of the simulation to archive", required = true)
-            @PathVariable String simulationId,
-            @Parameter(description = "The patch data containing the new isArchived flag", required = true)
-            @Valid @RequestBody ArchiveSimulationDTO dto) {
+            @Parameter(description = "The unique identifier of the simulation to archive", required = true) @PathVariable String simulationId,
+            @Parameter(description = "The patch data containing the new isArchived flag", required = true) @Valid @RequestBody ArchiveSimulationDTO dto) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "PATCH", "/api/simulations/" + simulationId);
         log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, simulationId);
@@ -205,8 +169,7 @@ public class SimulationControllerAdapter {
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     public ResponseEntity<Void> createSimulation(
-            @Parameter(description = "The complete simulation data including scenario name", required = true)
-            @Valid @RequestBody CreateSimulationDTO dto) {
+            @Parameter(description = "The complete simulation data including scenario name", required = true) @Valid @RequestBody CreateSimulationDTO dto) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "POST", "/api/simulations");
 
@@ -235,8 +198,7 @@ public class SimulationControllerAdapter {
             @ApiResponse(responseCode = "404", description = "Simulation not found")
     })
     public ResponseEntity<String> deleteSimulation(
-            @Parameter(description = "The unique identifier of the simulation to delete", required = true)
-            @PathVariable String simulationId) {
+            @Parameter(description = "The unique identifier of the simulation to delete", required = true) @PathVariable String simulationId) {
 
         log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "DELETE", "/api/simulations/" + simulationId);
         log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, simulationId);
