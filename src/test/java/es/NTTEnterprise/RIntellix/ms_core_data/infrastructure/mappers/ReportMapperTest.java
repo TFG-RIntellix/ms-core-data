@@ -2,7 +2,6 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.mappers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Date;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -38,9 +37,9 @@ class ReportMapperTest {
         report.setReportType(ReportType.RISK_ANALYSIS);
         report.setTitle("Title");
         report.setRiskFactors(List.of(new RiskFactor("Factor 1", Severity.ALTO, "Desc")));
-        
+
         ReportEntity entity = mapper.toEntity(report);
-        
+
         assertEquals(id, entity.getId());
         assertEquals(partyId, entity.getPartyId());
         assertEquals("RISK_ANALYSIS", entity.getReportType());
@@ -61,9 +60,9 @@ class ReportMapperTest {
         rfe.setSeverity("ALTO");
         rfe.setFactor("F1");
         entity.setRiskFactors(List.of(rfe));
-        
+
         Report report = mapper.toDomain(entity);
-        
+
         assertEquals(id.toHexString(), report.getId());
         assertEquals(ReportType.RISK_ANALYSIS, report.getReportType());
         assertEquals(1, report.getRiskFactors().size());

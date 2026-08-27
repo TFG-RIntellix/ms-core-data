@@ -5,8 +5,6 @@ import java.util.Date;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
 import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded.DeltaEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded.FormChangesEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded.SimulatedResultsEntity;
@@ -24,32 +22,14 @@ public class SimulationEntity {
 
     @Id
     private ObjectId id;
-
-    @Field("request_id")
     private ObjectId requestId;
-
-    @Field("party_id")
     private ObjectId partyId;
-
-    @Field("base_scoring_id")
     private ObjectId baseScoringId;
-
-    @Field("scenario_name")
     private String scenarioName;
-
-    @Field("simulation_date")
     private Date simulationDate;
-
-    @Field("form_changes")
     private FormChangesEntity formChanges;
-
-    @Field("simulated_results")
     private SimulatedResultsEntity simulatedResults;
-
-    @Field("delta")
     private DeltaEntity delta;
-
-    @Field("is_archived")
     private Boolean isArchived;
 
     public SimulationEntity() {

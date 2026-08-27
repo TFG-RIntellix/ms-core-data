@@ -55,7 +55,7 @@ class ScoringGenerationDTOMapperTest {
         fin.setPreviousLoansCount(1);
         fin.setPreviousDefaultsCount(0);
         fin.setExistingObligations(500.0);
-        fin.setHasMortage(true);
+        fin.setHasMortgage(true);
         pd.setFinancials(fin);
         
         party.setPersonDetails(pd);

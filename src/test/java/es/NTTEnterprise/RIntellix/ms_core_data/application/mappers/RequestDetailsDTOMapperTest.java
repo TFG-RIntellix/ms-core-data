@@ -61,7 +61,7 @@ class RequestDetailsDTOMapperTest {
         assertNotNull(dto.getRequestDate());
         assertEquals("PRESTAMO", dto.getRequestType());
         assertEquals("PENDIENTE_DE_REVISION", dto.getStatus());
-        assertEquals(15000.0, dto.getRequestedAmount());
+        assertEquals(15000.0, dto.getLoanAmount());
         assertEquals(24, dto.getRequestTermMonths());
         assertEquals(5.5, dto.getInterestRate());
         assertEquals("COMPRA_VEHICULO", dto.getPurpose());
@@ -72,7 +72,7 @@ class RequestDetailsDTOMapperTest {
         assertEquals("123 Main St", dto.getPartyAddress());
         assertEquals("INDEFINIDO", dto.getPartyLaboralSituation());
         assertEquals(50000.0, dto.getPartyIncome());
-        assertNull(dto.getRequestedCreditLimit());
+        assertNull(dto.getCreditLimit());
         assertFalse(dto.getIsRevolving());
         assertEquals("EUR", dto.getCurrency());
         assertNotNull(dto.getLastReviewDate());

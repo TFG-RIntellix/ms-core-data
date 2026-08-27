@@ -1,7 +1,5 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded;
 
-import org.springframework.data.mongodb.core.mapping.Field;
-
 /**
  * Embedded entity mapping the "credit_card_fields" sub-document from the "scorings" MongoDB
  * collection.
@@ -10,17 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @author Lucía Fernández Mancebo
  */
 public class CreditCardFieldsEntity {
-
-    @Field("requested_limit")
     private Double requestedLimit;
-
-    @Field("is_revolving")
     private Boolean isRevolving;
-
-    @Field("previous_cards_count")
     private Integer previousCardsCount;
-
-    @Field("revolving_utilization_rate")
     private Double revolvingUtilizationRate;
 
     public CreditCardFieldsEntity() {

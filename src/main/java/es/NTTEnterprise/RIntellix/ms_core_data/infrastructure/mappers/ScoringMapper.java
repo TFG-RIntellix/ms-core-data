@@ -109,37 +109,37 @@ public class ScoringMapper {
 
         putIfNotNull(features, "age", entity.getAge());
         putIfNotNull(features, "gender", entity.getGender());
-        putIfNotNull(features, "marital_status", entity.getMaritalStatus());
+        putIfNotNull(features, "maritalStatus", entity.getMaritalStatus());
         putIfNotNull(features, "education", entity.getEducation());
-        putIfNotNull(features, "employment_status", entity.getEmploymentStatus());
-        putIfNotNull(features, "employment_seniority_years", entity.getEmploymentSeniorityYears());
-        putIfNotNull(features, "income_type", entity.getIncomeType());
-        putIfNotNull(features, "work_sector", entity.getWorkSector());
-        putIfNotNull(features, "nr_dependants", entity.getNrDependants());
-        putIfNotNull(features, "home_ownership", entity.getHomeOwnership());
-        putIfNotNull(features, "has_mortgage", entity.getHasMortgage());
-        putIfNotNull(features, "annual_income", entity.getAnnualIncome());
-        putIfNotNull(features, "loan_type", entity.getLoanType());
+        putIfNotNull(features, "employmentStatus", entity.getEmploymentStatus());
+        putIfNotNull(features, "employmentSeniorityYears", entity.getEmploymentSeniorityYears());
+        putIfNotNull(features, "incomeType", entity.getIncomeType());
+        putIfNotNull(features, "occupationSector", entity.getOccupationSector());
+        putIfNotNull(features, "dependents", entity.getDependents());
+        putIfNotNull(features, "homeOwnership", entity.getHomeOwnership());
+        putIfNotNull(features, "hasMortgage", entity.getHasMortgage());
+        putIfNotNull(features, "annualIncome", entity.getAnnualIncome());
+        putIfNotNull(features, "loanType", entity.getLoanType());
         putIfNotNull(features, "purpose", entity.getPurpose());
-        putIfNotNull(features, "interest_rate", entity.getInterestRate());
+        putIfNotNull(features, "interestRate", entity.getInterestRate());
         putIfNotNull(features, "dti", entity.getDti());
-        putIfNotNull(features, "existing_obligations", entity.getExistingObligations());
+        putIfNotNull(features, "existingObligations", entity.getExistingObligations());
         putIfNotNull(features, "lti", entity.getLti());
-        putIfNotNull(features, "previous_defaults_count", entity.getPreviousDefaultsCount());
-        putIfNotNull(features, "product_type", entity.getProductType());
+        putIfNotNull(features, "previousDefaultsCount", entity.getPreviousDefaultsCount());
+        putIfNotNull(features, "productType", entity.getProductType());
 
         if (entity.getLoanFields() != null) {
-            putIfNotNull(features, "requested_amount", entity.getLoanFields().getRequestedAmount());
-            putIfNotNull(features, "term_months", entity.getLoanFields().getTermMonths());
-            putIfNotNull(features, "previous_loans_count", entity.getLoanFields().getPreviousLoansCount());
+            putIfNotNull(features, "loanAmount", entity.getLoanFields().getLoanAmount());
+            putIfNotNull(features, "termMonths", entity.getLoanFields().getTermMonths());
+            putIfNotNull(features, "previousLoansCount", entity.getLoanFields().getPreviousLoansCount());
             putIfNotNull(features, "ltv", entity.getLoanFields().getLtv());
         }
 
         if (entity.getCreditCardFields() != null) {
-            putIfNotNull(features, "requested_limit", entity.getCreditCardFields().getRequestedLimit());
-            putIfNotNull(features, "is_revolving", entity.getCreditCardFields().getIsRevolving());
-            putIfNotNull(features, "previous_cards_count", entity.getCreditCardFields().getPreviousCardsCount());
-            putIfNotNull(features, "revolving_utilization_rate",
+            putIfNotNull(features, "requestedLimit", entity.getCreditCardFields().getRequestedLimit());
+            putIfNotNull(features, "isRevolving", entity.getCreditCardFields().getIsRevolving());
+            putIfNotNull(features, "previousCardsCount", entity.getCreditCardFields().getPreviousCardsCount());
+            putIfNotNull(features, "revolvingUtilizationRate",
                     entity.getCreditCardFields().getRevolvingUtilizationRate());
         }
 
@@ -194,34 +194,34 @@ public class ScoringMapper {
 
         entity.setAge(getIntegerFeature(features, "age"));
         entity.setGender((String) features.get("gender"));
-        entity.setMaritalStatus((String) features.get("marital_status"));
+        entity.setMaritalStatus((String) features.get("maritalStatus"));
         entity.setEducation((String) features.get("education"));
-        entity.setEmploymentStatus((String) features.get("employment_status"));
-        entity.setEmploymentSeniorityYears(getIntegerFeature(features, "employment_seniority_years"));
-        entity.setIncomeType((String) features.get("income_type"));
-        entity.setWorkSector((String) features.get("work_sector"));
-        entity.setNrDependants(getIntegerFeature(features, "nr_dependants"));
-        entity.setHomeOwnership((String) features.get("home_ownership"));
-        entity.setHasMortgage(getBooleanFeature(features, "has_mortgage"));
-        entity.setAnnualIncome(getDoubleFeature(features, "annual_income"));
-        entity.setLoanType((String) features.get("loan_type"));
+        entity.setEmploymentStatus((String) features.get("employmentStatus"));
+        entity.setEmploymentSeniorityYears(getIntegerFeature(features, "employmentSeniorityYears"));
+        entity.setIncomeType((String) features.get("incomeType"));
+        entity.setOccupationSector((String) features.get("occupationSector"));
+        entity.setDependents(getIntegerFeature(features, "dependents"));
+        entity.setHomeOwnership((String) features.get("homeOwnership"));
+        entity.setHasMortgage(getBooleanFeature(features, "hasMortgage"));
+        entity.setAnnualIncome(getDoubleFeature(features, "annualIncome"));
+        entity.setLoanType((String) features.get("loanType"));
         entity.setPurpose((String) features.get("purpose"));
-        entity.setInterestRate(getDoubleFeature(features, "interest_rate"));
+        entity.setInterestRate(getDoubleFeature(features, "interestRate"));
         entity.setDti(getDoubleFeature(features, "dti"));
-        entity.setExistingObligations(getDoubleFeature(features, "existing_obligations"));
+        entity.setExistingObligations(getDoubleFeature(features, "existingObligations"));
         entity.setLti(getDoubleFeature(features, "lti"));
-        entity.setPreviousDefaultsCount(getIntegerFeature(features, "previous_defaults_count"));
-        entity.setProductType((String) features.get("product_type"));
+        entity.setPreviousDefaultsCount(getIntegerFeature(features, "previousDefaultsCount"));
+        entity.setProductType((String) features.get("productType"));
 
         // Loan fields mapping
-        Double requestedAmount = getDoubleFeature(features, "requested_amount");
-        Integer termMonths = getIntegerFeature(features, "term_months");
-        Integer previousLoansCount = getIntegerFeature(features, "previous_loans_count");
+        Double loanAmount = getDoubleFeature(features, "loanAmount");
+        Integer termMonths = getIntegerFeature(features, "termMonths");
+        Integer previousLoansCount = getIntegerFeature(features, "previousLoansCount");
         Double ltv = getDoubleFeature(features, "ltv");
 
-        if (requestedAmount != null || termMonths != null || previousLoansCount != null || ltv != null) {
+        if (loanAmount != null || termMonths != null || previousLoansCount != null || ltv != null) {
             LoanFieldsEntity loanFields = new LoanFieldsEntity();
-            loanFields.setRequestedAmount(requestedAmount);
+            loanFields.setLoanAmount(loanAmount);
             loanFields.setTermMonths(termMonths);
             loanFields.setPreviousLoansCount(previousLoansCount);
             loanFields.setLtv(ltv);
@@ -229,10 +229,10 @@ public class ScoringMapper {
         }
 
         // Credit Card fields mapping
-        Double requestedLimit = getDoubleFeature(features, "requested_limit");
-        Boolean isRevolving = getBooleanFeature(features, "is_revolving");
-        Integer previousCardsCount = getIntegerFeature(features, "previous_cards_count");
-        Double revolvingUtilizationRate = getDoubleFeature(features, "revolving_utilization_rate");
+        Double requestedLimit = getDoubleFeature(features, "requestedLimit");
+        Boolean isRevolving = getBooleanFeature(features, "isRevolving");
+        Integer previousCardsCount = getIntegerFeature(features, "previousCardsCount");
+        Double revolvingUtilizationRate = getDoubleFeature(features, "revolvingUtilizationRate");
 
         if (requestedLimit != null || isRevolving != null || previousCardsCount != null
                 || revolvingUtilizationRate != null) {

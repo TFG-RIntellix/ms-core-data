@@ -78,7 +78,7 @@ public class ScoringGenerationDTOMapper {
         scoringGenerationRequest.setEducation(demographics.getEducation().toString());
         scoringGenerationRequest.setDependents(demographics.getNrDependants());
         scoringGenerationRequest.setHomeOwnership(demographics.getHomeOwnership().toString());
-        scoringGenerationRequest.setHasMortgage(person.getFinancials() != null && Boolean.TRUE.equals(person.getFinancials().getHasMortage()));
+        scoringGenerationRequest.setHasMortgage(person.getFinancials() != null && Boolean.TRUE.equals(person.getFinancials().getHasMortgage()));
     }
 
     private void mapFinancialFeatures(Person person, ScoringGenerationRequest scoringGenerationRequest) {

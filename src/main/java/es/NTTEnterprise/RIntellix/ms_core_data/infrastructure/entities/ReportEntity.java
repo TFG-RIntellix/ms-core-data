@@ -6,8 +6,6 @@ import java.util.List;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.mongodb.core.index.Indexed;
 
@@ -28,54 +26,23 @@ public class ReportEntity {
 
     @Id
     private ObjectId id;
-
-    @Field("party_id")
     private ObjectId partyId;
 
     @Indexed(unique = true)
-    @Field("request_id")
     private ObjectId requestId;
-
-    @Field("scoring_id")
     private ObjectId scoringId;
-
-    @Field("report_type")
     private String reportType;
-
-    @Field("title")
     private String title;
-
-    @Field("ai_summary")
     private String aiSummary;
-
-    @Field("risk_analysis")
     private String riskAnalysis;
-
-    @Field("risk_factors")
     private List<RiskFactorEntity> riskFactors;
-
-    @Field("recommendations")
     private List<String> recommendations;
-
-    @Field("file_path")
     private String filePath;
-
-    @Field("file_size_bytes")
     private Integer fileSizeBytes;
-
-    @Field("generated_by")
     private String generatedBy;
-
-    @Field("generated_date")
     private Date generatedDate;
-
-    @Field("generation_time_ms")
     private Integer generationTimeMs;
-
-    @Field("model_version")
     private String modelVersion;
-
-    @Field("language")
     private String language;
 
     public ReportEntity() {

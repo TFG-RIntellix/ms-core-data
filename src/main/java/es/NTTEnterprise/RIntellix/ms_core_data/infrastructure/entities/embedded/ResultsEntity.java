@@ -1,7 +1,5 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded;
 
-import org.springframework.data.mongodb.core.mapping.Field;
-
 /**
  * Embedded entity mapping the "results" sub-document from the "scorings"
  * MongoDB collection.
@@ -13,26 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @Updated 05-26-2026 - Added FinancialMetricsEntity
  */
 public class ResultsEntity {
-
-    @Field("pd")
     private Double pd;
-
-    @Field("lgd")
     private Double lgd;
-
-    @Field("ead")
     private Double ead;
-
-    @Field("ecl")
     private Double ecl;
-
-    @Field("risk_grade")
     private String riskGrade;
-
-    @Field("credit_limit_assigned")
     private Double creditLimitAssigned;
-
-    @Field("financial_metrics")
     private FinancialMetricsEntity financialMetrics;
 
     public ResultsEntity() {

@@ -1,7 +1,5 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded;
 
-import org.springframework.data.mongodb.core.mapping.Field;
-
 /**
  * Embedded document for party contact information.
  * Contains phone, email and address data.
@@ -12,14 +10,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @date 01/03/2026
  */
 public class ContactInfoEntity {
-
-    @Field("phone_number")
     private String phoneNumber;
-
-    @Field("email")
     private String email;
-
-    @Field("address")
     private String address;
 
     public ContactInfoEntity() {

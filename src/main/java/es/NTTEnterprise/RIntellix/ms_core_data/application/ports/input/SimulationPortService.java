@@ -1,7 +1,5 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input;
 
-import java.util.List;
-
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ArchiveSimulationDTO;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateSimulationDTO;
@@ -50,8 +48,6 @@ public interface SimulationPortService {
          */
         SimulationDetailsDTO getSimulationDetails(String simulationId)
                         throws IllegalArgumentException, EntityNotFoundException;
-
-
 
         /**
          * Performs a soft delete (archive) on a simulation.

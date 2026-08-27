@@ -32,7 +32,7 @@ public class RequestDetailsDTOMapper {
               requestDetailsDTO.setRequestType(request.getRequestDetails().getRequestType().toString());
               requestDetailsDTO.setStatus(request.getRequestStatus().toString());
 
-              requestDetailsDTO.setRequestedAmount(request.getRequestDetails().getRequestedAmount() != null
+              requestDetailsDTO.setLoanAmount(request.getRequestDetails().getRequestedAmount() != null
                             ? request.getRequestDetails().getRequestedAmount().getAmount()
                             : null);
               requestDetailsDTO.setRequestTermMonths(request.getRequestDetails().getTermMonths());
@@ -52,7 +52,7 @@ public class RequestDetailsDTOMapper {
                             request.getParty().getPersonDetails().getFinancials().getAnnualIncome().getAmount());
 
               // Map creditCard fields
-              requestDetailsDTO.setRequestedCreditLimit(request.getRequestDetails().getCreditLimit() != null
+              requestDetailsDTO.setCreditLimit(request.getRequestDetails().getCreditLimit() != null
                             ? request.getRequestDetails().getCreditLimit().getAmount()
                             : null);
               requestDetailsDTO.setIsRevolving(request.getRequestDetails().isRevolving());
@@ -67,6 +67,8 @@ public class RequestDetailsDTOMapper {
                             ? request.getRequestDetails().getRequestedAmount()
                             : request.getRequestDetails().getCreditLimit();
               requestDetailsDTO.setCurrency(money != null ? money.getCurrency() : null);
+              requestDetailsDTO.setAmount(money != null ? money.getAmount() : null);
+              requestDetailsDTO.setCreationDate(request.getCreationDate().toInstant().toString());
               requestDetailsDTO.setLastReviewDate(request.getLastReviewDate() != null
                             ? request.getLastReviewDate().toInstant().toString()
                             : null);

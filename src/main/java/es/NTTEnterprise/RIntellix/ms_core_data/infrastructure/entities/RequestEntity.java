@@ -5,8 +5,6 @@ import java.time.LocalDate;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.Purpose;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestStatus;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestType;
@@ -23,56 +21,22 @@ public class RequestEntity {
 
     @Id
     private ObjectId id;
-
-    @Field("request_type")
     private RequestType requestType;
-
-    @Field("request_code")
     private String requestCode;
-
-    @Field("party_id")
     private ObjectId partyId;
-
-    @Field("currency")
     private String currency;
-
-    @Field("status")
     private RequestStatus status;
-
-    @Field("request_date")
     private LocalDate requestDate;
-
-    @Field("last_review_date")
     private LocalDate lastReviewDate;
-
-    @Field("requested_amount")
-    private Double requestedAmount;
-
-    @Field("requested_interest_rate")
-    private Double requestedInterestRate;
-
-    @Field("requested_term_months")
-    private Integer requestedTermMonths;
-
-    @Field("purpose")
+    private Double loanAmount;
+    private Double interestRate;
+    private Integer termMonths;
     private Purpose purpose;
-
-    @Field("property_value")
     private Double propertyValue;
-
-    @Field("is_first_home")
     private Boolean isFirstHome;
-
-    @Field("requested_credit_limit")
-    private Double requestedCreditLimit;
-
-    @Field("is_revolving")
+    private Double creditLimit;
     private Boolean isRevolving;
-
-    @Field("repayment_system")
     private String repaymentSystem;
-
-    @Field("loan_type")
     private String loanType;
 
     public RequestEntity() {
@@ -144,28 +108,28 @@ public class RequestEntity {
         this.lastReviewDate = lastReviewDate;
     }
 
-    public Double getRequestedAmount() {
-        return requestedAmount;
+    public Double getLoanAmount() {
+        return loanAmount;
     }
 
-    public void setRequestedAmount(Double requestedAmount) {
-        this.requestedAmount = requestedAmount;
+    public void setLoanAmount(Double loanAmount) {
+        this.loanAmount = loanAmount;
     }
 
-    public Double getRequestedInterestRate() {
-        return requestedInterestRate;
+    public Double getInterestRate() {
+        return interestRate;
     }
 
-    public void setRequestedInterestRate(Double requestedInterestRate) {
-        this.requestedInterestRate = requestedInterestRate;
+    public void setInterestRate(Double interestRate) {
+        this.interestRate = interestRate;
     }
 
-    public Integer getRequestedTermMonths() {
-        return requestedTermMonths;
+    public Integer getTermMonths() {
+        return termMonths;
     }
 
-    public void setRequestedTermMonths(Integer requestedTermMonths) {
-        this.requestedTermMonths = requestedTermMonths;
+    public void setTermMonths(Integer termMonths) {
+        this.termMonths = termMonths;
     }
 
     public Purpose getPurpose() {
@@ -192,12 +156,12 @@ public class RequestEntity {
         this.isFirstHome = isFirstHome;
     }
 
-    public Double getRequestedCreditLimit() {
-        return requestedCreditLimit;
+    public Double getCreditLimit() {
+        return creditLimit;
     }
 
-    public void setRequestedCreditLimit(Double requestedCreditLimit) {
-        this.requestedCreditLimit = requestedCreditLimit;
+    public void setCreditLimit(Double creditLimit) {
+        this.creditLimit = creditLimit;
     }
 
     public Boolean getIsRevolving() {
@@ -224,3 +188,4 @@ public class RequestEntity {
         this.loanType = loanType;
     }
 }
+

@@ -1,7 +1,5 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded;
 
-import org.springframework.data.mongodb.core.mapping.Field;
-
 /**
  * Embedded document for party employment information.
  * Contains employment status and work experience data.
@@ -10,20 +8,10 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @date 01/03/2026
  */
 public class EmploymentEntity {
-
-    @Field("status")
     private String status;
-
-    @Field("sector")
-    private String sector;
-
-    @Field("occupation")
+    private String occupationSector;
     private String occupation;
-
-    @Field("employer_seniority_years")
     private Integer employerSeniorityYears;
-
-    @Field("total_work_experience_years")
     private Integer totalWorkExperienceYears;
 
     public EmploymentEntity() {
@@ -39,12 +27,12 @@ public class EmploymentEntity {
         this.status = status;
     }
 
-    public String getSector() {
-        return sector;
+    public String getOccupationSector() {
+        return occupationSector;
     }
 
-    public void setSector(String sector) {
-        this.sector = sector;
+    public void setOccupationSector(String occupationSector) {
+        this.occupationSector = occupationSector;
     }
 
     public String getOccupation() {

@@ -38,9 +38,9 @@ class RequestMapperTest {
         entity.setRequestType(RequestType.PRESTAMO);
         entity.setPurpose(Purpose.COMPRA_VEHICULO);
         entity.setCurrency("EUR");
-        entity.setRequestedAmount(25000.0);
-        entity.setRequestedTermMonths(48);
-        entity.setRequestedInterestRate(4.5);
+        entity.setLoanAmount(25000.0);
+        entity.setTermMonths(48);
+        entity.setInterestRate(4.5);
         entity.setStatus(RequestStatus.PENDIENTE_DE_REVISION);
         
         LocalDate reqDate = LocalDate.of(2026, 1, 1);

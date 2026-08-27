@@ -1,7 +1,5 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded;
 
-import org.springframework.data.mongodb.core.mapping.Field;
-
 /**
  * Embedded entity mapping the "simulated_results" sub-document from the
  * "simulations" MongoDB collection.
@@ -12,26 +10,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @date 03/03/2026
  */
 public class SimulatedResultsEntity {
-
-    @Field("pd")
     private Double pd;
-
-    @Field("lgd")
     private Double lgd;
-
-    @Field("ead")
     private Double ead;
-
-    @Field("ecl")
     private Double ecl;
-
-    @Field("risk_grade")
     private String riskGrade;
-
-    @Field("decision")
     private String decision;
-
-    @Field("financial_metrics")
     private FinancialMetricsEntity financialMetrics;
 
     public SimulatedResultsEntity() {

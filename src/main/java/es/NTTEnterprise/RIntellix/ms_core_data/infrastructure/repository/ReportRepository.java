@@ -42,7 +42,7 @@ public interface ReportRepository extends MongoRepository<ReportEntity, ObjectId
             "{ $or: [ " +
             "{ $expr: { $eq: [:#{#search}, ''] } }, " +
             "{ $expr: { $regexMatch: { input: { $ifNull: [ '$title', '' ] }, regex: :#{#search}, options: 'i' } } }, " +
-            "{ 'request_id': { $in: :#{#requestIds} } } " +
+            "{ 'requestId': { $in: :#{#requestIds} } } " +
             "] } " +
             "] }")
     Page<ReportEntity> findWithFilters(

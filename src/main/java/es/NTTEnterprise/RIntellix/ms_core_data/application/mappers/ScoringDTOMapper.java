@@ -46,7 +46,9 @@ public class ScoringDTOMapper {
         // Input features (already a HashMap in domain) and remapping of isRevolving
         // field to "Si"/"No"
         Map<String, Object> inputFeatures = scoring.getInputSnapshot().getFeatures();
-        inputFeatures.put("is_revolving", Boolean.TRUE.equals(inputFeatures.get("is_revolving")) ? "Si" : "No");
+        if (inputFeatures.containsKey("isRevolving")) {
+            inputFeatures.put("isRevolving", Boolean.TRUE.equals(inputFeatures.get("isRevolving")) ? "Si" : "No");
+        }
         dto.setInputFeatures(inputFeatures);
 
         // Risk metrics

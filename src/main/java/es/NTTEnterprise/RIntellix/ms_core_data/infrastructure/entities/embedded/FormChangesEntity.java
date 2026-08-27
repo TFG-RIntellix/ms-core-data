@@ -1,7 +1,5 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded;
 
-import org.springframework.data.mongodb.core.mapping.Field;
-
 /**
  * Embedded entity mapping the "form_changes" sub-document from the
  * "simulations" MongoDB collection.
@@ -11,35 +9,15 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @date 03/03/2026
  */
 public class FormChangesEntity {
-
-    @Field("annual_income")
     private Double annualIncome;
-
-    @Field("term_months")
     private Integer termMonths;
-
-    @Field("loan_amount")
     private Double loanAmount;
-
-    @Field("interest_rate")
     private Double interestRate;
-
-    @Field("nr_dependants")
     private Integer nrDependants;
-
-    @Field("repayment_system")
     private String repaymentSystem;
-
-    @Field("employment_status")
     private String employmentStatus;
-
-    @Field("is_revolving")
     private Boolean isRevolving;
-
-    @Field("property_value")
     private Double propertyValue;
-
-    @Field("credit_limit")
     private Double creditLimit;
 
     public FormChangesEntity() {

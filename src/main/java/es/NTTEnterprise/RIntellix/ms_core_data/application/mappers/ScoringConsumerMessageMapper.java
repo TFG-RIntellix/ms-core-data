@@ -74,33 +74,33 @@ public class ScoringConsumerMessageMapper {
         // Common features across loans and credit cards.
         features.put("age", dto.getAge());
         features.put("gender", normalizeValue(dto.getGender()));
-        features.put("marital_status", normalizeValue(dto.getMaritalStatus()));
-        features.put("employment_status", normalizeValue(dto.getEmploymentStatus()));
-        features.put("nr_dependants", dto.getNrDependants());
-        features.put("home_ownership", normalizeValue(dto.getHomeOwnership()));
-        features.put("has_mortgage", normalizeMortgage(dto.getHasMortgage()));
-        features.put("annual_income", dto.getAnnualIncome());
-        features.put("interest_rate", dto.getInterestRate());
+        features.put("maritalStatus", normalizeValue(dto.getMaritalStatus()));
+        features.put("employmentStatus", normalizeValue(dto.getEmploymentStatus()));
+        features.put("dependents", dto.getNrDependants());
+        features.put("homeOwnership", normalizeValue(dto.getHomeOwnership()));
+        features.put("hasMortgage", normalizeMortgage(dto.getHasMortgage()));
+        features.put("annualIncome", dto.getAnnualIncome());
+        features.put("interestRate", dto.getInterestRate());
         features.put("dti", dto.getDti());
-        features.put("previous_defaults_count", dto.getPreviousDefaultsCount());
-        features.put("income_type", normalizeValue(dto.getIncomeType()));
+        features.put("previousDefaultsCount", dto.getPreviousDefaultsCount());
+        features.put("incomeType", normalizeValue(dto.getIncomeType()));
 
         // Use the loan type from the PersistScoring message as the Mongo request type.
-        features.put("loan_type", normalizeRequestType(dto.getLoanType()));
+        features.put("loanType", normalizeRequestType(dto.getLoanType()));
         features.put("education", normalizeValue(dto.getEducation()));
-        features.put("work_sector", dto.getWorkSector());
+        features.put("occupationSector", dto.getWorkSector());
         features.put("purpose", dto.getPurpose());
-        features.put("requested_amount", dto.getRequestedAmount());
-        features.put("term_months", dto.getTermMonths());
+        features.put("loanAmount", dto.getRequestedAmount());
+        features.put("termMonths", dto.getTermMonths());
         features.put("ltv", dto.getLtv());
-        features.put("previous_loans_count", dto.getPreviousLoansCount());
+        features.put("previousLoansCount", dto.getPreviousLoansCount());
 
         // Credit card specific features
-        features.put("employment_seniority_years", dto.getEmploymentSeniorityYears());
+        features.put("employmentSeniorityYears", dto.getEmploymentSeniorityYears());
         features.put("lti", dto.getLti());
-        features.put("requested_limit", dto.getCreditLimit());
-        features.put("is_revolving", mapIsRevolving(dto.getIsRevolving()));
-        features.put("existing_obligations", dto.getExistingObligations());
+        features.put("requestedLimit", dto.getCreditLimit());
+        features.put("isRevolving", mapIsRevolving(dto.getIsRevolving()));
+        features.put("existingObligations", dto.getExistingObligations());
         return new ModelInputs(features);
     }
 

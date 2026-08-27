@@ -17,6 +17,7 @@ public class RequestDetailsDTO {
     public String requestId;
     public String requestCode;
     public String requestDate;
+    public String creationDate;
     public String lastReviewDate;
     public String partyName;
     public String partyNIF;
@@ -29,13 +30,14 @@ public class RequestDetailsDTO {
     public String requestType;
     public String status;
     public String currency;
-    public Double requestedAmount;
+    public Double amount;
+    public Double loanAmount;
     public Integer requestTermMonths;
     public Double interestRate;
     public String purpose;
 
     // Credit card specific fields
-    public Double requestedCreditLimit;
+    public Double creditLimit;
     public Boolean isRevolving;
 
     // Mortgage specific fields
@@ -69,6 +71,14 @@ public class RequestDetailsDTO {
 
     public void setRequestDate(String requestDate) {
         this.requestDate = requestDate;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getLastReviewDate() {
@@ -167,12 +177,20 @@ public class RequestDetailsDTO {
         this.currency = currency;
     }
 
-    public Double getRequestedAmount() {
-        return requestedAmount;
+    public Double getAmount() {
+        return amount;
     }
 
-    public void setRequestedAmount(Double requestedAmount) {
-        this.requestedAmount = requestedAmount;
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public Double getLoanAmount() {
+        return loanAmount;
+    }
+
+    public void setLoanAmount(Double loanAmount) {
+        this.loanAmount = loanAmount;
     }
 
     public Integer getRequestTermMonths() {
@@ -201,12 +219,12 @@ public class RequestDetailsDTO {
 
     // Credit card specific getters and setters
 
-    public Double getRequestedCreditLimit() {
-        return requestedCreditLimit;
+    public Double getCreditLimit() {
+        return creditLimit;
     }
 
-    public void setRequestedCreditLimit(Double requestedCreditLimit) {
-        this.requestedCreditLimit = requestedCreditLimit;
+    public void setCreditLimit(Double creditLimit) {
+        this.creditLimit = creditLimit;
     }
 
     public Boolean getIsRevolving() {

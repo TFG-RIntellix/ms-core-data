@@ -2,8 +2,6 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded
 
 import java.time.LocalDate;
 
-import org.springframework.data.mongodb.core.mapping.Field;
-
 /**
  * Embedded document for party demographics information.
  * Contains personal identification and demographic data.
@@ -12,36 +10,16 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @date 01/03/2026
  */
 public class DemographicsEntity {
-
-    @Field("nif")
     private String nif;
-
-    @Field("first_name")
     private String firstName;
-
-    @Field("last_name")
     private String lastName;
-
-    @Field("birth_date")
     private LocalDate birthDate;
-
-    @Field("gender")
     private String gender;
-
-    @Field("marital_status")
     private String maritalStatus;
-
-    @Field("country_of_residence")
     private String countryOfResidence;
-
-    @Field("education")
     private String education;
-
-    @Field("home_ownership")
     private String homeOwnership;
-
-    @Field("nr_dependants")
-    private Integer nrDependants;
+    private Integer dependents;
 
     public DemographicsEntity() {
     }
@@ -120,11 +98,11 @@ public class DemographicsEntity {
         this.homeOwnership = homeOwnership;
     }
 
-    public Integer getNrDependants() {
-        return nrDependants;
+    public Integer getDependents() {
+        return dependents;
     }
 
-    public void setNrDependants(Integer nrDependants) {
-        this.nrDependants = nrDependants;
+    public void setDependents(Integer dependents) {
+        this.dependents = dependents;
     }
 }

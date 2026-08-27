@@ -1,7 +1,6 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.constraints;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

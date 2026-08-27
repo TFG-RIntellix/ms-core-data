@@ -1,7 +1,5 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded;
 
-import org.springframework.data.mongodb.core.mapping.Field;
-
 /**
  * Embedded entity mapping the "loan_fields" sub-document from the "scorings" MongoDB
  * collection.
@@ -10,17 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @author Lucía Fernández Mancebo
  */
 public class LoanFieldsEntity {
-
-    @Field("requested_amount")
-    private Double requestedAmount;
-
-    @Field("term_months")
+    private Double loanAmount;
     private Integer termMonths;
-
-    @Field("previous_loans_count")
     private Integer previousLoansCount;
-
-    @Field("ltv")
     private Double ltv;
 
     public LoanFieldsEntity() {
@@ -28,12 +18,12 @@ public class LoanFieldsEntity {
 
     // Getters and Setters
 
-    public Double getRequestedAmount() {
-        return requestedAmount;
+    public Double getLoanAmount() {
+        return loanAmount;
     }
 
-    public void setRequestedAmount(Double requestedAmount) {
-        this.requestedAmount = requestedAmount;
+    public void setLoanAmount(Double loanAmount) {
+        this.loanAmount = loanAmount;
     }
 
     public Integer getTermMonths() {
