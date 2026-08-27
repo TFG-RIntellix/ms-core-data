@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.DisplayName;
@@ -63,13 +62,13 @@ class SimulationMapperTest {
         assertEquals(reqId.toHexString(), domain.getRequestId());
         assertEquals(partyId.toHexString(), domain.getPartyId());
         assertEquals("Scenario 1", domain.getScenarioName());
-        
+
         assertEquals(20000.0, domain.getFormChanges().get("loanAmount"));
         assertEquals(48, domain.getFormChanges().get("termMonths"));
-        
+
         assertEquals(0.05, domain.getSimulatedResults().getProbabilityOfDefault());
         assertEquals("APPROVED", domain.getSimulatedDecision());
-        
+
         assertEquals(-0.01, domain.getPdChange());
         assertTrue(domain.isArchived());
     }
@@ -81,7 +80,7 @@ class SimulationMapperTest {
         ObjectId id = new ObjectId();
         domain.setId(id.toHexString());
         domain.setScenarioName("Scenario 2");
-        
+
         HashMap<String, Object> form = new HashMap<>();
         form.put("loanAmount", 30000.0);
         form.put("isRevolving", false);
@@ -91,7 +90,7 @@ class SimulationMapperTest {
         rm.setProbabilityOfDefault(0.04);
         domain.setSimulatedResults(rm);
         domain.setSimulatedDecision("REJECTED");
-        
+
         domain.setPdChange(0.02);
         domain.setArchived(false);
 
@@ -101,10 +100,10 @@ class SimulationMapperTest {
         assertEquals("Scenario 2", entity.getScenarioName());
         assertEquals(30000.0, entity.getFormChanges().getLoanAmount());
         assertEquals(false, entity.getFormChanges().getIsRevolving());
-        
+
         assertEquals(0.04, entity.getSimulatedResults().getPd());
         assertEquals("REJECTED", entity.getSimulatedResults().getDecision());
-        
+
         assertEquals(0.02, entity.getDelta().getPdChange());
         assertFalse(entity.getIsArchived());
     }

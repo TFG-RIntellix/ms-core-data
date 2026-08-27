@@ -85,7 +85,7 @@ public class PartyRepositoryAdapter implements PartyPortRepository {
 
     @Override
     public Map<String, Party> findPartyNames(Set<String> partyIds) {
-        log.debug(LogMessage.REPOSITORY_PARTY_FIND_NAMES_ONLY_START, partyIds.size());
+        log.debug(LogMessage.REPOSITORY_PARTY_FIND_NAMES_ONLY_START, partyIds != null ? partyIds.size() : 0);
         
         if (partyIds == null || partyIds.isEmpty()) {
             return Collections.emptyMap();

@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.FinancialMetrics;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskMetrics;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,7 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.ArchiveSimulationDTO;
-import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CalculatedSimulationDTO;
+
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.CreateSimulationDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.SimulatedResultsInputDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input.DeltaInputDTO;
@@ -63,8 +65,8 @@ class SimulationApplicationServiceTest {
     @BeforeEach
     void setUp() {
         service = new SimulationApplicationService(
-            simulationPortRepository, partyPortRepository, scoringPortRepository,
-            requestPortRepository, simulationDTOMapper);
+                simulationPortRepository, partyPortRepository, scoringPortRepository,
+                requestPortRepository, simulationDTOMapper);
     }
 
     // --- listSimulations ---
@@ -75,19 +77,21 @@ class SimulationApplicationServiceTest {
         Simulation sim = new Simulation();
         sim.setPartyId("P-1");
         sim.setRequestId("REQ-1");
-        
+
         PagedResult<Simulation> pagedResult = new PagedResult<>(List.of(sim), 1, 1, 0, 10);
-        
-        when(simulationPortRepository.findWithFilters(null, null, null, false, 0, 10, "simulationDate", "desc")).thenReturn(pagedResult);
+
+        when(simulationPortRepository.findWithFilters(null, null, null, false, 0, 10, "simulationDate", "desc"))
+                .thenReturn(pagedResult);
         when(partyPortRepository.findPartyNames(Set.of("P-1"))).thenReturn(Map.of("P-1", new Party()));
-        
+
         Request req = new Request();
         req.setRequestCode("REQ-CODE-1");
         when(requestPortRepository.findRequestsByIds(anySet())).thenReturn(Map.of("REQ-1", req));
-                
+
         when(simulationDTOMapper.toSummaryDTO(sim)).thenReturn(new SimulationSummaryDTO());
 
-        PageResponseDTO<SimulationSummaryDTO> results = service.listSimulations(null, false, 0, 10, "simulationDate", "desc");
+        PageResponseDTO<SimulationSummaryDTO> results = service.listSimulations(null, false, 0, 10, "simulationDate",
+                "desc");
         assertEquals(1, results.getContent().size());
         verify(partyPortRepository, never()).findPartyIdsByNameMatch(anyString());
         verify(requestPortRepository, never()).findRequestIdsBySearch(anyString());
@@ -104,13 +108,15 @@ class SimulationApplicationServiceTest {
 
         when(partyPortRepository.findPartyIdsByNameMatch("test")).thenReturn(Set.of("P-1"));
         when(requestPortRepository.findRequestIdsBySearch("test")).thenReturn(List.of("REQ-1"));
-        when(simulationPortRepository.findWithFilters("test", List.of("P-1"), List.of("REQ-1"), true, 0, 10, "simulationDate", "desc")).thenReturn(pagedResult);
+        when(simulationPortRepository.findWithFilters("test", List.of("P-1"), List.of("REQ-1"), true, 0, 10,
+                "simulationDate", "desc")).thenReturn(pagedResult);
         when(partyPortRepository.findPartyNames(Set.of("P-1"))).thenReturn(Map.of("P-1", new Party()));
         when(requestPortRepository.findRequestsByIds(anySet())).thenReturn(Map.of());
-                
+
         when(simulationDTOMapper.toSummaryDTO(sim)).thenReturn(new SimulationSummaryDTO());
 
-        PageResponseDTO<SimulationSummaryDTO> results = service.listSimulations("test", true, 0, 10, "simulationDate", "desc");
+        PageResponseDTO<SimulationSummaryDTO> results = service.listSimulations("test", true, 0, 10, "simulationDate",
+                "desc");
         assertEquals(1, results.getContent().size());
     }
 
@@ -160,16 +166,19 @@ class SimulationApplicationServiceTest {
         CreateSimulationDTO dto = new CreateSimulationDTO();
         dto.setRequestId("REQ-1");
         dto.setPartyId("P-1");
-        
+
         Request req = new Request();
         req.setPartyId("P-1"); // Matches
-        
+
         when(requestPortRepository.findById("REQ-1")).thenReturn(req);
         when(simulationPortRepository.existsByRequestIdAndScenarioName(eq("REQ-1"), anyString())).thenReturn(false);
-        
+
         Simulation saved = new Simulation();
         saved.setId("SIM-1");
         when(simulationPortRepository.save(any(Simulation.class))).thenReturn(saved);
+        
+        Simulation mappedSim = new Simulation();
+        when(simulationDTOMapper.toDomain(dto)).thenReturn(mappedSim);
 
         String id = service.createSimulation(dto);
 
@@ -185,7 +194,7 @@ class SimulationApplicationServiceTest {
         dto.setRequestId("REQ-1");
         dto.setPartyId("P-1");
         dto.setScenarioName("Custom");
-        
+
         SimulatedResultsInputDTO results = new SimulatedResultsInputDTO();
         results.setDti(0.5);
         results.setMonthlyPayment(500.0);
@@ -199,10 +208,15 @@ class SimulationApplicationServiceTest {
         req.setPartyId("P-1");
         when(requestPortRepository.findById("REQ-1")).thenReturn(req);
         when(simulationPortRepository.existsByRequestIdAndScenarioName("REQ-1", "Custom")).thenReturn(false);
-        
+
         Simulation saved = new Simulation();
         saved.setId("SIM-1");
         when(simulationPortRepository.save(simulationCaptor.capture())).thenReturn(saved);
+
+        Simulation mappedSim = new Simulation();
+        mappedSim.setDtiChange(0.1);
+        mappedSim.setSimulatedResults(new RiskMetrics(null, null, null, null, null, new FinancialMetrics(null, 0.5, null, null, null)));
+        when(simulationDTOMapper.toDomain(dto)).thenReturn(mappedSim);
 
         service.createSimulation(dto);
 
@@ -219,7 +233,7 @@ class SimulationApplicationServiceTest {
         dto.setRequestId("REQ-1");
         dto.setPartyId("P-1");
         dto.setScenarioName("Custom");
-        
+
         Request req = new Request();
         req.setPartyId("P-1");
         when(requestPortRepository.findById("REQ-1")).thenReturn(req);
@@ -234,45 +248,12 @@ class SimulationApplicationServiceTest {
         CreateSimulationDTO dto = new CreateSimulationDTO();
         dto.setRequestId("REQ-1");
         dto.setPartyId("P-2"); // Mismatch
-        
+
         Request req = new Request();
         req.setPartyId("P-1");
         when(requestPortRepository.findById("REQ-1")).thenReturn(req);
 
         assertThrows(RequestPartyMismatchException.class, () -> service.createSimulation(dto));
-    }
-
-    // --- updateSimulationTemplate ---
-
-    @Test
-    @DisplayName("Should update simulation template successfully")
-    void updateSimulationTemplate_success() throws EntityNotFoundException {
-        Simulation sim = new Simulation();
-        CalculatedSimulationDTO dto = new CalculatedSimulationDTO();
-        
-        SimulatedResultsInputDTO results = new SimulatedResultsInputDTO();
-        results.setRiskGrade("A");
-        dto.setSimulatedResults(results);
-
-        DeltaInputDTO delta = new DeltaInputDTO();
-        delta.setPdChange(0.01);
-        dto.setDelta(delta);
-
-        when(simulationPortRepository.findById("SIM-1")).thenReturn(sim);
-
-        service.updateSimulationTemplate("SIM-1", dto);
-
-        verify(simulationPortRepository).save(simulationCaptor.capture());
-        Simulation captured = simulationCaptor.getValue();
-        assertEquals("A", captured.getSimulatedResults().getRiskLevel()); // getRiskLevel
-        assertEquals(0.01, captured.getPdChange());
-    }
-
-    @Test
-    @DisplayName("Should throw when updateSimulationTemplate receives invalid ID")
-    void updateSimulationTemplate_invalidId() {
-        assertThrows(IllegalArgumentException.class, () -> service.updateSimulationTemplate(null, new CalculatedSimulationDTO()));
-        assertThrows(IllegalArgumentException.class, () -> service.updateSimulationTemplate("  ", new CalculatedSimulationDTO()));
     }
 
     // --- archiveSimulation ---
@@ -282,10 +263,10 @@ class SimulationApplicationServiceTest {
     void archiveSimulation_success() throws EntityNotFoundException {
         Simulation sim = new Simulation();
         sim.setArchived(false);
-        
+
         ArchiveSimulationDTO dto = new ArchiveSimulationDTO();
         dto.setIsArchived(true);
-        
+
         when(simulationPortRepository.findById("SIM-1")).thenReturn(sim);
 
         service.archiveSimulation("SIM-1", dto);

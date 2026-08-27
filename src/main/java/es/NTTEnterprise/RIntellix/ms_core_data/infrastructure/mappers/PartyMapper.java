@@ -89,7 +89,7 @@ public class PartyMapper {
         profile.setEducation(mapEducation(entity.getEducation()));
         profile.setHomeOwnership(mapHomeOwnership(entity.getHomeOwnership()));
         profile.setCountryOfResidence(entity.getCountryOfResidence());
-        profile.setNrDependants(entity.getNrDependants());
+        profile.setNrDependants(entity.getDependents());
 
         return profile;
     }
@@ -119,13 +119,13 @@ public class PartyMapper {
         profile.setAnnualIncome(annualIncome);
         profile.setExistingObligations(
             economicData.getExistingObligations() != null ? economicData.getExistingObligations() : 0.0);
-        profile.setHasMortage(
-            economicData.getHasMortage() != null ? economicData.getHasMortage() : false);
+        profile.setHasMortgage(
+            economicData.getHasMortgage() != null ? economicData.getHasMortgage() : false);
 
         // Map from EmploymentEntity
         EmploymentEntity employment = entity.getEmployment();
         profile.setEmploymentStatus(mapEmploymentStatus(employment.getStatus()));
-        profile.setOccupationSector(employment.getSector());
+        profile.setOccupationSector(employment.getOccupationSector());
         if (employment.getEmployerSeniorityYears() != null) {
             profile.setSeniorityYears(employment.getEmployerSeniorityYears().doubleValue());
         }

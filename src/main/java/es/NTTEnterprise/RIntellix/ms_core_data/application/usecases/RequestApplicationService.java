@@ -77,9 +77,9 @@ public class RequestApplicationService implements RequestPortService {
 
         // 2. Retrieve requests applying the generic search, party IDs, and pagination
         List<String> partyIdsList = matchingPartyIds != null ? matchingPartyIds.stream().toList() : null;
-        PagedResult<Request> pageResult = 
-                requestPortRepository.findWithFilters(search, partyIdsList, requestStatus, page, size, sortBy, sortDir);
-        
+        PagedResult<Request> pageResult = requestPortRepository.findWithFilters(search, partyIdsList, requestStatus,
+                page, size, sortBy, sortDir);
+
         List<Request> requests = pageResult.getContent();
         log.debug(LogMessage.SERVICE_LIST_REQUESTS_RESULT, requests.size());
 
@@ -104,8 +104,7 @@ public class RequestApplicationService implements RequestPortService {
                 pageResult.getTotalElements(),
                 pageResult.getTotalPages(),
                 pageResult.getNumber(),
-                pageResult.getSize()
-        );
+                pageResult.getSize());
     }
 
     @Override
@@ -166,7 +165,7 @@ public class RequestApplicationService implements RequestPortService {
             targetStatus = RequestStatus.valueOf(newStatus);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(
-                String.format(LogMessage.EXCEPTION_INVALID_STATUS_VALUE, newStatus));
+                    String.format(LogMessage.EXCEPTION_INVALID_STATUS_VALUE, newStatus));
         }
 
         // 2. Fetch and validate transition
@@ -176,8 +175,8 @@ public class RequestApplicationService implements RequestPortService {
             log.warn(LogMessage.SERVICE_UPDATE_STATUS_INVALID_TRANSITION,
                     request.getRequestStatus(), targetStatus, requestId);
             throw new InvalidStatusTransitionException(
-                String.format(LogMessage.EXCEPTION_INVALID_STATUS_TRANSITION,
-                    request.getRequestStatus(), targetStatus));
+                    String.format(LogMessage.EXCEPTION_INVALID_STATUS_TRANSITION,
+                            request.getRequestStatus(), targetStatus));
         }
 
         // 3. Persist
@@ -188,6 +187,11 @@ public class RequestApplicationService implements RequestPortService {
         return getRequestDetails(requestId);
     }
 
+    /**
+     * Validates the request ID.
+     * 
+     * @param requestId The ID of the request to validate
+     */
     private void validateRequestId(String requestId) {
         if (requestId == null || requestId.isBlank()) {
             log.warn(LogMessage.SERVICE_GET_DETAILS_VALIDATION_ERROR);

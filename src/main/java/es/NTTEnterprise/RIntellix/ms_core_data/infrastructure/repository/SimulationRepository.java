@@ -36,12 +36,12 @@ public interface SimulationRepository extends MongoRepository<SimulationEntity, 
     @Query("{ $and: [ " +
             "{ $or: [ " +
             "{ $expr: { $eq: [:#{#search}, ''] } }, " +
-            "{ $expr: { $regexMatch: { input: { $toString: { $ifNull: [ '$scenario_name', '' ] } }, regex: :#{#search}, options: 'i' } } }, "
+            "{ $expr: { $regexMatch: { input: { $toString: { $ifNull: [ '$scenarioName', '' ] } }, regex: :#{#search}, options: 'i' } } }, "
             +
-            "{ 'party_id': { $in: :#{#partyIds} } }, " +
-            "{ 'request_id': { $in: :#{#requestIds} } } " +
+            "{ 'partyId': { $in: :#{#partyIds} } }, " +
+            "{ 'requestId': { $in: :#{#requestIds} } } " +
             "] }, " +
-            "{ $or: [ { $expr: { $eq: [:#{#archived}, null] } }, { 'is_archived': :#{#archived} } ] } " +
+            "{ $or: [ { $expr: { $eq: [:#{#archived}, null] } }, { 'isArchived': :#{#archived} } ] } " +
             "] }")
     Page<SimulationEntity> findWithFilters(@Param("search") String search, @Param("partyIds") List<ObjectId> partyIds,
             @Param("requestIds") List<ObjectId> requestIds, @Param("archived") Boolean archived, Pageable pageable);

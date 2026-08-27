@@ -36,6 +36,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRe
  * Unit tests for {@link RequestApplicationService}.
  * Covers request listing with filters, detailed fetching, party fetching, and
  * async scoring triggers.
+ * @date 27/08/2026
  */
 @DisplayName("RequestApplicationService Tests")
 @ExtendWith(MockitoExtension.class)

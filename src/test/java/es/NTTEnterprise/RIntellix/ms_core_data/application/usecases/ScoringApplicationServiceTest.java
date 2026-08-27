@@ -19,6 +19,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ScoringPortRe
 /**
  * Unit tests for {@link ScoringApplicationService}.
  * Covers retrieving scorings by request ID and input validation.
+ * @date 27/08/2026
  */
 @DisplayName("ScoringApplicationService Tests")
 @ExtendWith(MockitoExtension.class)

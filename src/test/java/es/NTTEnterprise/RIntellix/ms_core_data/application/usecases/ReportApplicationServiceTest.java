@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +22,8 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ReportDTOMapp
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.PagedResult;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Report;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.FileStorageException;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.FileStoragePort;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ReportPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageResponseDTO;
@@ -28,6 +32,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 /**
  * Unit tests for {@link ReportApplicationService}.
  * Covers creation, listing, and retrieving reports.
+ * @date 27/08/2026
  */
 @DisplayName("ReportApplicationService Tests")
 @ExtendWith(MockitoExtension.class)
@@ -45,11 +50,14 @@ class ReportApplicationServiceTest {
     @Mock
     private ReportDTOMapper reportDTOMapper;
 
+    @Mock
+    private FileStoragePort fileStoragePort;
+
     private ReportApplicationService service;
 
     @BeforeEach
     void setUp() {
-        service = new ReportApplicationService(reportPortRepository, requestPortRepository, createReportDTOMapper, reportDTOMapper);
+        service = new ReportApplicationService(reportPortRepository, requestPortRepository, fileStoragePort, createReportDTOMapper, reportDTOMapper);
     }
 
     @Test
@@ -125,13 +133,18 @@ class ReportApplicationServiceTest {
     @Test
     @DisplayName("Should get report by ID")
     void getReport_success() throws EntityNotFoundException {
+        String reportId = "REP-1";
         Report report = new Report();
+        ReportDTO reportDTO = new ReportDTO();
+        reportDTO.setReportId(reportId);
 
-        when(reportPortRepository.findById("REP-1")).thenReturn(report);
+        when(reportPortRepository.findById(reportId)).thenReturn(report);
+        when(reportDTOMapper.toDTO(report)).thenReturn(reportDTO);
 
-        Report result = service.getReport("REP-1");
+        ReportDTO result = service.getReport(reportId);
 
-        assertEquals(report, result);
+        assertNotNull(result);
+        assertEquals(reportId, result.getReportId());
     }
 
     @Test
@@ -139,5 +152,38 @@ class ReportApplicationServiceTest {
     void getReport_nullId() {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> service.getReport(null));
         assertEquals(LogMessage.EXCEPTION_INVALID_REPORT_ID, ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should return file stream for valid file path")
+    void getReportFileStream_success() {
+        String filePath = "/reports/test.pdf";
+        InputStream expectedStream = new ByteArrayInputStream("pdf-content".getBytes());
+
+        when(fileStoragePort.getFile(filePath)).thenReturn(expectedStream);
+
+        InputStream result = service.getReportFileStream(filePath);
+
+        assertNotNull(result);
+        assertEquals(expectedStream, result);
+        verify(fileStoragePort).getFile(filePath);
+    }
+
+    @Test
+    @DisplayName("Should throw FileStorageException when file path is null")
+    void getReportFileStream_nullFilePath() {
+        FileStorageException ex = assertThrows(FileStorageException.class,
+                () -> service.getReportFileStream(null));
+        assertNotNull(ex.getMessage());
+        verify(fileStoragePort, never()).getFile(any());
+    }
+
+    @Test
+    @DisplayName("Should throw FileStorageException when file path is blank")
+    void getReportFileStream_blankFilePath() {
+        FileStorageException ex = assertThrows(FileStorageException.class,
+                () -> service.getReportFileStream("   "));
+        assertNotNull(ex.getMessage());
+        verify(fileStoragePort, never()).getFile(any());
     }
 }

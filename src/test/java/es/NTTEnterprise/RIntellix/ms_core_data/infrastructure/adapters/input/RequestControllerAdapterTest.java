@@ -1,7 +1,5 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.adapters.input;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -32,100 +30,102 @@ import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 @ExtendWith(MockitoExtension.class)
 class RequestControllerAdapterTest {
 
-    private MockMvc mockMvc;
+        private MockMvc mockMvc;
 
-    @Mock
-    private RequestPortService requestPortService;
+        @Mock
+        private RequestPortService requestPortService;
 
-    @InjectMocks
-    private RequestControllerAdapter controller;
+        @InjectMocks
+        private RequestControllerAdapter controller;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+        private ObjectMapper objectMapper = new ObjectMapper();
 
-    @BeforeEach
-    void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(controller)
-                .setControllerAdvice(new GlobalExceptionHandler())
-                .build();
-    }
+        @BeforeEach
+        void setUp() {
+                mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                                .setControllerAdvice(new GlobalExceptionHandler())
+                                .build();
+        }
 
-    @Test
-    @DisplayName("PUT /api/requests/{id} should return 200 with updated details when successful")
-    void testUpdateRequestStatus_success() throws Exception {
-        UpdateRequestStatusDTO dto = new UpdateRequestStatusDTO();
-        dto.setRequestStatus("REVISADO");
+        @Test
+        @DisplayName("PUT /api/requests/{id} should return 200 with updated details when successful")
+        void testUpdateRequestStatus_success() throws Exception {
+                UpdateRequestStatusDTO dto = new UpdateRequestStatusDTO();
+                dto.setRequestStatus("REVISADO");
 
-        RequestDetailsDTO responseDTO = new RequestDetailsDTO();
-        responseDTO.setRequestId("REQ-1");
-        responseDTO.setStatus("REVISADO");
+                RequestDetailsDTO responseDTO = new RequestDetailsDTO();
+                responseDTO.setRequestId("REQ-1");
+                responseDTO.setStatus("REVISADO");
 
-        when(requestPortService.updateRequestStatus("REQ-1", "REVISADO"))
-                .thenReturn(responseDTO);
+                when(requestPortService.updateRequestStatus("REQ-1", "REVISADO"))
+                                .thenReturn(responseDTO);
 
-        mockMvc.perform(put("/api/requests/REQ-1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.requestId").value("REQ-1"))
-                .andExpect(jsonPath("$.status").value("REVISADO"));
-    }
+                mockMvc.perform(put("/api/requests/REQ-1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto)))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.requestId").value("REQ-1"))
+                                .andExpect(jsonPath("$.status").value("REVISADO"));
+        }
 
-    @Test
-    @DisplayName("PUT /api/requests/{id} should return 404 when request is not found")
-    void testUpdateRequestStatus_notFound() throws Exception {
-        UpdateRequestStatusDTO dto = new UpdateRequestStatusDTO();
-        dto.setRequestStatus("REVISADO");
+        @Test
+        @DisplayName("PUT /api/requests/{id} should return 404 when request is not found")
+        void testUpdateRequestStatus_notFound() throws Exception {
+                UpdateRequestStatusDTO dto = new UpdateRequestStatusDTO();
+                dto.setRequestStatus("REVISADO");
 
-        when(requestPortService.updateRequestStatus("REQ-1", "REVISADO"))
-                .thenThrow(new EntityNotFoundException(String.format(LogMessage.EXCEPTION_REQUEST_NOT_FOUND, "REQ-1")));
+                when(requestPortService.updateRequestStatus("REQ-1", "REVISADO"))
+                                .thenThrow(new EntityNotFoundException(
+                                                String.format(LogMessage.EXCEPTION_REQUEST_NOT_FOUND, "REQ-1")));
 
-        mockMvc.perform(put("/api/requests/REQ-1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isNotFound());
-    }
+                mockMvc.perform(put("/api/requests/REQ-1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto)))
+                                .andExpect(status().isNotFound());
+        }
 
-    @Test
-    @DisplayName("PUT /api/requests/{id} should return 409 when status transition is invalid")
-    void testUpdateRequestStatus_invalidTransition() throws Exception {
-        UpdateRequestStatusDTO dto = new UpdateRequestStatusDTO();
-        dto.setRequestStatus("PENDIENTE_DE_REVISION");
+        @Test
+        @DisplayName("PUT /api/requests/{id} should return 409 when status transition is invalid")
+        void testUpdateRequestStatus_invalidTransition() throws Exception {
+                UpdateRequestStatusDTO dto = new UpdateRequestStatusDTO();
+                dto.setRequestStatus("PENDIENTE_DE_REVISION");
 
-        when(requestPortService.updateRequestStatus("REQ-1", "PENDIENTE_DE_REVISION"))
-                .thenThrow(new InvalidStatusTransitionException(
-                        String.format(LogMessage.EXCEPTION_INVALID_STATUS_TRANSITION, "REVISADO", "PENDIENTE_DE_REVISION")));
+                when(requestPortService.updateRequestStatus("REQ-1", "PENDIENTE_DE_REVISION"))
+                                .thenThrow(new InvalidStatusTransitionException(
+                                                String.format(LogMessage.EXCEPTION_INVALID_STATUS_TRANSITION,
+                                                                "REVISADO", "PENDIENTE_DE_REVISION")));
 
-        mockMvc.perform(put("/api/requests/REQ-1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isConflict());
-    }
+                mockMvc.perform(put("/api/requests/REQ-1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto)))
+                                .andExpect(status().isConflict());
+        }
 
-    @Test
-    @DisplayName("PUT /api/requests/{id} should return 400 when body is invalid (null status)")
-    void testUpdateRequestStatus_nullStatus() throws Exception {
-        UpdateRequestStatusDTO dto = new UpdateRequestStatusDTO();
-        // requestStatus is null
+        @Test
+        @DisplayName("PUT /api/requests/{id} should return 400 when body is invalid (null status)")
+        void testUpdateRequestStatus_nullStatus() throws Exception {
+                UpdateRequestStatusDTO dto = new UpdateRequestStatusDTO();
+                // requestStatus is null
 
-        mockMvc.perform(put("/api/requests/REQ-1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isBadRequest());
-    }
+                mockMvc.perform(put("/api/requests/REQ-1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto)))
+                                .andExpect(status().isBadRequest());
+        }
 
-    @Test
-    @DisplayName("PUT /api/requests/{id} should return 400 when status value is invalid (enum parse error)")
-    void testUpdateRequestStatus_invalidStatusValue() throws Exception {
-        UpdateRequestStatusDTO dto = new UpdateRequestStatusDTO();
-        dto.setRequestStatus("INVALIDO");
+        @Test
+        @DisplayName("PUT /api/requests/{id} should return 400 when status value is invalid (enum parse error)")
+        void testUpdateRequestStatus_invalidStatusValue() throws Exception {
+                UpdateRequestStatusDTO dto = new UpdateRequestStatusDTO();
+                dto.setRequestStatus("INVALIDO");
 
-        when(requestPortService.updateRequestStatus("REQ-1", "INVALIDO"))
-                .thenThrow(new IllegalArgumentException(
-                        String.format(LogMessage.EXCEPTION_INVALID_STATUS_VALUE, "INVALIDO")));
+                when(requestPortService.updateRequestStatus("REQ-1", "INVALIDO"))
+                                .thenThrow(new IllegalArgumentException(
+                                                String.format(LogMessage.EXCEPTION_INVALID_STATUS_VALUE, "INVALIDO")));
 
-        mockMvc.perform(put("/api/requests/REQ-1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isBadRequest());
-    }
+                mockMvc.perform(put("/api/requests/REQ-1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto)))
+                                .andExpect(status().isBadRequest());
+        }
 }

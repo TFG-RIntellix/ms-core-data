@@ -3,8 +3,6 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.mappers;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.DisplayName;
@@ -51,7 +49,7 @@ class PartyMapperTest {
         demo.setMaritalStatus("SOLTERO");
         demo.setEducation("GRADO");
         demo.setHomeOwnership("PROPIA_PAGADA");
-        demo.setNrDependants(0);
+        demo.setDependents(0);
         demo.setCountryOfResidence("ES");
         demo.setBirthDate(LocalDate.now());
         entity.setDemographics(demo);
@@ -66,12 +64,12 @@ class PartyMapperTest {
         eco.setAnnualIncome(50000.0);
         eco.setCurrency("EUR");
         eco.setExistingObligations(100.0);
-        eco.setHasMortage(true);
+        eco.setHasMortgage(true);
         entity.setEconomicData(eco);
 
         EmploymentEntity emp = new EmploymentEntity();
         emp.setStatus("INDEFINIDO");
-        emp.setSector("IT");
+        emp.setOccupationSector("IT");
         emp.setEmployerSeniorityYears(5);
         entity.setEmployment(emp);
 
@@ -86,7 +84,7 @@ class PartyMapperTest {
 
         assertEquals(entity.getId().toHexString(), party.getId());
         assertEquals(PartyType.INDIVIDUAL, party.getPartyType());
-        
+
         var pd = party.getPersonDetails();
         assertEquals("John", pd.getFirstName());
         assertEquals("Doe", pd.getLastName());
@@ -105,7 +103,7 @@ class PartyMapperTest {
         var f = pd.getFinancials();
         assertEquals(50000.0, f.getAnnualIncome().getAmount());
         assertEquals(100.0, f.getExistingObligations());
-        assertTrue(f.getHasMortage());
+        assertTrue(f.getHasMortgage());
         assertEquals(EmploymentStatus.INDEFINIDO, f.getEmploymentStatus());
         assertEquals(5.0, f.getSeniorityYears());
         assertEquals(2, f.getPreviousLoansCount());
@@ -117,18 +115,28 @@ class PartyMapperTest {
     void toPartialDomain_success() {
         PartyNameProjection proj = new PartyNameProjection() {
             @Override
-            public String getId() { return "P-1"; }
+            public String getId() {
+                return "P-1";
+            }
+
             @Override
             public DemographicsNameProjection getDemographics() {
                 return new DemographicsNameProjection() {
-                    @Override public String getFirstName() { return "Alice"; }
-                    @Override public String getLastName() { return "Smith"; }
+                    @Override
+                    public String getFirstName() {
+                        return "Alice";
+                    }
+
+                    @Override
+                    public String getLastName() {
+                        return "Smith";
+                    }
                 };
             }
         };
 
         Party party = mapper.toPartialDomain(proj);
-        
+
         assertEquals("P-1", party.getId());
         assertEquals("Alice", party.getPersonDetails().getFirstName());
         assertEquals("Smith", party.getPersonDetails().getLastName());

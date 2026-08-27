@@ -5,8 +5,6 @@ import java.util.Date;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.mongodb.core.index.Indexed;
 
@@ -30,22 +28,11 @@ public class ScoringEntity {
     private ObjectId id;
 
     @Indexed(unique = true)
-    @Field("request_id")
     private ObjectId requestId;
-
-    @Field("model_version")
     private String modelVersion;
-
-    @Field("scoring_date")
     private Date scoringDate;
-
-    @Field("input_features")
     private InputFeaturesEntity inputFeatures;
-
-    @Field("results")
     private ResultsEntity results;
-
-    @Field("xai")
     private XaiEntity xai;
 
     public ScoringEntity() {

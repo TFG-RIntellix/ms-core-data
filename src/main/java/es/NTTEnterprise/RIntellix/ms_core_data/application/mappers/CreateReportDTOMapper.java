@@ -13,6 +13,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
  * Mapper that converts a {@link CreateReportDTO} into a {@link Report} domain entity.
  * 
  * @author Lucía Fernández Mancebo
+ * @date 27/08/2026
  */
 public class CreateReportDTOMapper {
 

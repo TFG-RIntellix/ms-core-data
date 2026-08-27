@@ -1,7 +1,5 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded;
 
-import org.springframework.data.mongodb.core.mapping.Field;
-
 /**
  * Embedded entity mapping the "financial_metrics" sub-document from the
  * "results" object in the "scorings" MongoDB collection.
@@ -13,20 +11,10 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @date 26/05/2026
  */
 public class FinancialMetricsEntity {
-
-    @Field("monthly_payment")
     private Double monthlyPayment;
-
-    @Field("dti")
     private Double debtToIncomeRatio;
-
-    @Field("total_payment")
     private Double totalPayment;
-
-    @Field("total_interest")
     private Double totalInterest;
-
-    @Field("monthly_disposable_income")
     private Double monthlyDisposableIncome;
 
     /**

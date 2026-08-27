@@ -168,7 +168,6 @@ public class RequestDetails {
         return result;
     }
 
-    // TODO: Equals con loanType
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

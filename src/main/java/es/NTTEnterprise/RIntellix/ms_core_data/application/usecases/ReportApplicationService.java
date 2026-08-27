@@ -1,6 +1,9 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.FileStorageException;
+
+import java.io.InputStream;
 
 import java.util.List;
 import java.util.Objects;
@@ -13,7 +16,9 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.PageRespo
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ReportDTO;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.PagedResult;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Report;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.input.ReportPortService;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.FileStoragePort;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ReportPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.CreateReportDTOMapper;
@@ -33,14 +38,17 @@ public class ReportApplicationService implements ReportPortService {
 
     private final ReportPortRepository reportPortRepository;
     private final RequestPortRepository requestPortRepository;
+    private final FileStoragePort fileStoragePort;
     private final CreateReportDTOMapper createReportDTOMapper;
     private final ReportDTOMapper reportDTOMapper;
 
     public ReportApplicationService(ReportPortRepository reportPortRepository,
             RequestPortRepository requestPortRepository,
+            FileStoragePort fileStoragePort,
             CreateReportDTOMapper createReportDTOMapper, ReportDTOMapper reportDTOMapper) {
         this.reportPortRepository = Objects.requireNonNull(reportPortRepository);
         this.requestPortRepository = Objects.requireNonNull(requestPortRepository);
+        this.fileStoragePort = Objects.requireNonNull(fileStoragePort);
         this.createReportDTOMapper = Objects.requireNonNull(createReportDTOMapper);
         this.reportDTOMapper = Objects.requireNonNull(reportDTOMapper);
     }
@@ -78,9 +86,9 @@ public class ReportApplicationService implements ReportPortService {
             matchingRequestIds = requestPortRepository.findRequestIdsBySearch(search);
         }
 
-        PagedResult<Report> pageResult = 
-            reportPortRepository.findWithFilters(search, matchingRequestIds, page, size, sortBy, sortDir);
-            
+        PagedResult<Report> pageResult = reportPortRepository.findWithFilters(search, matchingRequestIds, page, size,
+                sortBy, sortDir);
+
         List<Report> reports = pageResult.getContent();
         log.debug(LogMessage.SERVICE_LIST_REPORTS_RESULT, reports.size());
 
@@ -88,7 +96,7 @@ public class ReportApplicationService implements ReportPortService {
                 .map(Report::getRequestId)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
-        Map<String, es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request> requestMap = requestPortRepository.findRequestsByIds(requestIds);
+        Map<String, Request> requestMap = requestPortRepository.findRequestsByIds(requestIds);
 
         List<ReportDTO> dtoList = reports.stream()
                 .map(report -> {
@@ -105,8 +113,7 @@ public class ReportApplicationService implements ReportPortService {
                 pageResult.getTotalElements(),
                 pageResult.getTotalPages(),
                 pageResult.getNumber(),
-                pageResult.getSize()
-        );
+                pageResult.getSize());
     }
 
     @Override
@@ -118,7 +125,8 @@ public class ReportApplicationService implements ReportPortService {
 
         ReportDTO dto = reportDTOMapper.toDTO(report);
         try {
-            es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request req = requestPortRepository.findById(requestId);
+            Request req = requestPortRepository
+                    .findById(requestId);
             if (req != null) {
                 dto.setRequestCode(req.getRequestCode());
             }
@@ -130,7 +138,7 @@ public class ReportApplicationService implements ReportPortService {
     }
 
     @Override
-    public Report getReport(String reportId) throws EntityNotFoundException, IllegalArgumentException {
+    public ReportDTO getReport(String reportId) throws EntityNotFoundException, IllegalArgumentException {
 
         log.debug(LogMessage.SERVICE_GET_REPORT_ID_START, reportId);
 
@@ -142,7 +150,21 @@ public class ReportApplicationService implements ReportPortService {
         Report report = reportPortRepository.findById(reportId);
         log.debug(LogMessage.SERVICE_GET_REPORT_ID_COMPLETE, reportId);
 
-        return report;
+        return reportDTOMapper.toDTO(report);
+    }
+
+    @Override
+    public InputStream getReportFileStream(String filePath) throws FileStorageException {
+
+        log.debug(LogMessage.SERVICE_GET_REPORT_FILE_START, filePath);
+
+        if (filePath == null || filePath.isBlank()) {
+            log.warn(LogMessage.SERVICE_GET_REPORT_FILE_NO_PATH, filePath);
+            throw new FileStorageException(LogMessage.EXCEPTION_REPORT_FILE_PATH_MISSING);
+        }
+
+        log.debug(LogMessage.SERVICE_GET_REPORT_FILE_COMPLETE, filePath);
+        return fileStoragePort.getFile(filePath);
     }
 
 }

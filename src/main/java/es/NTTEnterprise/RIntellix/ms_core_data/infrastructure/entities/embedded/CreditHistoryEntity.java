@@ -1,7 +1,5 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded;
 
-import org.springframework.data.mongodb.core.mapping.Field;
-
 /**
  * Embedded document for party credit history.
  * Contains information about previous loans and payment behavior.
@@ -11,20 +9,10 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @date 01/03/2026
  */
 public class CreditHistoryEntity {
-
-    @Field("previous_loans_count")
     private Integer previousLoansCount;
-
-    @Field("previous_loans_amount")
     private Double previousLoansAmount;
-
-    @Field("previous_repayments_amount")
     private Double previousRepaymentsAmount;
-
-    @Field("previous_defaults_count")
     private Integer previousDefaultsCount;
-
-    @Field("is_new_customer")
     private Boolean isNewCustomer;
 
     public CreditHistoryEntity() {

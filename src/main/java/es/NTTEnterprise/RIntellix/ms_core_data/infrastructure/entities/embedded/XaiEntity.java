@@ -2,8 +2,6 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded
 
 import java.util.List;
 
-import org.springframework.data.mongodb.core.mapping.Field;
-
 /**
  * Embedded entity mapping the "xai" sub-document from the "scorings" MongoDB
  * collection.
@@ -13,11 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @date 03/03/2026
  */
 public class XaiEntity {
-
-    @Field("base_value")
     private Double baseValue;
-
-    @Field("top_features")
     private List<TopFeatureEntity> topFeatures;
 
     public XaiEntity() {

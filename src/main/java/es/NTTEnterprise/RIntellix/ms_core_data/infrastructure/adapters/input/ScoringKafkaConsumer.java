@@ -71,8 +71,8 @@ public class ScoringKafkaConsumer {
         Scoring scoring = scoringConsumerService.processScoringMessage(message);
         String scoringId = scoring != null ? scoring.getId() : LogMessage.LOG_VALUE_UNKNOWN;
 
-        // Explicit ACK only on success. Error handling and retry are delegated
-        // to DefaultErrorHandler.
+        // Explicit ACK only on success.
+        // Error handling and retry are delegated to DefaultErrorHandler.
         if (acknowledgment != null) {
             acknowledgment.acknowledge();
         }
