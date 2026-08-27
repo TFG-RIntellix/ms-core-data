@@ -1,4 +1,4 @@
-package es.NTTEnterprise.RIntellix.ms_core_data.config;
+package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;

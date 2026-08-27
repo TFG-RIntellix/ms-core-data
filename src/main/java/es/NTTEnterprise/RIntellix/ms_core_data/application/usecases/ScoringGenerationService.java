@@ -1,23 +1,13 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.usecases;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Objects;
-
-
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output.ScoringGenerationRequest;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.mappers.ScoringGenerationDTOMapper;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.ports.output.ScoringGenerationPort;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.ModelInputs;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Party;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskFeature;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskMetrics;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Scoring;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.enums.RequestType;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.exceptions.EntityNotFoundException;
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.PartyPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ScoringPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -42,20 +32,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ScoringGenerationService {
 
-
-
     private final ScoringPortRepository scoringPortRepository;
-    private final PartyPortRepository partyPortRepository;
     private final ScoringGenerationDTOMapper scoringGenerationMapper;
     private final ScoringGenerationPort scoringGenerationPort;
 
     public ScoringGenerationService(
             ScoringPortRepository scoringPortRepository,
-            PartyPortRepository partyPortRepository,
             ScoringGenerationDTOMapper scoringGenerationMapper,
             ScoringGenerationPort scoringGenerationPort) {
         this.scoringPortRepository = Objects.requireNonNull(scoringPortRepository);
-        this.partyPortRepository = Objects.requireNonNull(partyPortRepository);
         this.scoringGenerationMapper = Objects.requireNonNull(scoringGenerationMapper);
         this.scoringGenerationPort = Objects.requireNonNull(scoringGenerationPort);
     }
@@ -64,7 +49,8 @@ public class ScoringGenerationService {
      * Asynchronously generates and publishes a scoring generation request.
      *
      * Runs in a separate thread to avoid blocking the main request flow.
-     * Checks for existing scoring to prevent duplicates, loads full party data, maps to
+     * Checks for existing scoring to prevent duplicates, loads full party data,
+     * maps to
      * ScoringGenerationRequest with all scoring features, and publishes
      * via ScoringGenerationPort using type-specific strategies.
      * Errors are logged but do not affect the calling request flow.
@@ -85,8 +71,6 @@ public class ScoringGenerationService {
             // Load full party data
             Party party = request.getParty();
 
-
-
             // Extract features and create output payload
             ScoringGenerationRequest scoringGenerationRequest = scoringGenerationMapper.toOutputDTO(request, party);
 
@@ -103,8 +87,6 @@ public class ScoringGenerationService {
                     request.getId(), e.getMessage(), e);
         }
     }
-
-
 
     // -------------------------------------------------------------------------
     // Duplicate-check helper

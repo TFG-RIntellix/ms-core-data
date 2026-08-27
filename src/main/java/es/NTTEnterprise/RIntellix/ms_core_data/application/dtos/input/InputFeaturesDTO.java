@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import es.NTTEnterprise.RIntellix.ms_core_data.application.constraints.NonNegativeAmount;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.constraints.ValidAge;
-import es.NTTEnterprise.RIntellix.ms_core_data.application.constraints.ValidPercentage;
 
 /**
  * DTO representing the input features section of a Kafka scoring message.

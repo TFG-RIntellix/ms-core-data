@@ -19,6 +19,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.ScoringConsu
 import es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.ScoringGenerationService;
 import es.NTTEnterprise.RIntellix.ms_core_data.application.usecases.SimulationApplicationService;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.PartyPortRepository;
+import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.FileStoragePort;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ReportPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.RequestPortRepository;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ScoringPortRepository;
@@ -43,11 +44,9 @@ public class ApplicationServicesConfig {
     @Bean
     public ScoringGenerationService scoringGenerationService(
             ScoringPortRepository scoringPortRepository,
-            PartyPortRepository partyPortRepository,
             ScoringGenerationDTOMapper scoringGenerationDTOMapper,
             ScoringGenerationPort scoringGenerationPort) {
-        return new ScoringGenerationService(scoringPortRepository, partyPortRepository, scoringGenerationDTOMapper,
-                scoringGenerationPort);
+        return new ScoringGenerationService(scoringPortRepository, scoringGenerationDTOMapper, scoringGenerationPort);
     }
 
     @Bean
@@ -74,9 +73,11 @@ public class ApplicationServicesConfig {
     public ReportApplicationService reportApplicationService(
             ReportPortRepository reportPortRepository,
             RequestPortRepository requestPortRepository,
+            FileStoragePort fileStoragePort,
             CreateReportDTOMapper createReportDTOMapper,
             ReportDTOMapper reportDTOMapper) {
-        return new ReportApplicationService(reportPortRepository, requestPortRepository, createReportDTOMapper, reportDTOMapper);
+        return new ReportApplicationService(reportPortRepository, requestPortRepository, fileStoragePort,
+                createReportDTOMapper, reportDTOMapper);
     }
 
     @Bean

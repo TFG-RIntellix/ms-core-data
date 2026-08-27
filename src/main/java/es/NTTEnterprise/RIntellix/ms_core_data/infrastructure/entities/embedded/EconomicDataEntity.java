@@ -1,7 +1,5 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded;
 
-import org.springframework.data.mongodb.core.mapping.Field;
-
 /**
  * Embedded document for party economic data.
  * Contains income and financial information.
@@ -10,21 +8,11 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @date 01/03/2026
  */
 public class EconomicDataEntity {
-
-    @Field("annual_income")
     private Double annualIncome;
-
-    @Field("income_type")
     private String incomeType;
-
-    @Field("currency")
     private String currency;
-
-    @Field("existing_obligations")
     private Double existingObligations;
-
-    @Field("has_mortage")
-    private Boolean hasMortage;
+    private Boolean hasMortgage;
 
     public EconomicDataEntity() {
     }
@@ -39,12 +27,12 @@ public class EconomicDataEntity {
         this.existingObligations = existingObligations;
     }
 
-    public Boolean getHasMortage() {
-        return hasMortage;
+    public Boolean getHasMortgage() {
+        return hasMortgage;
     }
 
-    public void setHasMortage(Boolean hasMortage) {
-        this.hasMortage = hasMortage;
+    public void setHasMortgage(Boolean hasMortgage) {
+        this.hasMortgage = hasMortgage;
     }
 
     // Getters and Setters

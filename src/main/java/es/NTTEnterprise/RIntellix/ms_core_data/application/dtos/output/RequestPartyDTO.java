@@ -7,6 +7,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.output;
  * the frontend-facing {@link RequestDetailsDTO} carries.
  *
  * @author Lucía Fernández Mancebo
+ * @date 27/08/2026
  */
 public class RequestPartyDTO {
 

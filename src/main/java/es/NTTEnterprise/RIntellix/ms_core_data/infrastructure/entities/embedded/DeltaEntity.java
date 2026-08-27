@@ -1,7 +1,5 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded;
 
-import org.springframework.data.mongodb.core.mapping.Field;
-
 /**
  * Embedded entity mapping the "delta" sub-document from the "simulations"
  * MongoDB collection.
@@ -12,29 +10,13 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @date 03/03/2026
  */
 public class DeltaEntity {
-
-    @Field("pd_change")
     private Double pdChange;
-
-    @Field("ecl_change")
     private Double eclChange;
-
-    @Field("risk_grade_change")
     private String riskGradeChange;
-
-    @Field("monthly_payment_change")
     private Double monthlyPaymentChange;
-
-    @Field("dti_change")
     private Double dtiChange;
-
-    @Field("total_payment_change")
     private Double totalPaymentChange;
-
-    @Field("total_interest_change")
     private Double totalInterestChange;
-
-    @Field("monthly_disposable_income_change")
     private Double monthlyDisposableIncomeChange;
 
     public DeltaEntity() {

@@ -28,7 +28,7 @@ public interface PartyRepository extends MongoRepository<PartyEntity, ObjectId> 
      * @param partyId the unique identifier of the party
      * @return projection with firstName and lastName, or null if not found
      */
-    @Query(value = "{ '_id': ?0 }", fields = "{ 'demographics.first_name': 1, 'demographics.last_name': 1 }")
+    @Query(value = "{ '_id': ?0 }", fields = "{ 'demographics.firstName': 1, 'demographics.lastName': 1 }")
     PartyNameProjection findPartyNameProjectionById(ObjectId partyId);
 
     /**
@@ -37,7 +37,7 @@ public interface PartyRepository extends MongoRepository<PartyEntity, ObjectId> 
      * @param partyIds the list of party IDs
      * @return list of projections with firstName and lastName
      */
-    @Query(value = "{ '_id': { $in: ?0 } }", fields = "{ 'demographics.first_name': 1, 'demographics.last_name': 1 }")
+    @Query(value = "{ '_id': { $in: ?0 } }", fields = "{ 'demographics.firstName': 1, 'demographics.lastName': 1 }")
     List<PartyNameProjection> findPartyNameProjectionsByIdIn(List<ObjectId> partyIds);
 
     /**
@@ -46,7 +46,7 @@ public interface PartyRepository extends MongoRepository<PartyEntity, ObjectId> 
      * @param search the partial name to search for
      * @return list of projections with ID and demographics names
      */
-    @Query(value = "{ $expr: { $regexMatch: { input: { $concat: [ { $ifNull: [ '$demographics.first_name', '' ] }, ' ', { $ifNull: [ '$demographics.last_name', '' ] } ] }, regex: ?0, options: 'i' } } }", fields = "{ '_id': 1 }")
+    @Query(value = "{ $expr: { $regexMatch: { input: { $concat: [ { $ifNull: [ '$demographics.firstName', '' ] }, ' ', { $ifNull: [ '$demographics.lastName', '' ] } ] }, regex: ?0, options: 'i' } } }", fields = "{ '_id': 1 }")
     List<PartyNameProjection> findPartyNameProjectionsByNameMatch(String search);
 
 }

@@ -44,13 +44,13 @@ public class RequestMapper {
 
         // Build Money objects
         Money requestedAmount = null;
-        if (entity.getRequestedAmount() != null) {
-            requestedAmount = new Money(entity.getRequestedAmount(), entity.getCurrency());
+        if (entity.getLoanAmount() != null) {
+            requestedAmount = new Money(entity.getLoanAmount(), entity.getCurrency());
         }
 
         Money creditLimit = null;
-        if (entity.getRequestedCreditLimit() != null) {
-            creditLimit = new Money(entity.getRequestedCreditLimit(), entity.getCurrency());
+        if (entity.getCreditLimit() != null) {
+            creditLimit = new Money(entity.getCreditLimit(), entity.getCurrency());
         }
 
         // Build RequestDetails
@@ -58,8 +58,8 @@ public class RequestMapper {
                 entity.getRequestType(),
                 entity.getPurpose(),
                 requestedAmount,
-                entity.getRequestedTermMonths(),
-                entity.getRequestedInterestRate(),
+                entity.getTermMonths(),
+                entity.getInterestRate(),
                 creditLimit,
                 Boolean.TRUE.equals(entity.getIsRevolving()),
                 entity.getRepaymentSystem(),

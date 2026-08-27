@@ -3,7 +3,6 @@ package es.NTTEnterprise.RIntellix.ms_core_data.application.mappers;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -55,9 +54,9 @@ class ScoringConsumerMessageMapperTest {
         assertNotNull(scoring.getInputSnapshot());
         assertEquals(30, scoring.getInputSnapshot().getFeatures().get("age"));
         assertEquals("MALE", scoring.getInputSnapshot().getFeatures().get("gender"));
-        assertEquals(Boolean.TRUE, scoring.getInputSnapshot().getFeatures().get("has_mortgage"));
-        assertEquals(Boolean.TRUE, scoring.getInputSnapshot().getFeatures().get("is_revolving"));
-        assertEquals("PERSONAL_LOAN", scoring.getInputSnapshot().getFeatures().get("loan_type"));
+        assertEquals(Boolean.TRUE, scoring.getInputSnapshot().getFeatures().get("hasMortgage"));
+        assertEquals(Boolean.TRUE, scoring.getInputSnapshot().getFeatures().get("isRevolving"));
+        assertEquals("PERSONAL_LOAN", scoring.getInputSnapshot().getFeatures().get("loanType"));
     }
 
     @Test
@@ -68,19 +67,27 @@ class ScoringConsumerMessageMapperTest {
         dto.setInputFeatures(input);
 
         input.setHasMortgage("yes");
-        assertEquals(Boolean.TRUE, ScoringConsumerMessageMapper.toDomain(dto).getInputSnapshot().getFeatures().get("has_mortgage"));
+        assertEquals(Boolean.TRUE,
+                ScoringConsumerMessageMapper.toDomain(dto).getInputSnapshot().getFeatures().get("hasMortgage"));
         input.setHasMortgage("1");
-        assertEquals(Boolean.TRUE, ScoringConsumerMessageMapper.toDomain(dto).getInputSnapshot().getFeatures().get("has_mortgage"));
+        assertEquals(Boolean.TRUE,
+                ScoringConsumerMessageMapper.toDomain(dto).getInputSnapshot().getFeatures().get("hasMortgage"));
 
         input.setHasMortgage("no");
-        assertEquals(Boolean.FALSE, ScoringConsumerMessageMapper.toDomain(dto).getInputSnapshot().getFeatures().get("has_mortgage"));
+        assertEquals(Boolean.FALSE,
+                ScoringConsumerMessageMapper.toDomain(dto).getInputSnapshot().getFeatures().get("hasMortgage"));
         input.setHasMortgage("false");
-        assertEquals(Boolean.FALSE, ScoringConsumerMessageMapper.toDomain(dto).getInputSnapshot().getFeatures().get("has_mortgage"));
+        assertEquals(Boolean.FALSE,
+                ScoringConsumerMessageMapper.toDomain(dto).getInputSnapshot().getFeatures().get("hasMortgage"));
         input.setHasMortgage("0");
-        assertEquals(Boolean.FALSE, ScoringConsumerMessageMapper.toDomain(dto).getInputSnapshot().getFeatures().get("has_mortgage"));
+        assertEquals(Boolean.FALSE,
+                ScoringConsumerMessageMapper.toDomain(dto).getInputSnapshot().getFeatures().get("hasMortgage"));
 
         input.setHasMortgage("other");
-        assertEquals(Boolean.FALSE, ScoringConsumerMessageMapper.toDomain(dto).getInputSnapshot().getFeatures().get("has_mortgage")); // Boolean.valueOf("other") returns FALSE.
+        assertEquals(Boolean.FALSE,
+                ScoringConsumerMessageMapper.toDomain(dto).getInputSnapshot().getFeatures().get("hasMortgage")); // Boolean.valueOf("other")
+                                                                                                                 // returns
+                                                                                                                 // FALSE.
     }
 
     @Test
@@ -91,10 +98,12 @@ class ScoringConsumerMessageMapperTest {
         dto.setInputFeatures(input);
 
         input.setIsRevolving("Si");
-        assertEquals(Boolean.TRUE, ScoringConsumerMessageMapper.toDomain(dto).getInputSnapshot().getFeatures().get("is_revolving"));
+        assertEquals(Boolean.TRUE,
+                ScoringConsumerMessageMapper.toDomain(dto).getInputSnapshot().getFeatures().get("isRevolving"));
 
         input.setIsRevolving("No");
-        assertEquals(Boolean.FALSE, ScoringConsumerMessageMapper.toDomain(dto).getInputSnapshot().getFeatures().get("is_revolving"));
+        assertEquals(Boolean.FALSE,
+                ScoringConsumerMessageMapper.toDomain(dto).getInputSnapshot().getFeatures().get("isRevolving"));
     }
 
     @Test
@@ -105,11 +114,11 @@ class ScoringConsumerMessageMapperTest {
         results.setPd("0.05");
         results.setEcl("200.0");
         results.setLgd(0.45);
-        
+
         FinancialMetricsDTO fm = new FinancialMetricsDTO();
         fm.setMonthlyPayment(500.0);
         results.setFinancialMetrics(fm);
-        
+
         dto.setResults(results);
 
         Scoring scoring = ScoringConsumerMessageMapper.toDomain(dto);
@@ -118,7 +127,7 @@ class ScoringConsumerMessageMapperTest {
         assertEquals(0.05, scoring.getResults().getProbabilityOfDefault());
         assertEquals(200.0, scoring.getResults().getExpectedCalculatedLoss());
         assertEquals(0.45, scoring.getResults().getLossGivenDefault());
-        
+
         assertNotNull(scoring.getResults().getFinancialMetrics());
         assertEquals(500.0, scoring.getResults().getFinancialMetrics().getMonthlyPayment());
     }
@@ -143,18 +152,18 @@ class ScoringConsumerMessageMapperTest {
     @DisplayName("Should map explainability filtering empty features")
     void toDomain_explainability() {
         ScoringResultMessageDTO dto = new ScoringResultMessageDTO();
-        
+
         List<XAIFeatureDTO> features = new ArrayList<>();
         features.add(null);
-        
+
         XAIFeatureDTO empty = new XAIFeatureDTO(); // all nulls
         features.add(empty);
-        
+
         XAIFeatureDTO valid = new XAIFeatureDTO();
         valid.setFeatureName("age");
         valid.setShapValue(-0.1);
         features.add(valid);
-        
+
         dto.setExplainability(features);
 
         Scoring scoring = ScoringConsumerMessageMapper.toDomain(dto);

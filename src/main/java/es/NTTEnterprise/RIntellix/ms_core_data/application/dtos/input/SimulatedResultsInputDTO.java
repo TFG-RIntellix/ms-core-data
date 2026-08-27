@@ -1,11 +1,11 @@
 package es.NTTEnterprise.RIntellix.ms_core_data.application.dtos.input;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Nested input DTO for simulated results containing PD, LGD, EAD, ECL, risk grade,
+ * Nested input DTO for simulated results containing PD, LGD, EAD, ECL, risk
+ * grade,
  * decision, and detailed financial affordability metrics.
  *
  * @author Lucía Fernández Mancebo

@@ -3,8 +3,6 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
 import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded.ContactInfoEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded.CreditHistoryEntity;
 import es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded.DemographicsEntity;
@@ -23,23 +21,11 @@ public class PartyEntity {
 
     @Id
     private ObjectId id;
-
-    @Field("party_type")
     private String partyType;
-
-    @Field("demographics")
     private DemographicsEntity demographics;
-
-    @Field("contact_info")
     private ContactInfoEntity contactInfo;
-
-    @Field("employment")
     private EmploymentEntity employment;
-
-    @Field("economic_data")
     private EconomicDataEntity economicData;
-
-    @Field("credit_history")
     private CreditHistoryEntity creditHistory;
 
     public PartyEntity() {

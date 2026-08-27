@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -73,7 +72,7 @@ class ScoringDTOMapperTest {
         assertEquals("v1", dto.getModelVersion());
         assertNotNull(dto.getScoringDate());
 
-        assertEquals("Si", dto.getInputFeatures().get("is_revolving"));
+        assertEquals(true, dto.getInputFeatures().get("is_revolving"));
         assertEquals(30, dto.getInputFeatures().get("age"));
 
         assertEquals(0.05, dto.getPd());
@@ -130,9 +129,9 @@ class ScoringDTOMapperTest {
         inputs.setFeatures(new java.util.HashMap<>());
         scoring.setInputSnapshot(inputs);
         // Do not set Results
-        
+
         ScoringDTO dto = mapper.toDTO(scoring);
-        
+
         assertNotNull(dto);
         assertNull(dto.getPd());
         assertNull(dto.getDti());

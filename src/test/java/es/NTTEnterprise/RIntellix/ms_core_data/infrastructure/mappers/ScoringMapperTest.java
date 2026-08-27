@@ -11,7 +11,6 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.FinancialMetrics;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.ModelInputs;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskFeature;
 import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.RiskMetrics;
@@ -51,7 +50,7 @@ class ScoringMapperTest {
         inputs.setAge(30);
         inputs.setGender("MALE");
         LoanFieldsEntity lf = new LoanFieldsEntity();
-        lf.setRequestedAmount(10000.0);
+        lf.setLoanAmount(10000.0);
         inputs.setLoanFields(lf);
         CreditCardFieldsEntity ccf = new CreditCardFieldsEntity();
         ccf.setIsRevolving(true);
@@ -83,12 +82,12 @@ class ScoringMapperTest {
         assertEquals(id.toHexString(), domain.getId());
         assertEquals(reqId.toHexString(), domain.getRequestId());
         assertEquals("v1", domain.getModelVersion());
-        
+
         Map<String, Object> features = domain.getInputSnapshot().getFeatures();
         assertEquals(30, features.get("age"));
         assertEquals("MALE", features.get("gender"));
-        assertEquals(10000.0, features.get("requested_amount"));
-        assertEquals(true, features.get("is_revolving"));
+        assertEquals(10000.0, features.get("loanAmount"));
+        assertEquals(true, features.get("isRevolving"));
 
         assertEquals(0.05, domain.getResults().getProbabilityOfDefault());
         assertEquals(250.0, domain.getResults().getFinancialMetrics().getMonthlyPayment());
@@ -105,10 +104,10 @@ class ScoringMapperTest {
         ObjectId reqId = new ObjectId();
         domain.setRequestId(reqId.toHexString());
         domain.setModelVersion("v1");
-        
+
         HashMap<String, Object> features = new HashMap<>();
         features.put("age", 40);
-        features.put("requested_amount", 50000.0);
+        features.put("loanAmount", 50000.0);
         domain.setInputSnapshot(new ModelInputs(features));
 
         RiskMetrics rm = new RiskMetrics();
@@ -123,7 +122,7 @@ class ScoringMapperTest {
         assertEquals(reqId, entity.getRequestId());
         assertEquals("v1", entity.getModelVersion());
         assertEquals(40, entity.getInputFeatures().getAge());
-        assertEquals(50000.0, entity.getInputFeatures().getLoanFields().getRequestedAmount());
+        assertEquals(50000.0, entity.getInputFeatures().getLoanFields().getLoanAmount());
         assertEquals(0.1, entity.getResults().getPd());
         assertEquals(1.0, entity.getXai().getBaseValue());
         assertEquals(1, entity.getXai().getTopFeatures().size());

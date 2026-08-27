@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(RequestControllerAdapter.BASE_PATH)
+@RequestMapping("/api/requests")
 @Tag(name = "Requests", description = "Management of client credit and rating requests")
 /**
  * Core component: RequestControllerAdapter.
@@ -40,9 +40,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 public class RequestControllerAdapter {
 
-    public static final String BASE_PATH = "/api/requests";
-    public static final String DETAILS_PATH = "/{requestId}";
-    public static final String PARTY_PATH = "/{requestId}/party";
+
 
     private final RequestPortService requestPortService;
 
@@ -76,7 +74,7 @@ public class RequestControllerAdapter {
             @Parameter(description = "Field to sort by", example = "creationDate") @RequestParam(defaultValue = "creationDate") String sortBy,
             @Parameter(description = "Sort direction (asc or desc)", example = "desc") @RequestParam(defaultValue = "desc") String sortDir) {
 
-        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", BASE_PATH);
+        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/requests");
         log.debug(LogMessage.CONTROLLER_REQUEST_PARAMS, search, requestStatus);
 
         PageResponseDTO<RequestSummaryDTO> requests = requestPortService.listRequests(search, requestStatus, page, size, sortBy, sortDir);
@@ -85,7 +83,7 @@ public class RequestControllerAdapter {
         return ResponseEntity.ok(requests);
     }
 
-    @GetMapping(DETAILS_PATH)
+    @GetMapping("/{requestId}")
     @Operation(summary = "Get request details", description = "Retrieves the full details of a specific request.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved request details"),
@@ -95,7 +93,7 @@ public class RequestControllerAdapter {
             @Parameter(description = "The unique identifier of the request", required = true)
             @PathVariable String requestId) {
 
-        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", BASE_PATH + DETAILS_PATH);
+        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/requests/" + requestId);
         log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, requestId);
 
         RequestDetailsDTO details = requestPortService.getRequestDetails(requestId);
@@ -113,7 +111,7 @@ public class RequestControllerAdapter {
      * @param requestId the unique identifier of the request
      * @return a ResponseEntity with the associated RequestPartyDTO
      */
-    @GetMapping(PARTY_PATH)
+    @GetMapping("/{requestId}/party")
     @Operation(summary = "Get request party", description = "Internal endpoint exposing only the party reference associated with a request.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved request party"),
@@ -123,7 +121,7 @@ public class RequestControllerAdapter {
             @Parameter(description = "The unique identifier of the request", required = true)
             @PathVariable String requestId) {
 
-        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", BASE_PATH + PARTY_PATH);
+        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "GET", "/api/requests/" + requestId + "/party");
         log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, requestId);
 
         RequestPartyDTO party = requestPortService.getRequestParty(requestId);
@@ -140,7 +138,7 @@ public class RequestControllerAdapter {
      * @param dto the DTO containing the new status value
      * @return a ResponseEntity with the updated RequestDetailsDTO
      */
-    @PutMapping(DETAILS_PATH)
+    @PutMapping("/{requestId}")
     @Operation(summary = "Update request status", description = "Endpoint to update the status of a request. Only valid transitions are allowed.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully updated request status"),
@@ -152,7 +150,7 @@ public class RequestControllerAdapter {
             @PathVariable String requestId,
             @Parameter(description = "The new status value", required = true)
             @RequestBody @Valid UpdateRequestStatusDTO dto) {
-        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "PUT", BASE_PATH + DETAILS_PATH);
+        log.info(LogMessage.CONTROLLER_REQUEST_RECEIVED, "PUT", "/api/requests/" + requestId);
         log.debug(LogMessage.CONTROLLER_REQUEST_PATH_VAR, requestId);
 
         RequestDetailsDTO updated = requestPortService.updateRequestStatus(

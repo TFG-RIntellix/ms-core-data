@@ -24,7 +24,7 @@ public class FinancialProfile {
     private Boolean isNewCustomer;
 
     private Double existingObligations;
-    private Boolean hasMortage;
+    private Boolean hasMortgage;
 
     /**
      * Constructor of the FinancialProfile class.
@@ -142,12 +142,12 @@ public class FinancialProfile {
         this.existingObligations = existingObligations;
     }
 
-    public Boolean getHasMortage() {
-        return hasMortage;
+    public Boolean getHasMortgage() {
+        return hasMortgage;
     }
 
-    public void setHasMortage(Boolean hasMortage) {
-        this.hasMortage = hasMortage;
+    public void setHasMortgage(Boolean hasMortgage) {
+        this.hasMortgage = hasMortgage;
     }
 
     // toString, hashCode and equals
@@ -165,7 +165,7 @@ public class FinancialProfile {
         sb.append(", previousLoansAmount=").append(previousLoansAmount);
         sb.append(", isNewCustomer=").append(isNewCustomer);
         sb.append(", existingObligations=").append(existingObligations);
-        sb.append(", hasMortage=").append(hasMortage);
+        sb.append(", hasMortgage=").append(hasMortgage);
         sb.append('}');
         return sb.toString();
     }
@@ -184,7 +184,7 @@ public class FinancialProfile {
         result = prime * result + ((previousLoansAmount == null) ? 0 : previousLoansAmount.hashCode());
         result = prime * result + ((isNewCustomer == null) ? 0 : isNewCustomer.hashCode());
         result = prime * result + ((existingObligations == null) ? 0 : existingObligations.hashCode());
-        result = prime * result + ((hasMortage == null) ? 0 : hasMortage.hashCode());
+        result = prime * result + ((hasMortgage == null) ? 0 : hasMortgage.hashCode());
         return result;
     }
 
@@ -244,10 +244,10 @@ public class FinancialProfile {
                 return false;
         } else if (!existingObligations.equals(other.existingObligations))
             return false;
-        if (hasMortage == null) {
-            if (other.hasMortage != null)
+        if (hasMortgage == null) {
+            if (other.hasMortgage != null)
                 return false;
-        } else if (!hasMortage.equals(other.hasMortage))
+        } else if (!hasMortgage.equals(other.hasMortgage))
             return false;
         return true;
     }

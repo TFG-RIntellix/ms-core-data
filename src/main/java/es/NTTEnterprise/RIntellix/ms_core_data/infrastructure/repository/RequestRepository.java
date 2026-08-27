@@ -36,9 +36,9 @@ public interface RequestRepository extends MongoRepository<RequestEntity, Object
     @Query("{ $and: [ " +
             "{ $or: [ " +
             "{ $expr: { $eq: [:#{#search}, ''] } }, " +
-            "{ $expr: { $regexMatch: { input: { $ifNull: [ '$request_code', '' ] }, regex: :#{#search}, options: 'i' } } }, "
+            "{ $expr: { $regexMatch: { input: { $ifNull: [ '$requestCode', '' ] }, regex: :#{#search}, options: 'i' } } }, "
             +
-            "{ 'party_id': { $in: :#{#partyIds} } } " +
+            "{ 'partyId': { $in: :#{#partyIds} } } " +
             "] }, " +
             "{ $or: [ { $expr: { $eq: [:#{#status}, null] } }, { 'status': :#{#status} } ] } " +
             "] }")
@@ -54,7 +54,7 @@ public interface RequestRepository extends MongoRepository<RequestEntity, Object
      */
     @Query(value = "{ $or: [ " +
             "{ $expr: { $eq: [:#{#search}, ''] } }, " +
-            "{ $expr: { $regexMatch: { input: { $ifNull: [ '$request_code', '' ] }, regex: :#{#search}, options: 'i' } } } "
+            "{ $expr: { $regexMatch: { input: { $ifNull: [ '$requestCode', '' ] }, regex: :#{#search}, options: 'i' } } } "
             +
             "] }", fields = "{ '_id': 1 }")
     List<RequestEntity> findRequestIdsBySearch(@Param("search") String search);
