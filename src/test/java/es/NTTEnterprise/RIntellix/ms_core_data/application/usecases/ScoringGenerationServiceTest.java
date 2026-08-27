@@ -30,6 +30,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.ports.output.ScoringPortRe
 /**
  * Unit tests for {@link ScoringGenerationService}.
  * Covers duplicate checks, hard-cutoff rules, and model publishing.
+ * @date 27/08/2026
  */
 @DisplayName("ScoringGenerationService Tests")
 @ExtendWith(MockitoExtension.class)

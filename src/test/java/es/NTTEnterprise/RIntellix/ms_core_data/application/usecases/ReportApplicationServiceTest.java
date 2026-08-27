@@ -32,6 +32,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.utils.LogMessage;
 /**
  * Unit tests for {@link ReportApplicationService}.
  * Covers creation, listing, and retrieving reports.
+ * @date 27/08/2026
  */
 @DisplayName("ReportApplicationService Tests")
 @ExtendWith(MockitoExtension.class)

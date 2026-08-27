@@ -13,6 +13,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.domain.entities;
  * @author: Lucía Fernández Mancebo
  *          Date: 03-02-2026
  *          Updated: 05-26-2026 - Added FinancialMetrics
+ * @date 27/08/2026
  */
 public class RiskMetrics {
 

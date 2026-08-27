@@ -16,6 +16,7 @@ import java.util.HashMap;
  * 
  * @author Lucía Fernández Mancebo
  *         Date 03-03-2026
+ * @date 27/08/2026
  */
 public class Simulation {
 

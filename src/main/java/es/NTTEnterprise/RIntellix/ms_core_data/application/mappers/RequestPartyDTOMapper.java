@@ -10,6 +10,7 @@ import es.NTTEnterprise.RIntellix.ms_core_data.domain.entities.Request;
  * the party identifiers (id and name) associated with the request.
  *
  * @author Lucía Fernández Mancebo
+ * @date 27/08/2026
  */
 public class RequestPartyDTOMapper {
 

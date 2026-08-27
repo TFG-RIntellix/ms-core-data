@@ -6,6 +6,7 @@ package es.NTTEnterprise.RIntellix.ms_core_data.infrastructure.entities.embedded
  * Contains specific fields for loan products.
  *
  * @author Lucía Fernández Mancebo
+ * @date 27/08/2026
  */
 public class LoanFieldsEntity {
     private Double loanAmount;
