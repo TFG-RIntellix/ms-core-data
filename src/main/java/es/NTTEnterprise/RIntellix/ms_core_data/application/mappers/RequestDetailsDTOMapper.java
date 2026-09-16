@@ -63,6 +63,9 @@ public class RequestDetailsDTOMapper {
                      requestDetailsDTO.setIsFirstHome(request.getCollateral().isFirstHome());
               }
 
+              requestDetailsDTO.setLoanType(request.getRequestDetails().getLoanType());
+              requestDetailsDTO.setRepaymentSystem(request.getRequestDetails().getRepaymentSystem());
+
               Money money = request.getRequestDetails().getRequestedAmount() != null
                             ? request.getRequestDetails().getRequestedAmount()
                             : request.getRequestDetails().getCreditLimit();
