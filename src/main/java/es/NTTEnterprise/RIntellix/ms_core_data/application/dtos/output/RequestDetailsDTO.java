@@ -44,6 +44,9 @@ public class RequestDetailsDTO {
     public Double propertyValue;
     public Boolean isFirstHome;
 
+    public String loanType;
+    public String repaymentSystem;
+
     public RequestDetailsDTO() {
     }
 
@@ -251,6 +254,22 @@ public class RequestDetailsDTO {
 
     public void setIsFirstHome(Boolean isFirstHome) {
         this.isFirstHome = isFirstHome;
+    }
+
+    public String getLoanType() {
+        return loanType;
+    }
+
+    public void setLoanType(String loanType) {
+        this.loanType = loanType;
+    }
+
+    public String getRepaymentSystem() {
+        return repaymentSystem;
+    }
+
+    public void setRepaymentSystem(String repaymentSystem) {
+        this.repaymentSystem = repaymentSystem;
     }
 
 }
